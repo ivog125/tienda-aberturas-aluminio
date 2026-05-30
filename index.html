@@ -4,990 +4,193 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aberturas — Fábrica y Distribución</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --negro: #0f0f0f;
-    --gris-oscuro: #1c1c1c;
-    --gris-medio: #2e2e2e;
-    --gris-borde: #3a3a3a;
-    --acento: #c8952a;
-    --acento-claro: #e8b04a;
-    --blanco: #f5f3ef;
-    --blanco-puro: #ffffff;
-    --gris-texto: #a0a0a0;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Barlow', sans-serif;
-    background: var(--negro);
-    color: var(--blanco);
-    font-weight: 300;
-    line-height: 1.6;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(15,15,15,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--gris-borde);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 64px;
-  }
-
-  .nav-logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: var(--blanco);
-    text-transform: uppercase;
-    text-decoration: none;
-  }
-
-  .nav-logo span { color: var(--acento); }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    color: var(--gris-texto);
-    text-decoration: none;
-    font-size: 13px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: 400;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--acento); }
-
-  .nav-cta {
-    background: var(--acento) !important;
-    color: var(--negro) !important;
-    padding: 8px 20px;
-    border-radius: 2px;
-    font-weight: 600 !important;
-  }
-
-  .nav-cta:hover { background: var(--acento-claro) !important; }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    padding: 80px 2rem 4rem;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(135deg, rgba(200,149,42,0.08) 0%, transparent 50%),
-      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px),
-      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px);
-  }
-
-  .hero-accent-line {
-    position: absolute;
-    left: 0;
-    top: 40%;
-    width: 3px;
-    height: 200px;
-    background: linear-gradient(to bottom, transparent, var(--acento), transparent);
-  }
-
-  .hero-content {
-    position: relative;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .hero-eyebrow {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--acento);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .hero-eyebrow::before {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 1px;
-    background: var(--acento);
-  }
-
-  .hero-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(52px, 8vw, 96px);
-    font-weight: 800;
-    line-height: 0.9;
-    text-transform: uppercase;
-    letter-spacing: -1px;
-    margin-bottom: 2rem;
-    animation: fadeUp 0.6s 0.12s ease both;
-  }
-
-  .hero-title .outline {
-    -webkit-text-stroke: 1px var(--blanco);
-    color: transparent;
-  }
-
-  .hero-title .gold { color: var(--acento); }
-
-  .hero-subtitle {
-    font-size: 16px;
-    font-weight: 300;
-    color: var(--gris-texto);
-    max-width: 480px;
-    margin-bottom: 3rem;
-    line-height: 1.7;
-    animation: fadeUp 0.6s 0.22s ease both;
-  }
-
-  .hero-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.32s ease both;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--acento);
-    color: var(--negro);
-    padding: 14px 28px;
-    border-radius: 2px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.2s;
-    border: none;
-    cursor: pointer;
-  }
-
-  .btn-primary:hover {
-    background: var(--acento-claro);
-    transform: translateY(-2px);
-  }
-
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    color: var(--blanco);
-    padding: 14px 28px;
-    border-radius: 2px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--gris-borde);
-    transition: all 0.2s;
-  }
-
-  .btn-secondary:hover {
-    border-color: var(--acento);
-    color: var(--acento);
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 3rem;
-    margin-top: 4rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--gris-borde);
-    flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.44s ease both;
-  }
-
-  .stat-num {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 42px;
-    font-weight: 800;
-    color: var(--acento);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--gris-texto);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 4px;
-  }
-
-  /* SECTION HELPERS */
-  .section-eyebrow {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--acento);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .section-eyebrow::before {
-    content: '';
-    display: block;
-    width: 30px;
-    height: 1px;
-    background: var(--acento);
-  }
-
-  .section-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(36px, 5vw, 56px);
-    font-weight: 800;
-    text-transform: uppercase;
-    line-height: 0.95;
-    letter-spacing: -0.5px;
-  }
-
-  .section-title .outline {
-    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
-    color: transparent;
-  }
-
-  /* RUBROS */
-  #rubros {
-    background: var(--negro);
-    padding: 5rem 2rem;
-  }
-
-  .rubros-wrapper { max-width: 1200px; margin: 0 auto; }
-
-  .rubros-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--gris-borde);
-    border: 1px solid var(--gris-borde);
-    margin-top: 3rem;
-  }
-
-  .rubro-card {
-    background: var(--gris-oscuro);
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .rubro-card.featured { grid-column: span 2; }
-
-  .rubro-card:hover .rubro-overlay { opacity: 1; }
-  .rubro-card:hover .rubro-img-placeholder { transform: scale(1.04); }
-  .rubro-card:hover .rubro-arrow {
-    background: var(--acento);
-    color: var(--negro);
-    border-color: var(--acento);
-  }
-
-  .rubro-img-placeholder {
-    width: 100%;
-    aspect-ratio: 16/9;
-    transition: transform 0.5s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 64px;
-    position: relative;
-  }
-
-  .rubro-card.featured .rubro-img-placeholder { aspect-ratio: 21/9; }
-
-  .bg-aluminio { background: linear-gradient(160deg, #1a2530 0%, #0d1a24 100%); }
-  .bg-chapa    { background: linear-gradient(160deg, #1e1a16 0%, #2a2218 100%); }
-  .bg-madera   { background: linear-gradient(160deg, #1c1408 0%, #261c0c 100%); }
-  .bg-portones { background: linear-gradient(160deg, #141a1c 0%, #0e1618 100%); }
-  .bg-pvc      { background: linear-gradient(160deg, #101820 0%, #0a1018 100%); }
-
-  .rubro-icon { position: relative; z-index: 1; }
-
-  .rubro-deco {
-    position: absolute;
-    inset: 0;
-    opacity: 0.15;
-  }
-
-  .rubro-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(200,149,42,0.15), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 2;
-  }
-
-  .rubro-info {
-    padding: 1.25rem 1.5rem;
-    border-top: 1px solid var(--gris-borde);
-    position: relative;
-  }
-
-  .rubro-tag {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--acento);
-    margin-bottom: 4px;
-  }
-
-  .rubro-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
-  }
-
-  .rubro-card.featured .rubro-name { font-size: 28px; }
-
-  .rubro-desc {
-    font-size: 13px;
-    color: var(--gris-texto);
-    font-weight: 300;
-    line-height: 1.5;
-  }
-
-  .rubro-arrow {
-    position: absolute;
-    right: 1.5rem;
-    bottom: 1.5rem;
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--gris-borde);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--acento);
-    font-size: 16px;
-    transition: all 0.2s;
-  }
-
-  /* FEATURES */
-  .features-section {
-    background: var(--gris-oscuro);
-    border-top: 1px solid var(--gris-borde);
-    border-bottom: 1px solid var(--gris-borde);
-  }
-
-  .features-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 5rem 2rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
-
-  .features-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-  }
-
-  .feature-item { display: flex; gap: 1.25rem; align-items: flex-start; }
-
-  .feature-num {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--acento);
-    letter-spacing: 2px;
-    padding-top: 3px;
-    min-width: 28px;
-  }
-
-  .feature-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 3px;
-  }
-
-  .feature-body {
-    font-size: 13px;
-    color: var(--gris-texto);
-    font-weight: 300;
-    line-height: 1.6;
-  }
-
-  .features-right {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--gris-borde);
-    border: 1px solid var(--gris-borde);
-  }
-
-  .metric-box {
-    background: var(--negro);
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .metric-box.accent {
-    background: rgba(200,149,42,0.08);
-    border: 1px solid rgba(200,149,42,0.2);
-  }
-
-  .metric-value {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 52px;
-    font-weight: 800;
-    color: var(--acento);
-    line-height: 1;
-  }
-
-  .metric-label {
-    font-size: 12px;
-    color: var(--gris-texto);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 6px;
-  }
-
-  /* CONTACTO */
-  #contacto {
-    background: var(--negro);
-    padding: 5rem 2rem;
-  }
-
-  .contact-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .contact-detail {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    margin-top: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--gris-borde);
-  }
-
-  .contact-detail:last-of-type { border-bottom: none; }
-
-  .contact-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--gris-medio);
-    border: 1px solid var(--gris-borde);
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  .contact-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--acento);
-    margin-bottom: 4px;
-    font-family: 'Barlow Condensed', sans-serif;
-  }
-
-  .contact-value { font-size: 15px; font-weight: 400; color: var(--blanco); }
-
-  /* FORM */
-  .contact-form-box {
-    background: var(--gris-oscuro);
-    border: 1px solid var(--gris-borde);
-    padding: 2rem;
-  }
-
-  .form-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 1.5rem;
-  }
-
-  .form-group { margin-bottom: 1rem; }
-
-  .form-label {
-    display: block;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--gris-texto);
-    margin-bottom: 6px;
-    font-family: 'Barlow Condensed', sans-serif;
-  }
-
-  .form-control {
-    width: 100%;
-    background: var(--negro);
-    border: 1px solid var(--gris-borde);
-    color: var(--blanco);
-    padding: 10px 14px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    border-radius: 0;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .form-control:focus { border-color: var(--acento); }
-  .form-control::placeholder { color: var(--gris-borde); }
-
-  textarea.form-control { resize: vertical; min-height: 90px; }
-
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-  /* FOOTER */
-  footer {
-    background: var(--gris-oscuro);
-    border-top: 1px solid var(--gris-borde);
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .footer-logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-
-  .footer-logo span { color: var(--acento); }
-
-  .footer-copy { font-size: 12px; color: var(--gris-texto); }
-
-  /* WA FLOAT */
-  .wa-float {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 200;
-    background: #25D366;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
-    text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .wa-float:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 28px rgba(37,211,102,0.5);
-  }
-
-  .wa-float svg { width: 28px; height: 28px; fill: white; }
-
-  /* ANIMATE */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-    .rubros-grid { grid-template-columns: 1fr; }
-    .rubro-card.featured { grid-column: span 1; }
-    .features-inner { grid-template-columns: 1fr; }
-    .features-right { grid-template-columns: 1fr 1fr; }
-    .contact-inner { grid-template-columns: 1fr; }
-    .form-grid { grid-template-columns: 1fr; }
-    .hero-stats { gap: 1.5rem; }
-  }
+/* ── HERO ── */
+.hero-banner { background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul) 60%, var(--azul-claro) 100%); position: relative; overflow: hidden; padding: 5rem 2rem; min-height: 520px; display: flex; align-items: center; }
+.hero-banner-pattern { position: absolute; inset: 0; opacity: .05; background-image: repeating-linear-gradient(45deg, white 0, white 1px, transparent 0, transparent 50%); background-size: 20px 20px; }
+.hero-banner-deco { position: absolute; right: -60px; top: -60px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 70%); border-radius: 50%; }
+.hero-content { position: relative; max-width: 1200px; margin: 0 auto; width: 100%; }
+.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); color: white; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1.5rem; }
+.hero-title { font-family: 'Nunito', sans-serif; font-size: clamp(36px,5vw,62px); font-weight: 900; color: white; line-height: 1.1; margin-bottom: 1rem; }
+.hero-title span { color: #fde68a; }
+.hero-subtitle { font-size: 17px; color: rgba(255,255,255,.85); max-width: 520px; margin-bottom: 2.5rem; }
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-hero-primary { background: white; color: var(--azul); padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+.btn-hero-secondary { background: transparent; color: white; border: 2px solid rgba(255,255,255,.5); padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-hero-secondary:hover { background: rgba(255,255,255,.1); border-color: white; }
+.hero-stats { display: flex; gap: 0; margin-top: 3rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 12px; overflow: hidden; width: fit-content; }
+.hero-stat { padding: 1rem 2rem; text-align: center; border-right: 1px solid rgba(255,255,255,.15); }
+.hero-stat:last-child { border-right: none; }
+.hero-stat-num { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900; color: #fde68a; line-height: 1; }
+.hero-stat-label { font-size: 11px; color: rgba(255,255,255,.7); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+/* ── RUBROS ── */
+.rubros-section { padding: 4rem 2rem; background: var(--gris-claro); }
+.rubros-wrapper { max-width: 1200px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: 2.5rem; }
+.rubros-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.rubro-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: all .3s; cursor: pointer; border: 2px solid transparent; text-decoration: none; color: inherit; display: block; }
+.rubro-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,95,173,.15); border-color: var(--azul); }
+.rubro-card.featured { grid-column: span 2; }
+.rubro-img { width: 100%; background: linear-gradient(135deg, var(--azul-suave), #dbeafe); display: flex; align-items: center; justify-content: center; font-size: 56px; }
+.rubro-card .rubro-img { height: 160px; }
+.rubro-card.featured .rubro-img { height: 200px; }
+.rubro-body { padding: 1.25rem; }
+.rubro-tag-pill { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+.rubro-tag-pill.fab { background: #dbeafe; color: var(--azul); }
+.rubro-tag-pill.dist { background: #fef3c7; color: #92400e; }
+.rubro-name { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: var(--negro); margin-bottom: 4px; }
+.rubro-card.featured .rubro-name { font-size: 22px; }
+.rubro-desc { font-size: 13px; color: var(--gris-texto); line-height: 1.5; }
+.rubro-link-text { display: inline-flex; align-items: center; gap: 4px; color: var(--azul); font-size: 13px; font-weight: 700; margin-top: 10px; }
+
+/* ── WHY ── */
+.why-section { padding: 4rem 2rem; background: white; }
+.why-wrapper { max-width: 1200px; margin: 0 auto; }
+.why-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-top: 2.5rem; }
+.why-card { background: var(--gris-claro); border-radius: 12px; padding: 1.75rem 1.5rem; text-align: center; }
+.why-icon { width: 56px; height: 56px; background: var(--azul-suave); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 1rem; }
+.why-title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--negro); margin-bottom: 6px; }
+.why-body { font-size: 13px; color: var(--gris-texto); line-height: 1.5; }
+
+/* ── CTA BAND ── */
+.cta-band { background: linear-gradient(135deg, var(--azul-oscuro), var(--azul)); padding: 3rem 2rem; text-align: center; }
+.cta-band h2 { font-family: 'Nunito', sans-serif; font-size: clamp(22px,3vw,32px); font-weight: 900; color: white; margin-bottom: .75rem; }
+.cta-band p { color: rgba(255,255,255,.8); font-size: 15px; margin-bottom: 1.75rem; }
+.cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.hero-content>*{animation:fadeUp .5s ease both;}
+.hero-content>*:nth-child(1){animation-delay:0s}
+.hero-content>*:nth-child(2){animation-delay:.08s}
+.hero-content>*:nth-child(3){animation-delay:.16s}
+.hero-content>*:nth-child(4){animation-delay:.24s}
+.hero-content>*:nth-child(5){animation-delay:.32s}
+
+@media(max-width:900px){.rubros-grid{grid-template-columns:1fr 1fr}.rubro-card.featured{grid-column:span 2}.why-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.rubros-grid{grid-template-columns:1fr}.rubro-card.featured{grid-column:span 1}.why-grid{grid-template-columns:1fr 1fr}.hero-stats{display:none}}
 </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">Aber<span>tu</span>ras</a>
-  <ul class="nav-links">
-    <li><a href="#rubros">Productos</a></li>
-    <li><a href="#nosotros">Nosotros</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-    <li><a href="https://wa.me/5491100000000" class="nav-cta">WhatsApp</a></li>
-  </ul>
-</nav>
+<div id="header-mount"></div>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-accent-line"></div>
+<section class="hero-banner">
+  <div class="hero-banner-pattern"></div>
+  <div class="hero-banner-deco"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Fábrica &amp; distribución — Buenos Aires</p>
-    <h1 class="hero-title">
-      Aberturas<br>
-      <span class="outline">de</span> <span class="gold">aluminio</span><br>
-      <span class="outline">y más</span>
-    </h1>
-    <p class="hero-subtitle">Fabricamos aberturas de aluminio a medida y comercializamos puertas de chapa, madera, portones y revestimientos de PVC. Todo en un solo lugar.</p>
-    <div class="hero-buttons">
-      <a href="#rubros" class="btn-primary">
-        Ver productos
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-      </a>
-      <a href="https://wa.me/5491100000000" class="btn-secondary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Consultá ahora
-      </a>
+    <div class="hero-badge">🏭 Fábrica propia de aluminio</div>
+    <h1 class="hero-title">Aberturas de <span>aluminio</span><br>y mucho más</h1>
+    <p class="hero-subtitle">Fabricamos ventanas y puertas de aluminio a medida. También distribuimos puertas de chapa, madera, portones y revestimientos PVC.</p>
+    <div class="hero-btns">
+      <a href="ventanas.html" class="btn-hero-primary">Ver productos →</a>
+      <a href="https://wa.me/5491100000000" class="btn-hero-secondary">💬 Consultá por WhatsApp</a>
     </div>
     <div class="hero-stats">
-      <div class="stat-item">
-        <div class="stat-num">+15</div>
-        <div class="stat-label">Años de experiencia</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">+500</div>
-        <div class="stat-label">Obras realizadas</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">5</div>
-        <div class="stat-label">Líneas de producto</div>
-      </div>
+      <div class="hero-stat"><div class="hero-stat-num">+15</div><div class="hero-stat-label">Años en el rubro</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">+500</div><div class="hero-stat-label">Obras realizadas</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">5</div><div class="hero-stat-label">Líneas de producto</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-label">A medida</div></div>
     </div>
   </div>
 </section>
 
 <!-- RUBROS -->
-<section id="rubros">
+<section class="rubros-section">
   <div class="rubros-wrapper">
-    <div class="section-eyebrow">Lo que hacemos</div>
-    <h2 class="section-title">Nuestros<br><span class="outline">productos</span></h2>
-
+    <div class="section-header">
+      <div class="section-badge">Nuestros productos</div>
+      <h2 class="section-title">Todo lo que necesitás para tu obra</h2>
+      <p class="section-subtitle">Fabricación propia de aluminio y distribución de todas las marcas líderes del mercado.</p>
+    </div>
     <div class="rubros-grid">
-
-      <!-- ALUMINIO (fabricación propia) — card grande -->
-      <div class="rubro-card featured">
-        <div class="rubro-img-placeholder bg-aluminio">
-          <svg class="rubro-deco" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid slice" fill="none">
-            <rect x="80" y="40" width="640" height="260" rx="2" stroke="#4a7fa5" stroke-width="1.5"/>
-            <line x1="400" y1="40" x2="400" y2="300" stroke="#4a7fa5" stroke-width="1.5"/>
-            <rect x="88" y="48" width="304" height="244" rx="1" fill="rgba(74,127,165,0.06)" stroke="#4a7fa5" stroke-width="0.8"/>
-            <rect x="400" y="48" width="312" height="244" rx="1" fill="rgba(74,127,165,0.06)" stroke="#4a7fa5" stroke-width="0.8"/>
-            <line x1="88" y1="169" x2="392" y2="169" stroke="#4a7fa5" stroke-width="0.8"/>
-            <line x1="400" y1="169" x2="712" y2="169" stroke="#4a7fa5" stroke-width="0.8"/>
-            <circle cx="396" cy="169" r="6" fill="#4a7fa5" opacity="0.6"/>
-            <rect x="70" y="30" width="660" height="16" rx="1" fill="#4a7fa5" opacity="0.12"/>
-            <rect x="70" y="295" width="660" height="16" rx="1" fill="#4a7fa5" opacity="0.12"/>
-            <rect x="70" y="30" width="16" height="282" rx="1" fill="#4a7fa5" opacity="0.12"/>
-            <rect x="714" y="30" width="16" height="282" rx="1" fill="#4a7fa5" opacity="0.12"/>
-            <line x1="130" y1="48" x2="170" y2="130" stroke="rgba(200,230,255,0.08)" stroke-width="20"/>
-            <line x1="460" y1="48" x2="500" y2="130" stroke="rgba(200,230,255,0.08)" stroke-width="20"/>
-          </svg>
-          <span class="rubro-icon" style="font-size:56px;">🪟</span>
-        </div>
-        <div class="rubro-info">
-          <div class="rubro-tag">Fabricación propia</div>
+      <a href="ventanas.html" class="rubro-card featured">
+        <div class="rubro-img">🪟</div>
+        <div class="rubro-body">
+          <span class="rubro-tag-pill fab">Fabricación propia</span>
           <div class="rubro-name">Aberturas de aluminio</div>
-          <div class="rubro-desc">Ventanas y puertas de aluminio fabricadas en nuestro taller. Corredizas, abatibles, paños fijos y proyectantes. A medida, en colores y con vidrio incluido.</div>
-          <div class="rubro-arrow">→</div>
+          <div class="rubro-desc">Ventanas y puertas de aluminio fabricadas en nuestro taller. Corredizas, abatibles, proyectantes y paños fijos. A medida, todos los colores, con vidrio.</div>
+          <div class="rubro-link-text">Ver catálogo →</div>
         </div>
-        <div class="rubro-overlay"></div>
-      </div>
-
-      <!-- PUERTAS DE CHAPA -->
-      <div class="rubro-card">
-        <div class="rubro-img-placeholder bg-chapa">
-          <svg class="rubro-deco" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" fill="none">
-            <rect x="80" y="20" width="240" height="200" rx="2" stroke="#8a6a40" stroke-width="1.5"/>
-            <rect x="88" y="28" width="224" height="184" rx="1" fill="rgba(138,106,64,0.06)" stroke="#8a6a40" stroke-width="0.8"/>
-            <rect x="96" y="36" width="208" height="80" rx="1" fill="rgba(138,106,64,0.08)" stroke="#8a6a40" stroke-width="0.6"/>
-            <rect x="96" y="124" width="208" height="80" rx="1" fill="rgba(138,106,64,0.08)" stroke="#8a6a40" stroke-width="0.6"/>
-            <circle cx="288" cy="152" r="8" fill="#8a6a40" opacity="0.5"/>
-            <circle cx="288" cy="152" r="3" fill="#8a6a40" opacity="0.8"/>
-          </svg>
-          <span class="rubro-icon" style="font-size:44px;">🚪</span>
-        </div>
-        <div class="rubro-info">
-          <div class="rubro-tag">Venta &amp; distribución</div>
+      </a>
+      <a href="puertas.html" class="rubro-card">
+        <div class="rubro-img">🚪</div>
+        <div class="rubro-body">
+          <span class="rubro-tag-pill dist">Distribución</span>
           <div class="rubro-name">Puertas de chapa</div>
-          <div class="rubro-desc">Puertas de chapa lisa y plegada para exterior e interior, con marcos y accesorios.</div>
-          <div class="rubro-arrow">→</div>
+          <div class="rubro-desc">Lisa y plegada, con marco. Para exterior e interior.</div>
+          <div class="rubro-link-text">Ver catálogo →</div>
         </div>
-        <div class="rubro-overlay"></div>
-      </div>
-
-      <!-- PORTONES -->
-      <div class="rubro-card">
-        <div class="rubro-img-placeholder bg-portones">
-          <svg class="rubro-deco" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" fill="none">
-            <rect x="30" y="60" width="340" height="160" rx="2" stroke="#4a7a4a" stroke-width="1.5"/>
-            <line x1="30" y1="100" x2="370" y2="100" stroke="#4a7a4a" stroke-width="1"/>
-            <line x1="30" y1="140" x2="370" y2="140" stroke="#4a7a4a" stroke-width="1"/>
-            <line x1="30" y1="180" x2="370" y2="180" stroke="#4a7a4a" stroke-width="1"/>
-            <line x1="200" y1="60" x2="200" y2="220" stroke="#4a7a4a" stroke-width="2"/>
-            <circle cx="196" cy="140" r="6" fill="#4a7a4a" opacity="0.5"/>
-            <circle cx="204" cy="140" r="6" fill="#4a7a4a" opacity="0.5"/>
-            <rect x="22" y="55" width="356" height="12" rx="1" fill="#4a7a4a" opacity="0.15"/>
-          </svg>
-          <span class="rubro-icon" style="font-size:44px;">🏗️</span>
-        </div>
-        <div class="rubro-info">
-          <div class="rubro-tag">Venta &amp; distribución</div>
+      </a>
+      <a href="puertas.html" class="rubro-card">
+        <div class="rubro-img">🏗️</div>
+        <div class="rubro-body">
+          <span class="rubro-tag-pill dist">Distribución</span>
           <div class="rubro-name">Portones</div>
-          <div class="rubro-desc">Portones de chapa y aluminio para garajes y entradas vehiculares. Manuales y con motorización.</div>
-          <div class="rubro-arrow">→</div>
+          <div class="rubro-desc">Chapa y aluminio para garajes. Manuales y con motor.</div>
+          <div class="rubro-link-text">Ver catálogo →</div>
         </div>
-        <div class="rubro-overlay"></div>
-      </div>
-
-      <!-- PUERTAS DE MADERA -->
-      <div class="rubro-card">
-        <div class="rubro-img-placeholder bg-madera">
-          <svg class="rubro-deco" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" fill="none">
-            <rect x="90" y="15" width="220" height="210" rx="2" stroke="#7a5a30" stroke-width="1.5"/>
-            <rect x="100" y="25" width="90" height="85" rx="1" fill="rgba(122,90,48,0.1)" stroke="#7a5a30" stroke-width="0.8"/>
-            <rect x="210" y="25" width="90" height="85" rx="1" fill="rgba(122,90,48,0.1)" stroke="#7a5a30" stroke-width="0.8"/>
-            <rect x="100" y="120" width="200" height="95" rx="1" fill="rgba(122,90,48,0.08)" stroke="#7a5a30" stroke-width="0.8"/>
-            <circle cx="298" cy="135" r="6" fill="#7a5a30" opacity="0.6"/>
-          </svg>
-          <span class="rubro-icon" style="font-size:44px;">🪵</span>
-        </div>
-        <div class="rubro-info">
-          <div class="rubro-tag">Venta &amp; distribución</div>
+      </a>
+      <a href="puertas.html" class="rubro-card">
+        <div class="rubro-img">🪵</div>
+        <div class="rubro-body">
+          <span class="rubro-tag-pill dist">Distribución</span>
           <div class="rubro-name">Puertas de madera</div>
-          <div class="rubro-desc">Puertas de interior en madera sólida y HDF. Varias terminaciones y tamaños estándar.</div>
-          <div class="rubro-arrow">→</div>
+          <div class="rubro-desc">Interior HDF y madera sólida. Varias terminaciones.</div>
+          <div class="rubro-link-text">Ver catálogo →</div>
         </div>
-        <div class="rubro-overlay"></div>
-      </div>
-
-      <!-- PVC -->
-      <div class="rubro-card">
-        <div class="rubro-img-placeholder bg-pvc">
-          <svg class="rubro-deco" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" fill="none">
-            <rect x="20" y="30" width="360" height="180" rx="2" stroke="#3a6080" stroke-width="1.5"/>
-            <line x1="20" y1="60" x2="380" y2="60" stroke="#3a6080" stroke-width="1"/>
-            <line x1="20" y1="90" x2="380" y2="90" stroke="#3a6080" stroke-width="1"/>
-            <line x1="20" y1="120" x2="380" y2="120" stroke="#3a6080" stroke-width="1"/>
-            <line x1="20" y1="150" x2="380" y2="150" stroke="#3a6080" stroke-width="1"/>
-            <line x1="20" y1="180" x2="380" y2="180" stroke="#3a6080" stroke-width="1"/>
-            <rect x="28" y="38" width="60" height="16" rx="1" fill="#3a6080" opacity="0.2"/>
-            <rect x="28" y="68" width="100" height="16" rx="1" fill="#3a6080" opacity="0.2"/>
-            <rect x="28" y="98" width="80" height="16" rx="1" fill="#3a6080" opacity="0.2"/>
-            <rect x="28" y="128" width="120" height="16" rx="1" fill="#3a6080" opacity="0.2"/>
-            <rect x="28" y="158" width="70" height="16" rx="1" fill="#3a6080" opacity="0.2"/>
-          </svg>
-          <span class="rubro-icon" style="font-size:44px;">🏠</span>
-        </div>
-        <div class="rubro-info">
-          <div class="rubro-tag">Venta &amp; distribución</div>
+      </a>
+      <a href="revestimientos.html" class="rubro-card">
+        <div class="rubro-img">🏠</div>
+        <div class="rubro-body">
+          <span class="rubro-tag-pill dist">Distribución</span>
           <div class="rubro-name">Revestimientos PVC</div>
-          <div class="rubro-desc">Cielorrasos, zócalos y revestimientos de PVC. Resistentes a la humedad, fácil instalación.</div>
-          <div class="rubro-arrow">→</div>
+          <div class="rubro-desc">Cielorrasos, zócalos y paredes. Resistentes a la humedad.</div>
+          <div class="rubro-link-text">Ver catálogo →</div>
         </div>
-        <div class="rubro-overlay"></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- POR QUÉ ELEGIRNOS -->
-<section id="nosotros" class="features-section">
-  <div class="features-inner">
-    <div>
-      <div class="section-eyebrow">Por qué elegirnos</div>
-      <h2 class="section-title" style="font-size: clamp(32px,4vw,48px);">Calidad<br><span class="outline">garantizada</span></h2>
-      <ul class="features-list">
-        <li class="feature-item">
-          <span class="feature-num">01</span>
-          <div>
-            <div class="feature-title">Fábrica propia de aluminio</div>
-            <div class="feature-body">Fabricamos en nuestro taller, sin intermediarios. Control total del proceso y los tiempos.</div>
-          </div>
-        </li>
-        <li class="feature-item">
-          <span class="feature-num">02</span>
-          <div>
-            <div class="feature-title">Medidas a pedido</div>
-            <div class="feature-body">Trabajamos con planos y tomamos medidas en obra. Cada abertura es personalizada.</div>
-          </div>
-        </li>
-        <li class="feature-item">
-          <span class="feature-num">03</span>
-          <div>
-            <div class="feature-title">Todo en un lugar</div>
-            <div class="feature-body">Aluminio, chapa, madera, portones y PVC. Un solo proveedor para toda la obra.</div>
-          </div>
-        </li>
-        <li class="feature-item">
-          <span class="feature-num">04</span>
-          <div>
-            <div class="feature-title">Asesoramiento técnico</div>
-            <div class="feature-body">Te ayudamos a elegir el sistema correcto según uso, ubicación y presupuesto.</div>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="features-right">
-      <div class="metric-box">
-        <div class="metric-value">+15</div>
-        <div class="metric-label">Años en el rubro</div>
-      </div>
-      <div class="metric-box accent">
-        <div class="metric-value">100%</div>
-        <div class="metric-label">A medida</div>
-      </div>
-      <div class="metric-box accent">
-        <div class="metric-value">5</div>
-        <div class="metric-label">Líneas de producto</div>
-      </div>
-      <div class="metric-box">
-        <div class="metric-value">+500</div>
-        <div class="metric-label">Obras entregadas</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACTO -->
-<section id="contacto">
-  <div class="contact-inner">
-    <div>
-      <div class="section-eyebrow">Hablemos</div>
-      <h2 class="section-title" style="font-size: clamp(32px,4vw,48px); margin-bottom: 0.5rem;">Pedí tu<br><span class="outline">presupuesto</span></h2>
-      <p style="color: var(--gris-texto); font-size: 14px; margin-bottom: 1rem;">Sin compromiso. Respondemos dentro de las 24hs hábiles.</p>
-
-      <div class="contact-detail">
-        <div class="contact-icon">📍</div>
-        <div>
-          <div class="contact-label">Ubicación</div>
-          <div class="contact-value">Buenos Aires, Argentina</div>
-        </div>
-      </div>
-      <div class="contact-detail">
-        <div class="contact-icon">📱</div>
-        <div>
-          <div class="contact-label">WhatsApp</div>
-          <div class="contact-value">+54 9 11 0000-0000</div>
-        </div>
-      </div>
-      <div class="contact-detail">
-        <div class="contact-icon">✉️</div>
-        <div>
-          <div class="contact-label">Email</div>
-          <div class="contact-value">contacto@empresa.com.ar</div>
-        </div>
-      </div>
-      <div class="contact-detail">
-        <div class="contact-icon">🕐</div>
-        <div>
-          <div class="contact-label">Horario</div>
-          <div class="contact-value">Lun a Vie 8–18hs · Sáb 8–13hs</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="contact-form-box">
-      <div class="form-title">Contactanos</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label">Nombre</label>
-          <input type="text" class="form-control" placeholder="Tu nombre">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Teléfono</label>
-          <input type="tel" class="form-control" placeholder="11 0000-0000">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-control" placeholder="tu@email.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">¿Qué producto te interesa?</label>
-        <select class="form-control" style="cursor:pointer; background: var(--negro);">
-          <option value="">Seleccioná un rubro...</option>
-          <option>Aberturas de aluminio (fabricación)</option>
-          <option>Puertas de chapa</option>
-          <option>Portones</option>
-          <option>Puertas de madera / interior</option>
-          <option>Revestimientos de PVC</option>
-          <option>Varios rubros</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mensaje</label>
-        <textarea class="form-control" placeholder="Contanos qué necesitás..."></textarea>
-      </div>
-      <a href="https://wa.me/5491100000000" class="btn-primary" style="width:100%; justify-content:center; text-align:center; display:flex; margin-top: 0.5rem;">
-        Enviar por WhatsApp →
       </a>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Aber<span>tu</span>ras</div>
-  <p class="footer-copy">© 2025 — Fábrica y distribución de aberturas · Buenos Aires</p>
-</footer>
+<!-- WHY -->
+<section class="why-section">
+  <div class="why-wrapper">
+    <div class="section-header">
+      <div class="section-badge">Por qué elegirnos</div>
+      <h2 class="section-title">Más de 15 años con calidad garantizada</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon">🏭</div><div class="why-title">Fábrica propia</div><div class="why-body">Fabricamos aluminio en nuestro taller sin intermediarios, con control total del proceso.</div></div>
+      <div class="why-card"><div class="why-icon">📐</div><div class="why-title">Medidas a pedido</div><div class="why-body">Tomamos medidas en obra. Cada abertura se fabrica según tu proyecto.</div></div>
+      <div class="why-card"><div class="why-icon">🛒</div><div class="why-title">Todo en un lugar</div><div class="why-body">Aluminio, chapa, madera, portones y PVC. Un solo proveedor para toda la obra.</div></div>
+      <div class="why-card"><div class="why-icon">💬</div><div class="why-title">Asesoramiento</div><div class="why-body">Te ayudamos a elegir el sistema correcto según uso, ubicación y presupuesto.</div></div>
+    </div>
+  </div>
+</section>
 
-<!-- WA FLOTANTE -->
-<a href="https://wa.me/5491100000000" class="wa-float" title="Escribinos por WhatsApp">
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-  </svg>
-</a>
+<!-- CTA -->
+<div class="cta-band">
+  <h2>¿Listo para cotizar tu proyecto?</h2>
+  <p>Respondemos dentro de las 24hs hábiles. Sin compromiso.</p>
+  <div class="cta-btns">
+    <a href="contacto.html" class="btn-hero-primary">Pedir presupuesto →</a>
+    <a href="https://wa.me/5491100000000" class="btn-hero-secondary">💬 WhatsApp</a>
+  </div>
+</div>
 
+<div id="footer-mount"></div>
+<div id="cart-mount"></div>
+
+<script src="partials.js"></script>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderNav('index.html');
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+  document.getElementById('cart-mount').innerHTML = renderCartSidebar();
+</script>
 </body>
 </html>

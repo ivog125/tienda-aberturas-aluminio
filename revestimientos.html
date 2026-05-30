@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revestimientos PVC — Aberturas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="page-banner">
+  <div class="page-banner-pattern"></div>
+  <div class="page-banner-inner">
+    <div class="page-breadcrumb"><a href="index.html">Inicio</a><span>›</span> Revestimientos PVC</div>
+    <h1 class="page-title">🏠 Revestimientos PVC</h1>
+    <p class="page-subtitle">Cielorrasos, paredes y zócalos · Resistentes a la humedad · Fácil instalación</p>
+  </div>
+</div>
+
+<section class="productos-section">
+  <div class="productos-wrapper">
+    <div class="tabs-row">
+      <button class="tab-btn active" onclick="switchTab('fijos')">💰 Precio fijo</button>
+      <button class="tab-btn" onclick="switchTab('medida')">📋 Consulta especial</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-fijos">
+      <div class="productos-layout">
+        <aside class="sidebar">
+          <div class="sidebar-title">🔍 Filtrar</div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Tipo</div>
+            <button class="sidebar-link active" onclick="filtrar('todos',this)">Todos <span class="count">6</span></button>
+            <button class="sidebar-link" onclick="filtrar('Cielorraso',this)">Cielorraso <span class="count">2</span></button>
+            <button class="sidebar-link" onclick="filtrar('Pared',this)">Pared <span class="count">2</span></button>
+            <button class="sidebar-link" onclick="filtrar('Zocalo',this)">Zócalo <span class="count">2</span></button>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Acceso rápido</div>
+            <button class="sidebar-link" onclick="switchTab('medida')">📋 Consulta especial</button>
+            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
+          </div>
+        </aside>
+        <div>
+          <div class="productos-grid" id="productos-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-medida">
+      <p style="font-size:13px;color:var(--gris-texto);margin-bottom:1.5rem;max-width:600px;font-weight:600;">
+        ¿Necesitás cantidad especial, color específico o asesoramiento? Completá el formulario y te contactamos.
+      </p>
+      <div class="medida-grid">
+        <div class="medida-card">
+          <div class="medida-card-header">
+            <div class="medida-icono">🏠</div>
+            <div><div class="medida-titulo">Consulta de revestimiento</div><div class="medida-tag">Asesoramiento personalizado</div></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Tipo</label>
+              <select id="r-tipo"><option value="">Seleccionar...</option><option>Cielorraso</option><option>Revestimiento de pared</option><option>Zócalo</option><option>Combinado</option></select>
+            </div>
+            <div class="form-field"><label>Superficie (m²)</label>
+              <input type="number" id="r-sup" placeholder="Ej: 30">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Color / terminación</label>
+              <select id="r-color"><option value="">Seleccionar...</option><option>Blanco liso</option><option>Blanco texturado</option><option>Madera</option><option>Mármol</option><option>Otro</option></select>
+            </div>
+            <div class="form-field"><label>Cantidad (cajas)</label>
+              <input type="number" id="r-cant" value="1" min="1">
+            </div>
+          </div>
+          <div class="form-field full" style="margin-top:4px;"><label>Observaciones</label><textarea id="r-obs" placeholder="Medidas del ambiente, tipo de instalación, etc."></textarea></div>
+          <button class="btn-consultar" onclick="submitRevestimiento()">+ Agregar consulta al carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-mount"></div>
+<div id="cart-mount"></div>
+
+<script src="partials.js"></script>
+<script src="shared.js"></script>
+<script>
+document.getElementById('header-mount').innerHTML = renderNav('revestimientos.html');
+document.getElementById('footer-mount').innerHTML = renderFooter();
+document.getElementById('cart-mount').innerHTML = renderCartSidebar();
+
+const PRODUCTOS = [
+  { id:301, icono:'🏠', nombre:'Panel PVC cielorraso blanco liso', desc:'Panel de 25cm de ancho. Resistente a la humedad.', precio:8500, unidad:'m²', tipo:'Cielorraso' },
+  { id:302, icono:'🏠', nombre:'Panel PVC cielorraso texturado', desc:'Panel de 25cm con textura. Ideal para baños y cocinas.', precio:9800, unidad:'m²', tipo:'Cielorraso' },
+  { id:303, icono:'🏠', nombre:'Revestimiento PVC pared blanco', desc:'Panel de 20cm de ancho. Resistente a la humedad.', precio:7200, unidad:'m²', tipo:'Pared' },
+  { id:304, icono:'🏠', nombre:'Revestimiento PVC pared madera', desc:'Panel efecto madera. Apto para interior.', precio:10500, unidad:'m²', tipo:'Pared' },
+  { id:305, icono:'🏠', nombre:'Zócalo PVC 10cm blanco', desc:'Zócalo de PVC flexible 10cm. Por metro lineal.', precio:2200, unidad:'ml', tipo:'Zocalo' },
+  { id:306, icono:'🏠', nombre:'Zócalo PVC 15cm blanco', desc:'Zócalo de PVC flexible 15cm. Por metro lineal.', precio:2900, unidad:'ml', tipo:'Zocalo' },
+];
+
+const qtyMap = {};
+PRODUCTOS.forEach(p=>{ qtyMap[p.id]=1; });
+
+function renderProductos(filtro){
+  const lista = filtro==='todos' ? PRODUCTOS : PRODUCTOS.filter(p=>p.tipo===filtro);
+  document.getElementById('productos-grid').innerHTML = lista.map(p=>`
+    <div class="producto-card">
+      <div class="producto-img">
+        <span class="producto-rubro-badge">${p.tipo}</span>${p.icono}
+      </div>
+      <div class="producto-body">
+        <div class="producto-nombre">${p.nombre}</div>
+        <div class="producto-desc">${p.desc}</div>
+        <div class="producto-precio">$${p.precio.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad}</span></div>
+        <div class="producto-actions">
+          <div class="qty-control">
+            <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
+            <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]||1}</span>
+            <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
+          </div>
+          <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function cambiarQty(id,d){ qtyMap[id]=Math.max(1,(qtyMap[id]||1)+d); const el=document.getElementById('qty-'+id); if(el) el.textContent=qtyMap[id]; }
+
+function addToCart(id){
+  const p=PRODUCTOS.find(x=>x.id===id); if(!p) return;
+  agregarFijo({id:p.id,icono:p.icono,nombre:p.nombre,precio:p.precio,unidad:p.unidad,qty:qtyMap[id]||1});
+  showToast('✓ '+p.nombre+' agregado');
+  const btn=document.getElementById('btn-'+id);
+  if(btn){btn.textContent='✓ Agregado';btn.classList.add('agregado');setTimeout(()=>{btn.textContent='+ Agregar';btn.classList.remove('agregado');},1500);}
+}
+
+function filtrar(tipo,el){
+  document.querySelectorAll('.sidebar-link').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderProductos(tipo);
+}
+
+function submitRevestimiento(){
+  const t=document.getElementById('r-tipo').value,s=document.getElementById('r-sup').value;
+  const c=document.getElementById('r-color').value,o=document.getElementById('r-obs').value;
+  const qty=parseInt(document.getElementById('r-cant').value)||1;
+  if(!t){showToast('⚠ Seleccioná el tipo de revestimiento');return;}
+  agregarMedida({icono:'🏠',nombre:'Revestimiento PVC consulta',detalle:`${t}${s?' · '+s+'m²':''}${c?' · '+c:''}${o?' · '+o:''}`,qty});
+  showToast('✓ Consulta agregada al carrito');
+  ['r-tipo','r-sup','r-color','r-obs'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('r-cant').value=1;
+  openCart();
+}
+
+renderProductos('todos');
+</script>
+</body>
+</html>

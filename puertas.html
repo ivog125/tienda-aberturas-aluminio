@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puertas y Portones — Aberturas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="page-banner">
+  <div class="page-banner-pattern"></div>
+  <div class="page-banner-inner">
+    <div class="page-breadcrumb"><a href="index.html">Inicio</a><span>›</span> Puertas y Portones</div>
+    <h1 class="page-title">🚪 Puertas y Portones</h1>
+    <p class="page-subtitle">Puertas de chapa, madera y portones · Distribución de marcas líderes</p>
+  </div>
+</div>
+
+<section class="productos-section">
+  <div class="productos-wrapper">
+    <div class="tabs-row">
+      <button class="tab-btn active" onclick="switchTab('fijos')">💰 Precio fijo</button>
+      <button class="tab-btn" onclick="switchTab('medida')">📐 Portones a medida</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-fijos">
+      <div class="productos-layout">
+        <aside class="sidebar">
+          <div class="sidebar-title">🔍 Filtrar</div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Categoría</div>
+            <button class="sidebar-link active" onclick="filtrar('todos',this)">Todos <span class="count">8</span></button>
+            <button class="sidebar-link" onclick="filtrar('Chapa',this)">Puertas de chapa <span class="count">3</span></button>
+            <button class="sidebar-link" onclick="filtrar('Madera',this)">Puertas de madera <span class="count">3</span></button>
+            <button class="sidebar-link" onclick="filtrar('Porton',this)">Portones <span class="count">2</span></button>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Acceso rápido</div>
+            <button class="sidebar-link" onclick="switchTab('medida')">📐 Portón a medida</button>
+            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
+          </div>
+        </aside>
+        <div>
+          <div class="productos-grid" id="productos-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-medida">
+      <p style="font-size:13px;color:var(--gris-texto);margin-bottom:1.5rem;max-width:600px;font-weight:600;">
+        Completá las especificaciones. Te enviamos el presupuesto a la brevedad.
+      </p>
+      <div class="medida-grid">
+        <div class="medida-card">
+          <div class="medida-card-header">
+            <div class="medida-icono">🏗️</div>
+            <div><div class="medida-titulo">Portón a medida</div><div class="medida-tag">Precio a confirmar</div></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Ancho (cm)</label><input type="number" id="pt-ancho" placeholder="Ej: 300"></div>
+            <div class="form-field"><label>Alto (cm)</label><input type="number" id="pt-alto" placeholder="Ej: 200"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Material</label>
+              <select id="pt-mat"><option value="">Seleccionar...</option><option>Chapa</option><option>Aluminio</option><option>Mixto</option></select>
+            </div>
+            <div class="form-field"><label>Apertura</label>
+              <select id="pt-apertura"><option value="">Seleccionar...</option><option>Batiente 1 hoja</option><option>Batiente 2 hojas</option><option>Corredizo</option><option>Seccional</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Motorización</label>
+              <select id="pt-motor"><option>No</option><option>Sí, incluir</option><option>Consultar aparte</option></select>
+            </div>
+            <div class="form-field"><label>Cantidad</label><input type="number" id="pt-cant" value="1" min="1"></div>
+          </div>
+          <div class="form-field full" style="margin-top:4px;"><label>Observaciones</label><textarea id="pt-obs" placeholder="Detalles adicionales..."></textarea></div>
+          <button class="btn-consultar" onclick="submitPorton()">+ Agregar al carrito</button>
+        </div>
+
+        <div class="medida-card">
+          <div class="medida-card-header">
+            <div class="medida-icono">🚪</div>
+            <div><div class="medida-titulo">Puerta de chapa a medida</div><div class="medida-tag">Precio a confirmar</div></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Ancho (cm)</label><input type="number" id="ch-ancho" placeholder="Ej: 90"></div>
+            <div class="form-field"><label>Alto (cm)</label><input type="number" id="ch-alto" placeholder="Ej: 210"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Tipo</label>
+              <select id="ch-tipo"><option value="">Seleccionar...</option><option>Lisa</option><option>Plegada</option><option>Con ventiluz</option></select>
+            </div>
+            <div class="form-field"><label>Uso</label>
+              <select id="ch-uso"><option value="">Seleccionar...</option><option>Exterior</option><option>Interior</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Marco incluido</label>
+              <select id="ch-marco"><option>Sí</option><option>No</option></select>
+            </div>
+            <div class="form-field"><label>Cantidad</label><input type="number" id="ch-cant" value="1" min="1"></div>
+          </div>
+          <div class="form-field full" style="margin-top:4px;"><label>Observaciones</label><textarea id="ch-obs" placeholder="Detalles adicionales..."></textarea></div>
+          <button class="btn-consultar" onclick="submitChapa()">+ Agregar al carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-mount"></div>
+<div id="cart-mount"></div>
+
+<script src="partials.js"></script>
+<script src="shared.js"></script>
+<script>
+document.getElementById('header-mount').innerHTML = renderNav('puertas.html');
+document.getElementById('footer-mount').innerHTML = renderFooter();
+document.getElementById('cart-mount').innerHTML = renderCartSidebar();
+
+const PRODUCTOS = [
+  { id:201, icono:'🚪', nombre:'Puerta de chapa lisa', desc:'Chapa 0.6mm, 80×200cm. Marco incluido.', precio:85000, unidad:'unidad', tipo:'Chapa' },
+  { id:202, icono:'🚪', nombre:'Puerta de chapa plegada', desc:'Chapa 0.8mm, 80×200cm. Marco incluido.', precio:110000, unidad:'unidad', tipo:'Chapa' },
+  { id:203, icono:'🚪', nombre:'Puerta de chapa con ventiluz', desc:'Chapa 0.6mm con ventiluz superior, 80×210cm.', precio:125000, unidad:'unidad', tipo:'Chapa' },
+  { id:204, icono:'🪵', nombre:'Puerta interior HDF', desc:'HDF sin marco. Terminación enchapada.', precio:65000, unidad:'unidad', tipo:'Madera' },
+  { id:205, icono:'🪵', nombre:'Puerta madera sólida', desc:'Madera sólida premium 80×200cm.', precio:145000, unidad:'unidad', tipo:'Madera' },
+  { id:206, icono:'🪵', nombre:'Puerta placa cedro', desc:'Placa con alma de cedro, 80×200cm. Marco opcional.', precio:89000, unidad:'unidad', tipo:'Madera' },
+  { id:207, icono:'🏗️', nombre:'Portón chapa simple hoja', desc:'Portón de chapa 200×200cm. Manual.', precio:320000, unidad:'unidad', tipo:'Porton' },
+  { id:208, icono:'🏗️', nombre:'Portón chapa doble hoja', desc:'Portón de chapa 300×200cm. Manual.', precio:480000, unidad:'unidad', tipo:'Porton' },
+];
+
+const qtyMap = {};
+PRODUCTOS.forEach(p => { qtyMap[p.id]=1; });
+
+function renderProductos(filtro) {
+  const lista = filtro==='todos' ? PRODUCTOS : PRODUCTOS.filter(p=>p.tipo===filtro);
+  document.getElementById('productos-grid').innerHTML = lista.map(p=>`
+    <div class="producto-card">
+      <div class="producto-img">
+        <span class="producto-rubro-badge">${p.tipo}</span>${p.icono}
+      </div>
+      <div class="producto-body">
+        <div class="producto-nombre">${p.nombre}</div>
+        <div class="producto-desc">${p.desc}</div>
+        <div class="producto-precio">$${p.precio.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad}</span></div>
+        <div class="producto-actions">
+          <div class="qty-control">
+            <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
+            <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]||1}</span>
+            <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
+          </div>
+          <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function cambiarQty(id,d){ qtyMap[id]=Math.max(1,(qtyMap[id]||1)+d); const el=document.getElementById('qty-'+id); if(el) el.textContent=qtyMap[id]; }
+
+function addToCart(id){
+  const p=PRODUCTOS.find(x=>x.id===id); if(!p) return;
+  agregarFijo({id:p.id,icono:p.icono,nombre:p.nombre,precio:p.precio,unidad:p.unidad,qty:qtyMap[id]||1});
+  showToast('✓ '+p.nombre+' agregado');
+  const btn=document.getElementById('btn-'+id);
+  if(btn){btn.textContent='✓ Agregado';btn.classList.add('agregado');setTimeout(()=>{btn.textContent='+ Agregar';btn.classList.remove('agregado');},1500);}
+}
+
+function filtrar(tipo,el){
+  document.querySelectorAll('.sidebar-link').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderProductos(tipo);
+}
+
+function submitPorton(){
+  const a=document.getElementById('pt-ancho').value,al=document.getElementById('pt-alto').value,m=document.getElementById('pt-mat').value;
+  const ap=document.getElementById('pt-apertura').value,mo=document.getElementById('pt-motor').value,o=document.getElementById('pt-obs').value;
+  const qty=parseInt(document.getElementById('pt-cant').value)||1;
+  if(!a||!al||!m){showToast('⚠ Completá ancho, alto y material');return;}
+  agregarMedida({icono:'🏗️',nombre:'Portón a medida',detalle:`${a}×${al}cm · ${m}${ap?' · '+ap:''} · Motor: ${mo}${o?' · '+o:''}`,qty});
+  showToast('✓ Portón agregado al carrito');
+  ['pt-ancho','pt-alto','pt-mat','pt-apertura','pt-obs'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('pt-cant').value=1; document.getElementById('pt-motor').value='No';
+  openCart();
+}
+
+function submitChapa(){
+  const a=document.getElementById('ch-ancho').value,al=document.getElementById('ch-alto').value,t=document.getElementById('ch-tipo').value;
+  const uso=document.getElementById('ch-uso').value,marco=document.getElementById('ch-marco').value,o=document.getElementById('ch-obs').value;
+  const qty=parseInt(document.getElementById('ch-cant').value)||1;
+  if(!a||!al||!t){showToast('⚠ Completá ancho, alto y tipo');return;}
+  agregarMedida({icono:'🚪',nombre:'Puerta de chapa a medida',detalle:`${a}×${al}cm · ${t}${uso?' · '+uso:''} · Marco: ${marco}${o?' · '+o:''}`,qty});
+  showToast('✓ Puerta agregada al carrito');
+  ['ch-ancho','ch-alto','ch-tipo','ch-uso','ch-obs'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('ch-cant').value=1;
+  openCart();
+}
+
+renderProductos('todos');
+</script>
+</body>
+</html>
