@@ -30,9 +30,9 @@ function renderNav(activePage) {
   </div>
   <nav>
     <a class="nav-logo" href="index.html">
-      <div class="nav-logo-icon">🪟</div>
+      <img src="logo.jpg" alt="Omar Aberturas" style="height:52px; width:52px; object-fit:cover; border-radius:8px;">
       <div>
-        <div class="nav-logo-text">Aber<span>turas</span></div>
+        <div class="nav-logo-text">Omar <span>Aberturas</span></div>
         <div class="nav-logo-sub">Fábrica &amp; Distribución</div>
       </div>
     </a>
@@ -85,7 +85,7 @@ function renderFooter() {
   <footer>
     <div class="footer-inner">
       <div>
-        <div class="footer-logo">Aber<span>turas</span></div>
+        <div class="footer-logo">Omar <span>Aberturas</span></div>
         <p class="footer-tagline">Fábrica y distribución de aberturas. Más de 15 años de experiencia en el rubro.</p>
         <div class="footer-social">
           <a href="#">f</a><a href="#">📷</a><a href="#">💬</a>
