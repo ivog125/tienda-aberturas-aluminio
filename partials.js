@@ -9,25 +9,13 @@ function renderNav(activePage) {
     { href: 'ventanas.html',      label: 'Ventanas' },
     { href: 'puertas.html',       label: 'Puertas y Portones' },
     { href: 'revestimientos.html',label: 'Revestimientos' },
-    { href: 'contacto.html',      label: 'Contacto' },
+    { href: 'index.html#obras',   label: 'Obras' },
   ];
   const links = pages.map(p =>
     `<li><a href="${p.href}" class="${activePage === p.href ? 'active' : ''}">${p.label}</a></li>`
   ).join('');
 
   return `
-  <div class="topbar">
-    <div class="topbar-left">
-      <span>📍 Buenos Aires, Argentina</span>
-      <span>·</span>
-      <a href="tel:01100000000" class="topbar-link">📞 (011) 0000-0000</a>
-      <span>·</span>
-      <span>Lun–Vie 8–18hs · Sáb 8–13hs</span>
-    </div>
-    <div class="topbar-right">
-      <a href="contacto.html" class="topbar-link">Contacto</a>
-    </div>
-  </div>
   <nav>
     <a class="nav-logo" href="index.html">
       <img src="logo.jpg" alt="Omar Aberturas" style="height:52px; width:52px; object-fit:cover; border-radius:8px;">
@@ -42,7 +30,6 @@ function renderNav(activePage) {
         🛒 Carrito
         <span class="cart-badge hidden" id="cart-badge">0</span>
       </button>
-      <a href="contacto.html" class="btn-contacto">✉ Contacto</a>
     </div>
   </nav>`;
 }
@@ -107,6 +94,7 @@ function renderFooter() {
           <li><a href="index.html">Inicio</a></li>
           <li><a href="contacto.html">Contacto</a></li>
           <li><a href="contacto.html">Cómo comprar</a></li>
+          <li><a href="index.html#obras">Obras realizadas</a></li>
         </ul>
       </div>
       <div>
