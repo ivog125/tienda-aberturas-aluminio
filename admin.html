@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administración — Omar Aberturas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --rojo: #cc2222; --rojo-oscuro: #8a1515; --rojo-suave: #fce8e8;
+  --negro: #1a1a1a; --gris-claro: #f4f4f4; --gris-medio: #e0e0e0; --gris-texto: #64748b;
+  --verde: #16a34a; --verde-suave: #dcfce7;
+  --amarillo: #d97706; --amarillo-suave: #fef3c7;
+  --azul: #1a5fad; --azul-suave: #dbeafe;
+}
+body { font-family: 'Nunito Sans', sans-serif; background: #f0f2f5; color: var(--negro); min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.admin-topbar { background: var(--negro); color: white; padding: .75rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.admin-logo { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900; }
+.admin-logo span { color: #ff8080; }
+.admin-logo-sub { font-size: 11px; color: rgba(255,255,255,.4); font-weight: 400; letter-spacing: 1px; text-transform: uppercase; margin-left: 10px; }
+.admin-user { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,.6); }
+.admin-avatar { width: 32px; height: 32px; background: var(--rojo); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: white; }
+.admin-exit { color: rgba(255,255,255,.4); font-size: 12px; text-decoration: none; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.15); transition: all .2s; }
+.admin-exit:hover { color: white; border-color: rgba(255,255,255,.4); }
+
+/* ── LAYOUT ── */
+.admin-layout { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 52px); }
+
+/* ── SIDEBAR ── */
+.admin-sidebar { background: white; border-right: 1px solid var(--gris-medio); padding: 1.5rem 1rem; }
+.admin-nav-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gris-texto); margin: 1.5rem 0 .5rem .5rem; }
+.admin-nav-label:first-child { margin-top: 0; }
+.admin-nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--gris-texto); cursor: pointer; text-decoration: none; transition: all .2s; margin-bottom: 2px; }
+.admin-nav-item:hover { background: var(--gris-claro); color: var(--negro); }
+.admin-nav-item.active { background: var(--rojo-suave); color: var(--rojo); font-weight: 700; }
+.admin-nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.admin-nav-badge { margin-left: auto; background: var(--rojo); color: white; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 10px; }
+
+/* ── CONTENIDO ── */
+.admin-content { padding: 2rem; }
+.admin-page-title { font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 900; color: var(--negro); margin-bottom: .25rem; }
+.admin-page-sub { font-size: 13px; color: var(--gris-texto); margin-bottom: 2rem; }
+
+/* ── STATS ── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+.stat-card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; border: 1px solid var(--gris-medio); }
+.stat-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gris-texto); margin-bottom: .5rem; }
+.stat-value { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900; color: var(--negro); line-height: 1; }
+.stat-sub { font-size: 12px; color: var(--gris-texto); margin-top: .35rem; }
+.stat-card.highlight { background: var(--rojo); border-color: var(--rojo); }
+.stat-card.highlight .stat-label { color: rgba(255,255,255,.7); }
+.stat-card.highlight .stat-value { color: white; }
+.stat-card.highlight .stat-sub { color: rgba(255,255,255,.6); }
+
+/* ── TABLA ── */
+.table-card { background: white; border-radius: 12px; border: 1px solid var(--gris-medio); overflow: hidden; }
+.table-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gris-medio); flex-wrap: wrap; gap: 1rem; }
+.table-title { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 900; color: var(--negro); }
+.table-filters { display: flex; gap: 6px; }
+.filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--gris-medio); background: white; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; color: var(--gris-texto); cursor: pointer; transition: all .2s; }
+.filter-btn.active { background: var(--negro); color: white; border-color: var(--negro); }
+.filter-btn:hover:not(.active) { border-color: var(--negro); color: var(--negro); }
+
+table { width: 100%; border-collapse: collapse; }
+thead th { background: var(--gris-claro); padding: .875rem 1.25rem; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gris-texto); border-bottom: 1px solid var(--gris-medio); }
+tbody tr { border-bottom: 1px solid var(--gris-medio); transition: background .15s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fafafa; }
+td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
+.td-id { font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--gris-texto); font-size: 13px; }
+.td-cliente { font-weight: 700; color: var(--negro); }
+.td-cliente-sub { font-size: 12px; color: var(--gris-texto); font-weight: 400; margin-top: 2px; }
+.td-productos { font-size: 13px; color: var(--gris-texto); max-width: 200px; }
+.td-total { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 15px; color: var(--negro); }
+
+/* Badges de estado */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge-pendiente { background: var(--amarillo-suave); color: var(--amarillo); }
+.badge-confirmado { background: var(--azul-suave); color: var(--azul); }
+.badge-entregado { background: var(--verde-suave); color: var(--verde); }
+.badge-cancelado { background: #fee2e2; color: #dc2626; }
+
+/* Acciones */
+.td-acciones { display: flex; gap: 6px; }
+.btn-accion { padding: 5px 12px; border-radius: 6px; border: 1px solid var(--gris-medio); background: white; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all .2s; color: var(--negro); display: flex; align-items: center; gap: 4px; }
+.btn-accion:hover { border-color: var(--negro); background: var(--gris-claro); }
+.btn-accion.wa { border-color: #25D366; color: #25D366; }
+.btn-accion.wa:hover { background: #25D366; color: white; }
+.btn-accion.danger { border-color: #dc2626; color: #dc2626; }
+.btn-accion.danger:hover { background: #dc2626; color: white; }
+
+/* Estado selector */
+.estado-select { border: 1px solid var(--gris-medio); border-radius: 6px; padding: 5px 10px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; background: white; color: var(--negro); cursor: pointer; outline: none; }
+.estado-select:focus { border-color: var(--rojo); }
+
+/* ── AVISO BOCETO ── */
+.boceto-banner { background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; padding: .875rem 1.25rem; margin-bottom: 1.5rem; font-size: 13px; color: #92400e; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+/* ── TOAST ── */
+.admin-toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(12px); background:var(--negro); color:white; padding:10px 20px; border-radius:8px; font-size:13px; font-family:'Nunito',sans-serif; font-weight:700; z-index:500; opacity:0; pointer-events:none; transition:all .3s; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,.2); }
+.admin-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── DRAWER DE DETALLE ── */
+.detalle-overlay { position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:300; opacity:0; pointer-events:none; transition:opacity .3s; }
+.detalle-overlay.open { opacity:1; pointer-events:all; }
+.detalle-drawer { position:fixed; top:0; right:-480px; width:460px; max-width:100vw; height:100vh; background:white; box-shadow:-8px 0 40px rgba(0,0,0,.12); z-index:301; display:flex; flex-direction:column; transition:right .35s cubic-bezier(.4,0,.2,1); }
+.detalle-drawer.open { right:0; }
+.detalle-drawer-header { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 1.5rem; border-bottom:1px solid var(--gris-medio); background:var(--gris-claro); }
+.detalle-drawer-title { font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; color:var(--negro); }
+.detalle-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--gris-texto); padding:4px 8px; border-radius:6px; transition:all .2s; }
+.detalle-close:hover { background:var(--gris-medio); }
+.detalle-body { flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1.25rem; }
+.detalle-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--gris-texto); margin-bottom:.5rem; }
+.detalle-row { display:flex; justify-content:space-between; align-items:flex-start; padding:.5rem 0; border-bottom:1px solid var(--gris-medio); font-size:14px; }
+.detalle-row:last-child { border-bottom:none; }
+.detalle-row-label { color:var(--gris-texto); font-weight:600; }
+.detalle-row-value { font-weight:700; color:var(--negro); text-align:right; }
+.detalle-wa-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:#25D366; color:white; border:none; padding:12px; border-radius:8px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; cursor:pointer; width:100%; margin-top:auto; transition:all .2s; }
+.detalle-wa-btn:hover { background:#1da851; }
+
+@media(max-width:900px) { .stats-grid { grid-template-columns: 1fr 1fr; } .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { display: none; } }
+@media(max-width:640px) { .stats-grid { grid-template-columns: 1fr 1fr; } td, th { padding: .75rem .875rem; } .td-acciones { flex-direction: column; } .detalle-drawer { width:100vw; } }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="admin-topbar">
+  <div style="display:flex; align-items:center;">
+    <div class="admin-logo">Omar <span>Aberturas</span></div>
+    <span class="admin-logo-sub">Panel de administración</span>
+  </div>
+  <div class="admin-user">
+    <div class="admin-avatar">A</div>
+    <span>Adrián</span>
+    <a href="index.html" class="admin-exit">← Volver al sitio</a>
+  </div>
+</div>
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR NAV -->
+  <aside class="admin-sidebar">
+    <div class="admin-nav-label">Principal</div>
+    <a class="admin-nav-item active" href="#">
+      <span class="admin-nav-icon">📦</span> Pedidos
+      <span class="admin-nav-badge">3</span>
+    </a>
+    <a class="admin-nav-item" href="#">
+      <span class="admin-nav-icon">🛒</span> Productos
+    </a>
+    <a class="admin-nav-item" href="#">
+      <span class="admin-nav-icon">🏗️</span> Obras
+    </a>
+    <div class="admin-nav-label">Configuración</div>
+    <a class="admin-nav-item" href="#">
+      <span class="admin-nav-icon">💬</span> WhatsApp
+    </a>
+    <a class="admin-nav-item" href="#">
+      <span class="admin-nav-icon">⚙️</span> Ajustes
+    </a>
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="admin-content">
+    <div class="admin-page-title">Pedidos</div>
+    <div class="admin-page-sub">Todos los pedidos recibidos desde el sitio web.</div>
+
+    <div class="boceto-banner">
+      ⚠ Este es un boceto del panel. En la versión final los pedidos se guardan automáticamente y Adrián los gestiona desde acá.
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card highlight">
+        <div class="stat-label">Pendientes</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">Requieren atención</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total este mes</div>
+        <div class="stat-value">8</div>
+        <div class="stat-sub">Pedidos recibidos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Entregados</div>
+        <div class="stat-value">5</div>
+        <div class="stat-sub">Este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ingresos del mes</div>
+        <div class="stat-value">$1.2M</div>
+        <div class="stat-sub">Solo productos con precio fijo</div>
+      </div>
+    </div>
+
+    <!-- TABLA DE PEDIDOS -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">Todos los pedidos</div>
+        <div class="table-filters">
+          <button class="filter-btn active" onclick="filtrarTabla('todos', this)">Todos</button>
+          <button class="filter-btn" onclick="filtrarTabla('pendiente', this)">Pendientes</button>
+          <button class="filter-btn" onclick="filtrarTabla('confirmado', this)">Confirmados</button>
+          <button class="filter-btn" onclick="filtrarTabla('entregado', this)">Entregados</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Productos</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-pedidos"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="admin-toast" id="admin-toast"></div>
+
+<!-- DRAWER DETALLE -->
+<div class="detalle-overlay" id="detalle-overlay" onclick="cerrarDetalle()"></div>
+<div class="detalle-drawer" id="detalle-drawer">
+  <div class="detalle-drawer-header">
+    <div class="detalle-drawer-title" id="detalle-titulo">Detalle del pedido</div>
+    <button class="detalle-close" onclick="cerrarDetalle()">✕</button>
+  </div>
+  <div class="detalle-body" id="detalle-body"></div>
+</div>
+
+<script>
+const PEDIDOS = [
+  {
+    id: '#008', fecha: '17/06/2025', cliente: 'Martín García', contacto: '11 4523-0012', email: 'mgarcia@email.com',
+    productos: 'Ventana corrediza 150×120cm × 3', total: '$540.000', estado: 'pendiente',
+    wa: 'Hola Martín, recibimos tu pedido de 3 ventanas corredizas. ¿Cuándo podemos coordinar la visita para tomar medidas?'
+  },
+  {
+    id: '#007', fecha: '16/06/2025', cliente: 'Laura Pérez', contacto: '11 6789-4321', email: 'lperez@email.com',
+    productos: 'Puerta de chapa plegada × 2 · Portón a medida', total: 'A confirmar', estado: 'pendiente',
+    wa: 'Hola Laura, recibimos tu consulta. Vamos a preparar el presupuesto para el portón a medida. Te contactamos pronto.'
+  },
+  {
+    id: '#006', fecha: '15/06/2025', cliente: 'Diego Fernández', contacto: '11 2233-5566', email: 'dfernandez@email.com',
+    productos: 'Panel PVC cielorraso blanco × 18m²', total: '$153.000', estado: 'pendiente',
+    wa: 'Hola Diego, ya tenemos tu pedido. ¿Querés coordinar la entrega para esta semana?'
+  },
+  {
+    id: '#005', fecha: '13/06/2025', cliente: 'Empresa Construcciones SRL', contacto: '11 9988-7766', email: 'compras@construcciones.com',
+    productos: 'Ventana proyectante × 12 · Puerta madera sólida × 4', total: '$1.348.000', estado: 'confirmado',
+    wa: 'Hola, les confirmamos el pedido. Fecha estimada de entrega: 25/06.'
+  },
+  {
+    id: '#004', fecha: '10/06/2025', cliente: 'Ana Rodríguez', contacto: '11 5544-3322', email: 'ana.r@email.com',
+    productos: 'Puerta interior HDF × 3', total: '$195.000', estado: 'entregado',
+    wa: ''
+  },
+  {
+    id: '#003', fecha: '08/06/2025', cliente: 'Roberto Sanz', contacto: '11 7711-2233', email: 'rsanz@email.com',
+    productos: 'Portón chapa doble hoja × 1', total: '$480.000', estado: 'entregado',
+    wa: ''
+  },
+];
+
+let estadoActual = {};
+PEDIDOS.forEach(p => { estadoActual[p.id] = p.estado; });
+
+function badgeEstado(e) {
+  const map = { pendiente:'Pendiente', confirmado:'Confirmado', entregado:'Entregado', cancelado:'Cancelado' };
+  return `<span class="badge badge-${e}">${map[e] || e}</span>`;
+}
+
+function renderTabla(filtro) {
+  const lista = filtro === 'todos' ? PEDIDOS : PEDIDOS.filter(p => p.estado === filtro);
+  document.getElementById('tabla-pedidos').innerHTML = lista.map(p => `
+    <tr data-estado="${p.estado}">
+      <td class="td-id">${p.id}</td>
+      <td style="font-size:13px;color:var(--gris-texto);">${p.fecha}</td>
+      <td>
+        <div class="td-cliente">${p.cliente}</div>
+        <div class="td-cliente-sub">${p.contacto}</div>
+      </td>
+      <td class="td-productos">${p.productos}</td>
+      <td class="td-total">${p.total}</td>
+      <td>
+        <select class="estado-select" onchange="cambiarEstado('${p.id}', this.value)">
+          <option value="pendiente" ${estadoActual[p.id]==='pendiente'?'selected':''}>⏳ Pendiente</option>
+          <option value="confirmado" ${estadoActual[p.id]==='confirmado'?'selected':''}>✅ Confirmado</option>
+          <option value="entregado" ${estadoActual[p.id]==='entregado'?'selected':''}>📦 Entregado</option>
+          <option value="cancelado" ${estadoActual[p.id]==='cancelado'?'selected':''}>❌ Cancelado</option>
+        </select>
+      </td>
+      <td>
+        <div class="td-acciones">
+          ${p.wa ? `<button class="btn-accion wa" onclick="responderWA('${p.id}')">💬 WA</button>` : ''}
+          <button class="btn-accion" onclick="verDetalle('${p.id}')">Ver</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filtrarTabla(filtro, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTabla(filtro);
+}
+
+function adminToast(msg) {
+  const t = document.getElementById('admin-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function cambiarEstado(id, nuevoEstado) {
+  estadoActual[id] = nuevoEstado;
+  const labels = { pendiente:'⏳ Pendiente', confirmado:'✅ Confirmado', entregado:'📦 Entregado', cancelado:'❌ Cancelado' };
+  adminToast(`Pedido ${id} → ${labels[nuevoEstado]}`);
+}
+
+function responderWA(id) {
+  const p = PEDIDOS.find(x => x.id === id);
+  if (!p || !p.wa) return;
+  const num = p.contacto.replace(/\D/g, '');
+  window.open(`https://wa.me/549${num}?text=${encodeURIComponent(p.wa)}`, '_blank');
+}
+
+function verDetalle(id) {
+  const p = PEDIDOS.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('detalle-titulo').textContent = `Pedido ${p.id}`;
+  document.getElementById('detalle-body').innerHTML = `
+    <div>
+      <div class="detalle-section-title">Cliente</div>
+      <div class="detalle-row"><span class="detalle-row-label">Nombre</span><span class="detalle-row-value">${p.cliente}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Teléfono</span><span class="detalle-row-value">${p.contacto}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Email</span><span class="detalle-row-value">${p.email}</span></div>
+    </div>
+    <div>
+      <div class="detalle-section-title">Pedido</div>
+      <div class="detalle-row"><span class="detalle-row-label">Fecha</span><span class="detalle-row-value">${p.fecha}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Productos</span><span class="detalle-row-value" style="max-width:220px;">${p.productos}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Total</span><span class="detalle-row-value" style="color:var(--rojo);font-size:18px;">${p.total}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Estado</span><span class="detalle-row-value">${estadoActual[p.id]}</span></div>
+    </div>
+    ${p.wa ? `<button class="detalle-wa-btn" onclick="responderWA('${p.id}')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Responder por WhatsApp
+    </button>` : ''}
+  `;
+  document.getElementById('detalle-overlay').classList.add('open');
+  document.getElementById('detalle-drawer').classList.add('open');
+}
+
+function cerrarDetalle() {
+  document.getElementById('detalle-overlay').classList.remove('open');
+  document.getElementById('detalle-drawer').classList.remove('open');
+}
+
+renderTabla('todos');
+</script>
+</body>
+</html>

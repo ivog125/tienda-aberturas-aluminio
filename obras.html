@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obras realizadas — Omar Aberturas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ── PROCESO ── */
+.proceso-section { background: var(--gris-claro); border-radius: 16px; padding: 3rem 2.5rem; margin-bottom: 3.5rem; }
+.proceso-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--azul); margin-bottom: .75rem; }
+.proceso-title { font-family: "Nunito", sans-serif; font-size: clamp(20px,3vw,28px); font-weight: 900; color: var(--negro); margin-bottom: 2.5rem; line-height: 1.3; }
+.proceso-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+.proceso-step { background: white; border-radius: 12px; padding: 1.5rem; position: relative; border-top: 3px solid var(--azul); }
+.proceso-num { font-family: "Nunito", sans-serif; font-size: 11px; font-weight: 900; color: var(--azul); letter-spacing: 2px; margin-bottom: .5rem; }
+.proceso-icon { font-size: 28px; margin-bottom: .75rem; }
+.proceso-step-title { font-family: "Nunito", sans-serif; font-size: 16px; font-weight: 800; color: var(--negro); margin-bottom: .5rem; }
+.proceso-step-body { font-size: 13px; color: var(--gris-texto); line-height: 1.6; }
+
+/* ── GALERÍA ── */
+.obras-main { padding: 4rem 2rem; background: white; }
+.obras-wrapper { max-width: 1200px; margin: 0 auto; }
+.galeria-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.galeria-title { font-family: "Nunito", sans-serif; font-size: 22px; font-weight: 900; color: var(--negro); }
+.galeria-tabs { display: flex; gap: 6px; }
+.galeria-tab { padding: 7px 18px; border-radius: 20px; border: 1px solid var(--gris-medio); background: white; color: var(--gris-texto); font-family: "Nunito", sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .2s; }
+.galeria-tab.active { background: var(--azul); color: white; border-color: var(--azul); }
+.galeria-tab:hover:not(.active) { border-color: var(--azul); color: var(--azul); }
+
+.carrusel-wrapper { margin-bottom: 3.5rem; }
+.galeria-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.25rem; }
+.carrusel-nav { display: flex; align-items: center; justify-content: center; gap: 1.5rem; }
+.carrusel-btn { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gris-medio); background: white; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all .2s; color: var(--negro); }
+.carrusel-btn:hover:not(:disabled) { border-color: var(--azul); color: var(--azul); background: var(--azul-suave); }
+.carrusel-btn:disabled { opacity: .3; cursor: not-allowed; }
+.carrusel-indicador { font-family: "Nunito", sans-serif; font-size: 14px; font-weight: 700; color: var(--gris-texto); min-width: 48px; text-align: center; }
+.galeria-item { border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; background: var(--gris-claro); aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; transition: transform .3s; }
+.galeria-item:hover { transform: scale(1.02); }
+.galeria-item:hover .galeria-overlay { opacity: 1; }
+.galeria-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: var(--gris-texto); font-size: 13px; }
+.galeria-placeholder-icon { font-size: 36px; opacity: .4; }
+.galeria-placeholder-label { font-family: "Nunito", sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: .5; }
+.galeria-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(204,34,34,.85), transparent 60%); opacity: 0; transition: opacity .3s; display: flex; align-items: flex-end; padding: 1rem 1.25rem; }
+.galeria-overlay-text { color: white; }
+.galeria-overlay-tipo { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: .8; }
+.galeria-overlay-desc { font-family: "Nunito", sans-serif; font-size: 15px; font-weight: 800; }
+
+/* ── TESTIMONIOS ── */
+.testimonios-section { margin: 3.5rem 0; }
+.testimonios-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 2rem; }
+.testimonio-card { background: white; border: 1px solid var(--gris-medio); border-radius: 16px; padding: 1.75rem; transition: all .3s; display: flex; flex-direction: column; }
+.testimonio-card:hover { box-shadow: 0 8px 24px rgba(204,34,34,.1); border-color: var(--azul); transform: translateY(-3px); }
+.testimonio-stars { color: var(--azul); font-size: 17px; letter-spacing: 3px; margin-bottom: .75rem; }
+.testimonio-comilla { font-family: Georgia, serif; font-size: 52px; color: var(--azul); opacity: .15; line-height: .8; margin-bottom: .5rem; }
+.testimonio-texto { font-size: 14px; color: var(--gris-texto); line-height: 1.75; font-style: italic; flex: 1; }
+.testimonio-autor { padding-top: 1.25rem; margin-top: 1.25rem; border-top: 1px solid var(--gris-medio); }
+.testimonio-nombre { font-family: "Nunito", sans-serif; font-size: 15px; font-weight: 800; color: var(--negro); }
+.testimonio-tipo { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--azul); margin-top: 3px; }
+
+/* ── DIRIGIDO ── */
+.dirigido-section { background: var(--gris-claro); border-radius: 16px; padding: 3rem 2.5rem; text-align: center; margin-top: 3.5rem; }
+.dirigido-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 2rem; text-align: left; }
+.dirigido-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--gris-medio); transition: all .3s; }
+.dirigido-card:hover { box-shadow: 0 8px 24px rgba(204,34,34,.12); border-color: var(--azul); transform: translateY(-3px); }
+.dirigido-img { height: 110px; background: linear-gradient(135deg, #1a1a1a, #cc2222); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+.dirigido-body { padding: 1.25rem; }
+.dirigido-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--azul); margin-bottom: 6px; }
+.dirigido-title { font-family: "Nunito", sans-serif; font-size: 17px; font-weight: 800; color: var(--negro); margin-bottom: 6px; }
+.dirigido-desc { font-size: 13px; color: var(--gris-texto); line-height: 1.5; margin-bottom: 1rem; }
+.dirigido-cta { display: inline-flex; align-items: center; gap: 4px; color: var(--azul); font-size: 13px; font-weight: 800; text-decoration: none; transition: gap .2s; font-family: "Nunito", sans-serif; }
+.dirigido-cta:hover { gap: 8px; }
+
+@media(max-width:900px) { .proceso-grid { grid-template-columns:1fr 1fr; } .dirigido-grid { grid-template-columns:1fr; } .galeria-grid { grid-template-columns:1fr 1fr; } .testimonios-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:640px) { .proceso-grid { grid-template-columns:1fr; } .galeria-grid { grid-template-columns:1fr; } .galeria-header { flex-direction:column; align-items:flex-start; } .testimonios-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div id="header-mount"></div>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <div class="page-banner-pattern"></div>
+  <div class="page-banner-inner">
+    <div class="page-breadcrumb"><a href="index.html">Inicio</a><span>›</span> Obras</div>
+    <h1 class="page-title">🏗️ Obras realizadas</h1>
+    <p class="page-subtitle">Más de 500 proyectos entregados · Viviendas, edificios y locales comerciales</p>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<section class="obras-main">
+  <div class="obras-wrapper">
+
+    <!-- PROCESO -->
+    <div class="proceso-section">
+      <div class="proceso-eyebrow">Nuestro proceso</div>
+      <h2 class="proceso-title">Estar en obra es demandante.<br>Conseguir las aberturas no debería serlo.</h2>
+      <div class="proceso-grid">
+        <div class="proceso-step">
+          <div class="proceso-num">01</div>
+          <div class="proceso-icon">&#x1F4AC;</div>
+          <div class="proceso-step-title">Asesoramiento</div>
+          <div class="proceso-step-body">Un vendedor asignado a tu proyecto te ayuda a elegir la mejor opción para cada espacio. Cientos de combinaciones, elegís la correcta.</div>
+        </div>
+        <div class="proceso-step">
+          <div class="proceso-num">02</div>
+          <div class="proceso-icon">&#x1F4D0;</div>
+          <div class="proceso-step-title">Visita y medición</div>
+          <div class="proceso-step-body">Nuestro equipo técnico visita tu obra y toma medidas. Nos aseguramos de que cada abertura cumpla con tus expectativas antes de fabricar.</div>
+        </div>
+        <div class="proceso-step">
+          <div class="proceso-num">03</div>
+          <div class="proceso-icon">&#x1F3ED;</div>
+          <div class="proceso-step-title">Fabricación</div>
+          <div class="proceso-step-body">Fabricamos en nuestro taller con control total del proceso. Coordinamos los tiempos para que el material esté listo cuando lo necesitás.</div>
+        </div>
+        <div class="proceso-step">
+          <div class="proceso-num">04</div>
+          <div class="proceso-icon">&#x1F527;</div>
+          <div class="proceso-step-title">Entrega e instalación</div>
+          <div class="proceso-step-body">Entregamos en obra y si contratás instalación, nuestros colocadores se encargan de que todo quede perfecto.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALERÍA -->
+    <div class="galeria-header">
+      <h3 class="galeria-title">Algunos de nuestros proyectos</h3>
+      <div class="galeria-tabs">
+        <button class="galeria-tab active" onclick="filtrarObras('todos', this)">Todos</button>
+        <button class="galeria-tab" onclick="filtrarObras('vivienda', this)">Viviendas</button>
+        <button class="galeria-tab" onclick="filtrarObras('edificio', this)">Edificios</button>
+        <button class="galeria-tab" onclick="filtrarObras('comercio', this)">Comercios</button>
+      </div>
+    </div>
+
+    <div class="carrusel-wrapper">
+      <div class="galeria-grid" id="galeria-grid"></div>
+      <div class="carrusel-nav">
+        <button class="carrusel-btn" id="carrusel-prev" onclick="cambiarPagina(-1)">←</button>
+        <span class="carrusel-indicador" id="carrusel-indicador">1 / 1</span>
+        <button class="carrusel-btn" id="carrusel-next" onclick="cambiarPagina(1)">→</button>
+      </div>
+    </div>
+
+    <!-- TESTIMONIOS -->
+    <div class="testimonios-section">
+      <div class="section-badge">Lo que dicen nuestros clientes</div>
+      <h3 class="proceso-title">Más de 15 años construyendo confianza</h3>
+      <div class="testimonios-grid">
+        <div class="testimonio-card">
+          <div class="testimonio-stars">★★★★★</div>
+          <div class="testimonio-comilla">"</div>
+          <p class="testimonio-texto">Trabajamos con Omar en un edificio de 24 departamentos. Cumplieron los plazos al día y la calidad fue impecable. Los volvemos a contratar sin dudar.</p>
+          <div class="testimonio-autor">
+            <div class="testimonio-nombre">Martín G.</div>
+            <div class="testimonio-tipo">Constructor · GBA Norte</div>
+          </div>
+        </div>
+        <div class="testimonio-card">
+          <div class="testimonio-stars">★★★★★</div>
+          <div class="testimonio-comilla">"</div>
+          <p class="testimonio-texto">Construí mi casa y Omar me asesoró desde el principio. Me ayudaron a elegir las ventanas correctas para cada ambiente. El resultado superó mis expectativas.</p>
+          <div class="testimonio-autor">
+            <div class="testimonio-nombre">Laura P.</div>
+            <div class="testimonio-tipo">Vivienda unifamiliar · Pilar</div>
+          </div>
+        </div>
+        <div class="testimonio-card">
+          <div class="testimonio-stars">★★★★★</div>
+          <div class="testimonio-comilla">"</div>
+          <p class="testimonio-texto">Los recomiendo a todos mis clientes. Respetan los detalles del proyecto y tienen una variedad de terminaciones que no encontrás en otros lugares.</p>
+          <div class="testimonio-autor">
+            <div class="testimonio-nombre">Arq. Diego F.</div>
+            <div class="testimonio-tipo">Arquitecto / Estudio · CABA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIRIGIDO A -->
+    <div class="dirigido-section">
+      <div class="section-badge" style="display:inline-block; margin-bottom:1rem;">Podemos ayudarte si sos...</div>
+      <h3 class="proceso-title">Soluciones para cada proyecto</h3>
+      <div class="dirigido-grid">
+        <div class="dirigido-card">
+          <div class="dirigido-img">&#x1F3E0;</div>
+          <div class="dirigido-body">
+            <div class="dirigido-tag">Vivienda particular</div>
+            <div class="dirigido-title">Construís o renovás tu casa</div>
+            <div class="dirigido-desc">Te acompañamos en cada etapa para entregarte la mejor solución en confort, diseño y seguridad para tu familia.</div>
+            <a href="https://wa.me/5491100000000?text=Hola%2C+estoy+construyendo+mi+vivienda+y+necesito+cotizar+aberturas" class="dirigido-cta">Consultá ahora →</a>
+          </div>
+        </div>
+        <div class="dirigido-card">
+          <div class="dirigido-img">&#x1F3D7;&#xFE0F;</div>
+          <div class="dirigido-body">
+            <div class="dirigido-tag">Constructor / Desarrollador</div>
+            <div class="dirigido-title">Obra de mediana o gran escala</div>
+            <div class="dirigido-desc">Precios de fábrica para grandes volúmenes, cotización rápida sobre planos y respaldo técnico en toda la obra.</div>
+            <a href="https://wa.me/5491100000000?text=Hola%2C+soy+constructor+y+necesito+cotizar+una+obra" class="dirigido-cta">Consultá ahora →</a>
+          </div>
+        </div>
+        <div class="dirigido-card">
+          <div class="dirigido-img">&#x1F4CB;</div>
+          <div class="dirigido-body">
+            <div class="dirigido-tag">Arquitecto / Estudio</div>
+            <div class="dirigido-title">Proyecto de diseño</div>
+            <div class="dirigido-desc">Asesoramiento técnico especializado y acompañamiento integral. Cumplimos los plazos que tu proyecto necesita.</div>
+            <a href="https://wa.me/5491100000000?text=Hola%2C+soy+arquitecto+y+quiero+cotizar+aberturas" class="dirigido-cta">Consultá ahora →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>¿Listo para cotizar tu proyecto?</h2>
+  <p>Respondemos dentro de las 24hs hábiles. Sin compromiso.</p>
+  <div class="cta-btns">
+    <a href="contacto.html" class="btn-hero-primary">Pedir presupuesto →</a>
+    <a href="https://wa.me/5491100000000" class="btn-hero-secondary">💬 WhatsApp</a>
+  </div>
+</div>
+
+<div id="footer-mount"></div>
+<div id="cart-mount"></div>
+
+<script src="partials.js"></script>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderNav('obras.html');
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+  document.getElementById('cart-mount').innerHTML = renderCartSidebar();
+
+const OBRAS = [
+  { id:1, tipo:'vivienda', emoji:'🏠', desc:'Casa unifamiliar · Ventanas corredizas aluminio blanco', lugar:'Zona Norte' },
+  { id:2, tipo:'vivienda', emoji:'🪟', desc:'Renovación ventanas · Aluminio natural + DVH', lugar:'CABA' },
+  { id:3, tipo:'edificio', emoji:'🏢', desc:'Edificio de 4 pisos · Ventanas proyectantes', lugar:'GBA Sur' },
+  { id:4, tipo:'edificio', emoji:'🏗️', desc:'Complejo residencial · 48 unidades aluminio negro', lugar:'GBA Oeste' },
+  { id:5, tipo:'comercio', emoji:'🏪', desc:'Local comercial · Frente de aluminio con vidrio templado', lugar:'San Isidro' },
+  { id:6, tipo:'vivienda', emoji:'🚪', desc:'Vivienda · Puertas de chapa + portón motorizado', lugar:'Pilar' },
+  { id:7, tipo:'comercio', emoji:'🏬', desc:'Galería comercial · Revestimiento PVC + aberturas', lugar:'Quilmes' },
+  { id:8, tipo:'edificio', emoji:'🏛️', desc:'Edificio corporativo · Sistema DVH premium', lugar:'Puerto Madero' },
+  { id:9, tipo:'vivienda', emoji:'🪵', desc:'Country · Puertas de madera sólida + aluminio negro', lugar:'Tigre' },
+];
+
+const ITEMS_POR_PAGINA = 3;
+let paginaActual = 0;
+let listaActual = OBRAS;
+
+function filtrarObras(tipo, btn) {
+  document.querySelectorAll('.galeria-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  listaActual = tipo === 'todos' ? OBRAS : OBRAS.filter(o => o.tipo === tipo);
+  paginaActual = 0;
+  renderGaleria();
+}
+
+function cambiarPagina(dir) {
+  const totalPaginas = Math.ceil(listaActual.length / ITEMS_POR_PAGINA);
+  paginaActual = Math.max(0, Math.min(paginaActual + dir, totalPaginas - 1));
+  renderGaleria();
+}
+
+function renderGaleria() {
+  const inicio = paginaActual * ITEMS_POR_PAGINA;
+  const pagina = listaActual.slice(inicio, inicio + ITEMS_POR_PAGINA);
+  const totalPaginas = Math.ceil(listaActual.length / ITEMS_POR_PAGINA);
+
+  document.getElementById('galeria-grid').innerHTML = pagina.map(o => `
+    <div class="galeria-item">
+      <div class="galeria-placeholder">
+        <span class="galeria-placeholder-icon">${o.emoji}</span>
+        <span class="galeria-placeholder-label">Foto próximamente</span>
+      </div>
+      <div class="galeria-overlay">
+        <div class="galeria-overlay-text">
+          <div class="galeria-overlay-tipo">${o.tipo} · ${o.lugar}</div>
+          <div class="galeria-overlay-desc">${o.desc}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('carrusel-prev').disabled = paginaActual === 0;
+  document.getElementById('carrusel-next').disabled = paginaActual >= totalPaginas - 1;
+  document.getElementById('carrusel-indicador').textContent = `${paginaActual + 1} / ${totalPaginas}`;
+}
+
+renderGaleria();
+</script>
+</body>
+</html>

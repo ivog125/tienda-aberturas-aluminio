@@ -115,9 +115,85 @@ function openCart() {
   document.getElementById('cart-overlay').classList.add('open');
 }
 
-// ── Checkout ─────────────────────────────────────────────────
+// ── Checkout modal ───────────────────────────────────────────
 function pagarMP() {
-  alert('🔗 Integración Mercado Pago\n\nSe conecta con el SDK de MP y las credenciales del cliente.');
+  document.getElementById('cart-sidebar').classList.remove('open');
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('co-overlay').classList.add('open');
+  document.getElementById('co-modal').classList.add('open');
+  _coPaso(1);
+}
+
+function cerrarCheckout() {
+  document.getElementById('co-overlay').classList.remove('open');
+  document.getElementById('co-modal').classList.remove('open');
+}
+
+function _coPaso(n) {
+  document.getElementById('co-paso-1').style.display = n === 1 ? 'block' : 'none';
+  document.getElementById('co-paso-2').style.display = n === 2 ? 'block' : 'none';
+  document.getElementById('co-paso-3').style.display = n === 3 ? 'block' : 'none';
+  document.getElementById('co-dot-1').className = 'co-dot ' + (n === 1 ? 'active' : 'done');
+  document.getElementById('co-dot-2').className = 'co-dot ' + (n === 2 ? 'active' : n === 3 ? 'done' : '');
+}
+
+function coSiguiente() {
+  const nombre = document.getElementById('co-nombre').value.trim();
+  const email  = document.getElementById('co-email').value.trim();
+  const tel    = document.getElementById('co-tel').value.trim();
+  if (!nombre || !email || !tel) { showToast('⚠ Completá todos los campos'); return; }
+
+  const fijos = carrito.filter(i => i.tipo === 'fijo');
+  const consultas = carrito.filter(i => i.tipo === 'medida');
+  const total = fijos.reduce((s, i) => s + i.precio * i.qty, 0);
+
+  document.getElementById('co-resumen').innerHTML =
+    fijos.map(i => `
+      <div class="co-item">
+        <span>${i.icono} ${i.nombre} <small>x${i.qty}</small></span>
+        <span>$${(i.precio * i.qty).toLocaleString('es-AR')}</span>
+      </div>`).join('') +
+    (consultas.length ? `<div class="co-item co-item-consulta">
+        <span>📋 ${consultas.length} producto${consultas.length > 1 ? 's' : ''} a medida</span>
+        <span style="font-size:12px;color:#b45309;">Precio a confirmar</span>
+      </div>` : '') +
+    `<div class="co-total-row"><span>Total</span><span>$${total.toLocaleString('es-AR')}</span></div>`;
+
+  _coPaso(2);
+}
+
+function coVolver() { _coPaso(1); }
+
+function irAMP() {
+  const nombre = document.getElementById('co-nombre').value.trim();
+  const email  = document.getElementById('co-email').value.trim();
+  const tel    = document.getElementById('co-tel').value.trim();
+
+  // Armar mensaje para Adrián
+  let msg = `🛒 *Nuevo pedido — Omar Aberturas*\n\n`;
+  msg += `👤 *Cliente:* ${nombre}\n`;
+  msg += `📧 *Email:* ${email}\n`;
+  msg += `📱 *Teléfono:* ${tel}\n\n`;
+  msg += `*Productos:*\n`;
+  carrito.forEach((item, i) => {
+    msg += `${i + 1}. ${item.nombre}`;
+    if (item.tipo === 'fijo') msg += ` x${item.qty} — $${(item.precio * item.qty).toLocaleString('es-AR')}`;
+    else msg += ` (a medida · ${item.detalle || 'ver detalle'})`;
+    msg += '\n';
+  });
+  const total = carrito.filter(i => i.tipo === 'fijo').reduce((s, i) => s + i.precio * i.qty, 0);
+  if (total > 0) msg += `\n💰 *Total: $${total.toLocaleString('es-AR')}*`;
+  msg += '\n\n_Pedido generado desde el sitio web_';
+
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  _coPaso(3);
+}
+
+function irMP() {
+  // Placeholder: reemplazar con URL real de preferencia MP cuando Adrián tenga credenciales
+  window.open('https://www.mercadopago.com.ar/', '_blank');
+  cerrarCheckout();
+  limpiarCarrito();
 }
 
 function enviarWA() {
@@ -160,7 +236,97 @@ const WA_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><pat
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   actualizarCarritoUI();
-  // Inyectar WA SVG en wa-float
+
   const waFloat = document.querySelector('.wa-float');
   if (waFloat) waFloat.innerHTML = WA_SVG;
+
+  // Inyectar estilos del checkout
+  const style = document.createElement('style');
+  style.textContent = `
+    .co-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:400; opacity:0; pointer-events:none; transition:opacity .3s; backdrop-filter:blur(3px); }
+    .co-overlay.open { opacity:1; pointer-events:all; }
+    .co-modal { position:fixed; top:50%; left:50%; transform:translate(-50%,-48%); width:100%; max-width:480px; background:white; border-radius:20px; box-shadow:0 24px 60px rgba(0,0,0,.18); z-index:401; opacity:0; pointer-events:none; transition:all .3s; }
+    .co-modal.open { opacity:1; pointer-events:all; transform:translate(-50%,-50%); }
+    .co-header { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 1.5rem; border-bottom:1px solid var(--gris-medio); }
+    .co-steps { display:flex; align-items:center; gap:.75rem; }
+    .co-dot { display:flex; align-items:center; gap:6px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; color:var(--gris-texto); }
+    .co-dot span { width:24px; height:24px; border-radius:50%; background:var(--gris-medio); color:var(--gris-texto); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
+    .co-dot.active { color:var(--azul); }
+    .co-dot.active span { background:var(--azul); color:white; }
+    .co-dot.done span { background:#16a34a; color:white; }
+    .co-step-line { width:28px; height:2px; background:var(--gris-medio); border-radius:2px; }
+    .co-close { background:none; border:none; font-size:20px; color:var(--gris-texto); cursor:pointer; padding:4px 8px; border-radius:6px; transition:all .2s; }
+    .co-close:hover { background:var(--gris-claro); color:var(--negro); }
+    .co-body { padding:1.5rem; }
+    .co-title { font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; color:var(--negro); margin-bottom:.25rem; }
+    .co-sub { font-size:13px; color:var(--gris-texto); margin-bottom:1.5rem; }
+    .co-form { display:flex; flex-direction:column; gap:.875rem; margin-bottom:1.5rem; }
+    .co-field { display:flex; flex-direction:column; gap:4px; }
+    .co-field label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gris-texto); }
+    .co-field input { background:var(--gris-claro); border:1px solid var(--gris-medio); color:var(--negro); padding:10px 14px; font-family:'Nunito Sans',sans-serif; font-size:14px; border-radius:8px; outline:none; transition:all .2s; }
+    .co-field input:focus { border-color:var(--azul); background:white; box-shadow:0 0 0 3px rgba(204,34,34,.1); }
+    .co-btn-primary { width:100%; background:var(--azul); color:white; border:none; padding:13px; border-radius:8px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all .2s; }
+    .co-btn-primary:hover { background:var(--azul-oscuro); transform:translateY(-1px); }
+    .co-item { display:flex; justify-content:space-between; align-items:center; padding:.75rem 0; border-bottom:1px solid var(--gris-medio); font-size:14px; color:var(--negro); font-weight:600; }
+    .co-item small { color:var(--gris-texto); font-weight:400; margin-left:4px; }
+    .co-item-consulta { color:var(--gris-texto); }
+    .co-total-row { display:flex; justify-content:space-between; align-items:center; padding:.875rem 0 1.25rem; font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; color:var(--negro); }
+    .co-total-row span:last-child { color:var(--azul); }
+    .co-btn-mp { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; background:#009ee3; color:white; border:none; padding:14px; border-radius:8px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all .2s; margin-bottom:.75rem; }
+    .co-btn-mp:hover { background:#0077b5; transform:translateY(-1px); }
+    .co-btn-mp svg { width:22px; height:22px; }
+    .co-btn-back { width:100%; background:none; border:none; color:var(--gris-texto); font-family:'Nunito',sans-serif; font-size:14px; font-weight:700; cursor:pointer; padding:8px; transition:color .2s; }
+    .co-btn-back:hover { color:var(--negro); }
+    @media(max-width:520px) { .co-modal { max-width:100%; border-radius:20px 20px 0 0; top:auto; bottom:0; left:0; transform:translateY(100%); } .co-modal.open { transform:translateY(0); } }
+  `;
+  document.head.appendChild(style);
+
+  // Inyectar HTML del modal de checkout
+  const modal = document.createElement('div');
+  modal.innerHTML = `
+    <div class="co-overlay" id="co-overlay" onclick="cerrarCheckout()"></div>
+    <div class="co-modal" id="co-modal">
+      <div class="co-header">
+        <div class="co-steps">
+          <div class="co-dot active" id="co-dot-1"><span>1</span> Tus datos</div>
+          <div class="co-step-line"></div>
+          <div class="co-dot" id="co-dot-2"><span>2</span> Confirmar</div>
+        </div>
+        <button class="co-close" onclick="cerrarCheckout()">✕</button>
+      </div>
+
+      <div class="co-body" id="co-paso-1">
+        <div class="co-title">¿A nombre de quién es el pedido?</div>
+        <div class="co-sub">Te contactamos para coordinar la entrega.</div>
+        <div class="co-form">
+          <div class="co-field"><label>Nombre completo *</label><input type="text" id="co-nombre" placeholder="Tu nombre y apellido"></div>
+          <div class="co-field"><label>Email *</label><input type="email" id="co-email" placeholder="tu@email.com"></div>
+          <div class="co-field"><label>Teléfono *</label><input type="tel" id="co-tel" placeholder="11 0000-0000"></div>
+        </div>
+        <button class="co-btn-primary" onclick="coSiguiente()">Continuar →</button>
+      </div>
+
+      <div class="co-body" id="co-paso-2" style="display:none;">
+        <div class="co-title">Resumen del pedido</div>
+        <div id="co-resumen"></div>
+        <button class="co-btn-mp" onclick="irAMP()">
+          <svg viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10" fill="#009ee3"/><path d="M7 14c.8-2.2 2.8-3.8 5-3.8s4.2 1.6 5 3.8" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="9.5" cy="10" r="1" fill="white"/><circle cx="14.5" cy="10" r="1" fill="white"/></svg>
+          Pagar con Mercado Pago
+        </button>
+        <button class="co-btn-back" onclick="coVolver()">← Volver</button>
+      </div>
+
+      <div class="co-body" id="co-paso-3" style="display:none; text-align:center;">
+        <div style="font-size:52px; margin-bottom:1rem;">✅</div>
+        <div class="co-title">¡Pedido enviado!</div>
+        <div class="co-sub" style="margin-bottom:1.5rem;">Adrián recibió los detalles por WhatsApp. Completá el pago para confirmar tu compra.</div>
+        <button class="co-btn-mp" onclick="irMP()">
+          <svg viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10" fill="#009ee3"/><path d="M7 14c.8-2.2 2.8-3.8 5-3.8s4.2 1.6 5 3.8" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="9.5" cy="10" r="1" fill="white"/><circle cx="14.5" cy="10" r="1" fill="white"/></svg>
+          Ir a Mercado Pago
+        </button>
+        <button class="co-btn-back" onclick="cerrarCheckout(); limpiarCarrito();">Cerrar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
 });

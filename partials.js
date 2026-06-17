@@ -9,10 +9,11 @@ function renderNav(activePage) {
     { href: 'ventanas.html',      label: 'Ventanas' },
     { href: 'puertas.html',       label: 'Puertas y Portones' },
     { href: 'revestimientos.html',label: 'Revestimientos' },
-    { href: 'index.html#obras',   label: 'Obras' },
+    { href: 'obras.html',          label: 'Obras' },
+    { href: 'contacto.html',      label: 'Contacto' },
   ];
   const links = pages.map(p =>
-    `<li><a href="${p.href}" class="${activePage === p.href ? 'active' : ''}">${p.label}</a></li>`
+    `<li><a href="${p.href}" class="${!p.href.includes('#') && activePage === p.href ? 'active' : ''}">${p.label}</a></li>`
   ).join('');
 
   return `
@@ -30,6 +31,7 @@ function renderNav(activePage) {
         🛒 Carrito
         <span class="cart-badge hidden" id="cart-badge">0</span>
       </button>
+      <button class="nav-hamburger" onclick="toggleNavMobile(this)" aria-label="Abrir menú">☰</button>
     </div>
   </nav>`;
 }
@@ -93,8 +95,7 @@ function renderFooter() {
         <ul class="footer-links">
           <li><a href="index.html">Inicio</a></li>
           <li><a href="contacto.html">Contacto</a></li>
-          <li><a href="contacto.html">Cómo comprar</a></li>
-          <li><a href="index.html#obras">Obras realizadas</a></li>
+          <li><a href="obras.html">Obras realizadas</a></li>
         </ul>
       </div>
       <div>
@@ -113,4 +114,10 @@ function renderFooter() {
       <span>Todos los derechos reservados</span>
     </div>
   </footer>`;
+}
+
+function toggleNavMobile(btn) {
+  const links = document.querySelector('.nav-links');
+  links.classList.toggle('open');
+  btn.textContent = links.classList.contains('open') ? '✕' : '☰';
 }

@@ -71,60 +71,24 @@
 .hero-content>*:nth-child(5){animation-delay:.32s}
 
 @media(max-width:900px){.rubros-grid{grid-template-columns:1fr 1fr}.rubro-card.featured{grid-column:span 2}.why-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.rubros-grid{grid-template-columns:1fr}.rubro-card.featured{grid-column:span 1}.why-grid{grid-template-columns:1fr 1fr}.hero-stats{display:none}}
+@media(max-width:640px){.rubros-grid{grid-template-columns:1fr}.rubro-card.featured{grid-column:span 1}.why-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;width:100%;}
+  .hero-stat{padding:.75rem 1rem;border-right:1px solid rgba(255,255,255,.15);border-bottom:1px solid rgba(255,255,255,.15);}
+  .hero-stat:nth-child(2n){border-right:none;}
+  .hero-stat:nth-last-child(-n+2){border-bottom:none;}
+}
 
-/* ── OBRAS ── */
-.obras-section { padding: 5rem 2rem; background: white; }
-.obras-wrapper { max-width: 1200px; margin: 0 auto; }
-.obras-header { text-align: center; margin-bottom: 3.5rem; }
-
-/* Proceso */
-.proceso-section { background: var(--gris-claro); border-radius: 16px; padding: 3rem 2.5rem; margin-bottom: 3.5rem; }
-.proceso-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--azul); margin-bottom: .75rem; }
-.proceso-title { font-family: "Nunito", sans-serif; font-size: clamp(20px,3vw,28px); font-weight: 900; color: var(--negro); margin-bottom: 2.5rem; line-height: 1.3; }
-.proceso-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
-.proceso-step { background: white; border-radius: 12px; padding: 1.5rem; position: relative; border-top: 3px solid var(--azul); }
-.proceso-num { font-family: "Nunito", sans-serif; font-size: 11px; font-weight: 900; color: var(--azul); letter-spacing: 2px; margin-bottom: .5rem; }
-.proceso-icon { font-size: 28px; margin-bottom: .75rem; }
-.proceso-step-title { font-family: "Nunito", sans-serif; font-size: 16px; font-weight: 800; color: var(--negro); margin-bottom: .5rem; }
-.proceso-step-body { font-size: 13px; color: var(--gris-texto); line-height: 1.6; }
-
-/* Galería */
-.galeria-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-.galeria-title { font-family: "Nunito", sans-serif; font-size: 22px; font-weight: 900; color: var(--negro); }
-.galeria-tabs { display: flex; gap: 6px; }
-.galeria-tab { padding: 7px 18px; border-radius: 20px; border: 1px solid var(--gris-medio); background: white; color: var(--gris-texto); font-family: "Nunito", sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .2s; }
-.galeria-tab.active { background: var(--azul); color: white; border-color: var(--azul); }
-.galeria-tab:hover:not(.active) { border-color: var(--azul); color: var(--azul); }
-
-.galeria-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 3.5rem; }
-.galeria-item { border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; background: var(--gris-claro); aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; transition: transform .3s; }
-.galeria-item:hover { transform: scale(1.02); }
-.galeria-item:hover .galeria-overlay { opacity: 1; }
-.galeria-item.grande { grid-column: span 2; aspect-ratio: 16/7; }
-.galeria-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: var(--gris-texto); font-size: 13px; }
-.galeria-placeholder-icon { font-size: 36px; opacity: .4; }
-.galeria-placeholder-label { font-family: "Nunito", sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: .5; }
-.galeria-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(204,34,34,.85), transparent 60%); opacity: 0; transition: opacity .3s; display: flex; align-items: flex-end; padding: 1rem 1.25rem; }
-.galeria-overlay-text { color: white; }
-.galeria-overlay-tipo { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: .8; }
-.galeria-overlay-desc { font-family: "Nunito", sans-serif; font-size: 15px; font-weight: 800; }
-
-/* Dirigido */
-.dirigido-section { background: var(--gris-claro); border-radius: 16px; padding: 3rem 2.5rem; text-align: center; }
-.dirigido-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 2rem; text-align: left; }
-.dirigido-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--gris-medio); transition: all .3s; }
-.dirigido-card:hover { box-shadow: 0 8px 24px rgba(204,34,34,.12); border-color: var(--azul); transform: translateY(-3px); }
-.dirigido-img { height: 110px; background: linear-gradient(135deg, #1a1a1a, #cc2222); display: flex; align-items: center; justify-content: center; font-size: 40px; }
-.dirigido-body { padding: 1.25rem; }
-.dirigido-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--azul); margin-bottom: 6px; }
-.dirigido-title { font-family: "Nunito", sans-serif; font-size: 17px; font-weight: 800; color: var(--negro); margin-bottom: 6px; }
-.dirigido-desc { font-size: 13px; color: var(--gris-texto); line-height: 1.5; margin-bottom: 1rem; }
-.dirigido-cta { display: inline-flex; align-items: center; gap: 4px; color: var(--azul); font-size: 13px; font-weight: 800; text-decoration: none; transition: gap .2s; font-family: "Nunito", sans-serif; }
-.dirigido-cta:hover { gap: 8px; }
-
-@media(max-width:900px) { .proceso-grid { grid-template-columns:1fr 1fr; } .dirigido-grid { grid-template-columns:1fr; } .galeria-grid { grid-template-columns:1fr 1fr; } .galeria-item.grande { grid-column:span 2; } }
-@media(max-width:640px) { .proceso-grid { grid-template-columns:1fr; } .galeria-grid { grid-template-columns:1fr; } .galeria-item.grande { grid-column:span 1; aspect-ratio:4/3; } .galeria-header { flex-direction:column; align-items:flex-start; } }
+/* ── OBRAS PREVIEW ── */
+.obras-preview { padding: 4rem 2rem; background: var(--gris-claro); }
+.obras-preview-wrapper { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 3rem; }
+.obras-preview-stats { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.obras-stat { text-align: center; }
+.obras-stat-num { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--azul); line-height: 1; }
+.obras-stat-label { font-size: 12px; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.obras-preview-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--azul); color: white; padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; transition: all .2s; white-space: nowrap; }
+.obras-preview-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,95,173,.25); }
+@media(max-width:768px) { .obras-preview-wrapper { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -179,7 +143,7 @@
         </div>
       </a>
       <a href="puertas.html" class="rubro-card">
-        <div class="rubro-img">🏗️</div>
+        <div class="rubro-img">🚗</div>
         <div class="rubro-body">
           <span class="rubro-tag-pill dist">Distribución</span>
           <div class="rubro-name">Portones</div>
@@ -225,93 +189,20 @@
   </div>
 </section>
 
-<!-- OBRAS -->
-<section class="obras-section" id="obras">
-  <div class="obras-wrapper">
-
-    <div class="obras-header">
+<!-- OBRAS PREVIEW -->
+<section class="obras-preview">
+  <div class="obras-preview-wrapper">
+    <div>
       <div class="section-badge">Nuestros trabajos</div>
-      <h2 class="section-title">Obras realizadas</h2>
-      <p class="section-subtitle">Más de 500 proyectos entregados en toda la zona. Viviendas, edificios y locales comerciales.</p>
-    </div>
-
-    <div class="proceso-section">
-      <div class="proceso-eyebrow">Nuestro proceso</div>
-      <h3 class="proceso-title">Estar en obra es demandante.<br>Conseguir las aberturas no debería serlo.</h3>
-      <div class="proceso-grid">
-        <div class="proceso-step">
-          <div class="proceso-num">01</div>
-          <div class="proceso-icon">&#x1F4AC;</div>
-          <div class="proceso-step-title">Asesoramiento</div>
-          <div class="proceso-step-body">Un vendedor asignado a tu proyecto te ayuda a elegir la mejor opción para cada espacio. Cientos de combinaciones, elegís la correcta.</div>
-        </div>
-        <div class="proceso-step">
-          <div class="proceso-num">02</div>
-          <div class="proceso-icon">&#x1F4D0;</div>
-          <div class="proceso-step-title">Visita y medición</div>
-          <div class="proceso-step-body">Nuestro equipo técnico visita tu obra y toma medidas. Nos aseguramos de que cada abertura cumpla con tus expectativas antes de fabricar.</div>
-        </div>
-        <div class="proceso-step">
-          <div class="proceso-num">03</div>
-          <div class="proceso-icon">&#x1F3ED;</div>
-          <div class="proceso-step-title">Fabricación</div>
-          <div class="proceso-step-body">Fabricamos en nuestro taller con control total del proceso. Coordinamos los tiempos para que el material esté listo cuando lo necesitás.</div>
-        </div>
-        <div class="proceso-step">
-          <div class="proceso-num">04</div>
-          <div class="proceso-icon">&#x1F527;</div>
-          <div class="proceso-step-title">Entrega e instalación</div>
-          <div class="proceso-step-body">Entregamos en obra y si contratás instalación, nuestros colocadores se encargan de que todo quede perfecto.</div>
-        </div>
+      <h2 class="section-title" style="margin-top:.5rem;">Más de 500 obras<br>realizadas en toda la zona</h2>
+      <p class="section-subtitle" style="margin-top:.5rem;">Viviendas, edificios y locales comerciales. Aluminio, chapa, madera y PVC.</p>
+      <div class="obras-preview-stats">
+        <div class="obras-stat"><div class="obras-stat-num">+500</div><div class="obras-stat-label">Obras realizadas</div></div>
+        <div class="obras-stat"><div class="obras-stat-num">GBA</div><div class="obras-stat-label">y CABA</div></div>
+        <div class="obras-stat"><div class="obras-stat-num">+15</div><div class="obras-stat-label">Años en el rubro</div></div>
       </div>
     </div>
-
-    <div class="galeria-header">
-      <h3 class="galeria-title">Algunos de nuestros proyectos</h3>
-      <div class="galeria-tabs">
-        <button class="galeria-tab active" onclick="filtrarObras('todos', this)">Todos</button>
-        <button class="galeria-tab" onclick="filtrarObras('vivienda', this)">Viviendas</button>
-        <button class="galeria-tab" onclick="filtrarObras('edificio', this)">Edificios</button>
-        <button class="galeria-tab" onclick="filtrarObras('comercio', this)">Comercios</button>
-      </div>
-    </div>
-
-    <div class="galeria-grid" id="galeria-grid"></div>
-
-    <div class="dirigido-section">
-      <div class="section-badge" style="display:inline-block; margin-bottom:1rem;">Podemos ayudarte si sos...</div>
-      <h3 class="proceso-title">Soluciones para cada proyecto</h3>
-      <div class="dirigido-grid">
-        <div class="dirigido-card">
-          <div class="dirigido-img">&#x1F3E0;</div>
-          <div class="dirigido-body">
-            <div class="dirigido-tag">Vivienda particular</div>
-            <div class="dirigido-title">Construís o renovás tu casa</div>
-            <div class="dirigido-desc">Te acompañamos en cada etapa para entregarte la mejor solución en confort, diseño y seguridad para tu familia.</div>
-            <a href="https://wa.me/5491100000000?text=Hola%2C+estoy+construyendo+mi+vivienda+y+necesito+cotizar+aberturas" class="dirigido-cta">Consultá ahora →</a>
-          </div>
-        </div>
-        <div class="dirigido-card">
-          <div class="dirigido-img">&#x1F3D7;&#xFE0F;</div>
-          <div class="dirigido-body">
-            <div class="dirigido-tag">Constructor / Desarrollador</div>
-            <div class="dirigido-title">Obra de mediana o gran escala</div>
-            <div class="dirigido-desc">Precios de fábrica para grandes volúmenes, cotización rápida sobre planos y respaldo técnico en toda la obra.</div>
-            <a href="https://wa.me/5491100000000?text=Hola%2C+soy+constructor+y+necesito+cotizar+una+obra" class="dirigido-cta">Consultá ahora →</a>
-          </div>
-        </div>
-        <div class="dirigido-card">
-          <div class="dirigido-img">&#x1F4CB;</div>
-          <div class="dirigido-body">
-            <div class="dirigido-tag">Arquitecto / Estudio</div>
-            <div class="dirigido-title">Proyecto de diseño</div>
-            <div class="dirigido-desc">Asesoramiento técnico especializado y acompañamiento integral. Cumplimos los plazos que tu proyecto necesita.</div>
-            <a href="https://wa.me/5491100000000?text=Hola%2C+soy+arquitecto+y+quiero+cotizar+aberturas" class="dirigido-cta">Consultá ahora →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <a href="obras.html" class="obras-preview-cta">Ver todas las obras →</a>
   </div>
 </section>
 
@@ -335,44 +226,6 @@
   document.getElementById('footer-mount').innerHTML = renderFooter();
   document.getElementById('cart-mount').innerHTML = renderCartSidebar();
 
-// ── GALERÍA DE OBRAS ──
-const OBRAS = [
-  { id:1, tipo:'vivienda', grande:true,  emoji:'🏠', desc:'Casa unifamiliar · Ventanas corredizas aluminio blanco', lugar:'Zona Norte' },
-  { id:2, tipo:'vivienda', grande:false, emoji:'🪟', desc:'Renovación ventanas · Aluminio natural + DVH', lugar:'CABA' },
-  { id:3, tipo:'edificio', grande:false, emoji:'🏢', desc:'Edificio de 4 pisos · Ventanas proyectantes', lugar:'GBA Sur' },
-  { id:4, tipo:'edificio', grande:false, emoji:'🏗️', desc:'Complejo residencial · 48 unidades aluminio negro', lugar:'GBA Oeste' },
-  { id:5, tipo:'comercio', grande:false, emoji:'🏪', desc:'Local comercial · Frente de aluminio con vidrio templado', lugar:'San Isidro' },
-  { id:6, tipo:'vivienda', grande:false, emoji:'🚪', desc:'Vivienda · Puertas de chapa + portón motorizado', lugar:'Pilar' },
-  { id:7, tipo:'comercio', grande:false, emoji:'🏬', desc:'Galería comercial · Revestimiento PVC + aberturas', lugar:'Quilmes' },
-  { id:8, tipo:'edificio', grande:true,  emoji:'🏛️', desc:'Edificio corporativo · Sistema DVH premium', lugar:'Puerto Madero' },
-  { id:9, tipo:'vivienda', grande:false, emoji:'🪵', desc:'Country · Puertas de madera sólida + aluminio negro', lugar:'Tigre' },
-];
-
-function filtrarObras(tipo, btn) {
-  document.querySelectorAll('.galeria-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const lista = tipo === 'todos' ? OBRAS : OBRAS.filter(o => o.tipo === tipo);
-  renderGaleria(lista);
-}
-
-function renderGaleria(lista) {
-  document.getElementById('galeria-grid').innerHTML = lista.map(o => `
-    <div class="galeria-item${o.grande ? ' grande' : ''}">
-      <div class="galeria-placeholder">
-        <span class="galeria-placeholder-icon">${o.emoji}</span>
-        <span class="galeria-placeholder-label">Foto próximamente</span>
-      </div>
-      <div class="galeria-overlay">
-        <div class="galeria-overlay-text">
-          <div class="galeria-overlay-tipo">${o.tipo} · ${o.lugar}</div>
-          <div class="galeria-overlay-desc">${o.desc}</div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-renderGaleria(OBRAS);
 
 </script>
 </body>
