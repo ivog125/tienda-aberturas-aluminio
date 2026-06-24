@@ -287,4 +287,48 @@ footer { background: #1a2332; color: white; padding: 3rem 2rem 0; }
 .co-bank-total{background:var(--primario);color:white;border-radius:8px;padding:.875rem 1.25rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;}
 .co-bank-total-label{opacity:.85;font-size:13px;font-family:'Nunito',sans-serif;font-weight:700;}
 .co-bank-total-amount{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;}
+
+/* ── BOTÓN MI CUENTA (NAV) ── */
+.account-nav-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1.5px solid var(--gris-medio);color:var(--negro);padding:7px 14px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.account-nav-btn:hover{border-color:var(--primario);color:var(--primario);}
+
+/* ── AUTH MODAL ── */
+.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1001;opacity:0;pointer-events:none;transition:opacity .3s;}
+.auth-overlay.open{opacity:1;pointer-events:all;}
+.auth-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);width:calc(100% - 2rem);max-width:420px;background:white;border-radius:16px;padding:2rem;z-index:1002;box-shadow:0 24px 64px rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:all .3s;max-height:90vh;overflow-y:auto;}
+.auth-modal.open{opacity:1;pointer-events:all;transform:translate(-50%,-50%);}
+.auth-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris-texto);padding:4px 8px;border-radius:6px;transition:all .2s;}
+.auth-close:hover{background:var(--gris-claro);}
+.auth-title{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:var(--negro);margin-bottom:.25rem;}
+.auth-sub{font-size:13px;color:var(--gris-texto);margin-bottom:1.5rem;}
+.auth-field{margin-bottom:1rem;}
+.auth-field label{display:block;font-size:13px;font-weight:700;color:var(--negro);margin-bottom:.4rem;}
+.auth-field input{width:100%;border:1.5px solid var(--gris-medio);border-radius:8px;padding:10px 14px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--negro);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.auth-field input:focus{border-color:var(--primario);}
+.auth-error{font-size:13px;color:#dc2626;margin-bottom:.75rem;min-height:1em;}
+.auth-btn-primary{width:100%;background:var(--primario);color:white;border:none;padding:12px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:background .2s;margin-bottom:.5rem;}
+.auth-btn-primary:hover{background:#154f8f;}
+.auth-btn-secondary{width:100%;background:white;color:var(--gris-texto);border:1.5px solid var(--gris-medio);padding:11px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+.auth-btn-secondary:hover{border-color:var(--negro);color:var(--negro);}
+.auth-links{display:flex;flex-direction:column;gap:4px;margin:.75rem 0;}
+.auth-link{background:none;border:none;color:var(--primario);font-size:13px;font-weight:700;cursor:pointer;padding:4px 0;text-align:left;font-family:'Nunito Sans',sans-serif;}
+.auth-link:hover{text-decoration:underline;}
+.auth-divider{text-align:center;color:var(--gris-texto);font-size:12px;margin:.75rem 0;position:relative;}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--gris-medio);}
+.auth-divider::before{left:0;}.auth-divider::after{right:0;}
+.auth-user-info{background:var(--gris-claro);border-radius:10px;padding:1rem;margin-bottom:1.25rem;}
+.auth-user-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;color:var(--negro);}
+.auth-user-email{color:var(--gris-texto);font-size:12px;margin-top:2px;}
+.auth-orders-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gris-texto);margin-bottom:.75rem;}
+.auth-orders{max-height:220px;overflow-y:auto;}
+.auth-orders-empty{font-size:13px;color:var(--gris-texto);text-align:center;padding:1.5rem 0;}
+.auth-order-item{border:1px solid var(--gris-medio);border-radius:8px;padding:.875rem;margin-bottom:.5rem;}
+.auth-order-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem;}
+.auth-order-fecha{font-size:12px;color:var(--gris-texto);}
+.auth-order-estado{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:capitalize;}
+.auth-estado-pendiente{background:#fef3c7;color:#d97706;}
+.auth-estado-confirmado{background:#dcfce7;color:#16a34a;}
+.auth-estado-entregado{background:#dbeafe;color:#2563eb;}
+.auth-order-productos{font-size:13px;color:var(--negro);font-weight:600;margin-bottom:.25rem;}
+.auth-order-total{font-family:'Nunito',sans-serif;font-weight:900;color:var(--primario);font-size:15px;}
 @media(max-width:520px){.co-modal{max-width:100%;border-radius:20px 20px 0 0;top:auto;bottom:0;left:0;transform:translateY(100%)!important;}.co-modal.open{transform:translateY(0)!important;}}

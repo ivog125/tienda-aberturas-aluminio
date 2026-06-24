@@ -95,6 +95,9 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
 /* Badges de categoría */
 .cat-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
 .cat-ventanas { background: var(--primario-suave); color: var(--primario); }
+.cat-vivienda { background: #fef3c7; color: #d97706; }
+.cat-edificio { background: var(--primario-suave); color: var(--primario); }
+.cat-comercio { background: var(--verde-suave); color: var(--verde); }
 .cat-puertas { background: var(--verde-suave); color: var(--verde); }
 .cat-portones { background: var(--amarillo-suave); color: var(--amarillo); }
 .cat-revestimientos { background: var(--violeta-suave); color: var(--violeta); }
@@ -219,6 +222,14 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
 
 @media(max-width:900px) { .stats-grid { grid-template-columns: 1fr 1fr; } .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { display: none; } .form-row { grid-template-columns: 1fr; } }
 @media(max-width:640px) { .stats-grid { grid-template-columns: 1fr 1fr; } td, th { padding: .75rem .875rem; } .td-acciones { flex-direction: column; } .detalle-drawer { width: 100vw; } }
+
+/* ── LOGIN OVERLAY ── */
+.al-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.al-box { background: white; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 400px; box-shadow: 0 24px 64px rgba(0,0,0,.3); }
+.al-brand { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 900; color: var(--negro); margin-bottom: .25rem; }
+.al-brand span { color: var(--rojo); }
+.al-sub { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gris-texto); font-weight: 700; margin-bottom: 2rem; }
+.al-error { color: #dc2626; font-size: 13px; margin-bottom: .75rem; display: none; }
 </style>
 </head>
 <body>
@@ -230,9 +241,10 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
     <span class="admin-logo-sub">Panel de administración</span>
   </div>
   <div class="admin-user">
-    <div class="admin-avatar">A</div>
-    <span>Adrián</span>
-    <a href="index.html" class="admin-exit">← Volver al sitio</a>
+    <div class="admin-avatar" id="admin-avatar">A</div>
+    <span id="admin-user-email">Administrador</span>
+    <a href="index.html" class="admin-exit">← Sitio</a>
+    <a href="#" class="admin-exit" onclick="adminCerrarSesion();return false;">Cerrar sesión</a>
   </div>
 </div>
 
@@ -574,17 +586,16 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Categoría</label>
-        <select class="form-select" id="obra-categoria">
-          <option value="Ventanas">Ventanas</option>
-          <option value="Puertas">Puertas</option>
-          <option value="Portones">Portones</option>
-          <option value="Revestimientos">Revestimientos</option>
+        <label class="form-label">Tipo de cliente</label>
+        <select class="form-select" id="obra-tipo">
+          <option value="Vivienda">🏠 Vivienda particular</option>
+          <option value="Edificio">🏢 Edificio / Constructor</option>
+          <option value="Comercio">🏪 Comercio / Local</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Foto <span class="form-label-sub">(en la versión final)</span></label>
-        <input class="form-input" id="obra-foto" type="file" accept="image/*" style="padding:7px 12px;">
+        <label class="form-label">Zona / Localidad</label>
+        <input class="form-input" id="obra-lugar" type="text" placeholder="Ej: CABA, GBA Norte, Pilar...">
       </div>
     </div>
     <div class="form-group">
@@ -597,6 +608,11 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
     </div>
   </div>
 </div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
 
 <!-- MODAL: CONFIRMAR ELIMINACIÓN -->
 <div class="modal-overlay" id="modal-confirmar">
@@ -612,6 +628,84 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
 </div>
 
 <script>
+/* ═══════════════════════════════════
+   AUTH ADMIN
+═══════════════════════════════════ */
+
+auth.onAuthStateChanged(user => {
+  const overlay = document.getElementById('al-overlay');
+  if (!overlay) return;
+  if (user) {
+    if (user.email !== ADMIN_EMAIL) {
+      showAdminAuthError('al-err-login', 'No tenés permisos de administrador.');
+      auth.signOut();
+      overlay.style.display = 'flex';
+      return;
+    }
+    overlay.style.display = 'none';
+    document.getElementById('admin-user-email').textContent = user.email;
+    document.getElementById('admin-avatar').textContent = user.email[0].toUpperCase();
+  } else {
+    overlay.style.display = 'flex';
+  }
+});
+
+function adminLogin() {
+  const email = document.getElementById('al-email').value.trim();
+  const pass  = document.getElementById('al-pass').value;
+  hideAdminAuthError('al-err-login');
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(err => showAdminAuthError('al-err-login', tradAdminError(err.code)));
+}
+
+function adminRegistrar() {
+  const email = document.getElementById('al-reg-email').value.trim();
+  const pass  = document.getElementById('al-reg-pass').value;
+  const pass2 = document.getElementById('al-reg-pass2').value;
+  hideAdminAuthError('al-err-registro');
+  if (email !== ADMIN_EMAIL) {
+    showAdminAuthError('al-err-registro', 'Este email no está autorizado como administrador.'); return;
+  }
+  if (pass !== pass2) {
+    showAdminAuthError('al-err-registro', 'Las contraseñas no coinciden.'); return;
+  }
+  if (pass.length < 6) {
+    showAdminAuthError('al-err-registro', 'La contraseña debe tener al menos 6 caracteres.'); return;
+  }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .catch(err => showAdminAuthError('al-err-registro', tradAdminError(err.code)));
+}
+
+function alToggleForm(form) {
+  document.getElementById('al-form-login').style.display    = form === 'login'    ? 'block' : 'none';
+  document.getElementById('al-form-registro').style.display = form === 'registro' ? 'block' : 'none';
+  hideAdminAuthError('al-err-login');
+  hideAdminAuthError('al-err-registro');
+}
+
+function adminCerrarSesion() { auth.signOut(); }
+
+function showAdminAuthError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function hideAdminAuthError(id) {
+  document.getElementById(id).style.display = 'none';
+}
+function tradAdminError(code) {
+  const map = {
+    'auth/invalid-email':        'Email inválido.',
+    'auth/user-not-found':       'No existe una cuenta con ese email.',
+    'auth/wrong-password':       'Contraseña incorrecta.',
+    'auth/invalid-credential':   'Email o contraseña incorrectos.',
+    'auth/email-already-in-use': 'Ya existe una cuenta con ese email.',
+    'auth/weak-password':        'La contraseña debe tener al menos 6 caracteres.',
+    'auth/too-many-requests':    'Demasiados intentos. Intentá más tarde.',
+  };
+  return map[code] || 'Error al iniciar sesión. Intentá de nuevo.';
+}
+
 /* ═══════════════════════════════════
    DATOS
 ═══════════════════════════════════ */
@@ -649,10 +743,10 @@ const DEFAULT_PRODUCTOS = [
 ];
 
 const DEFAULT_OBRAS = [
-  { id: 1, titulo: 'Ventanas duplex Palermo', categoria: 'Ventanas', descripcion: 'Instalación de 12 ventanas corredizas en edificio de 3 plantas' },
-  { id: 2, titulo: 'Portones residencial Tigre', categoria: 'Portones', descripcion: 'Portón doble hoja con automatismo incluido' },
-  { id: 3, titulo: 'Revestimiento integral PVC', categoria: 'Revestimientos', descripcion: 'Cielorraso y paredes, 180m² en vivienda particular' },
-  { id: 4, titulo: 'Puertas oficinas Microcentro', categoria: 'Puertas', descripcion: '8 puertas HDF con herrajes premium, obra entregada en 5 días' },
+  { id: 1, titulo: 'Ventanas duplex Palermo',        tipo: 'Edificio',  descripcion: 'Instalación de 12 ventanas corredizas en edificio de 3 plantas', lugar: 'CABA' },
+  { id: 2, titulo: 'Portones residencial Tigre',     tipo: 'Vivienda',  descripcion: 'Portón doble hoja con automatismo incluido',                     lugar: 'GBA Norte' },
+  { id: 3, titulo: 'Revestimiento integral PVC',     tipo: 'Vivienda',  descripcion: 'Cielorraso y paredes, 180m² en vivienda particular',             lugar: 'GBA Oeste' },
+  { id: 4, titulo: 'Puertas oficinas Microcentro',   tipo: 'Comercio',  descripcion: '8 puertas HDF con herrajes premium, entregada en 5 días',        lugar: 'CABA' },
 ];
 
 let PEDIDOS   = JSON.parse(localStorage.getItem('admin_pedidos')   || 'null') ?? [...DEFAULT_PEDIDOS];
@@ -918,7 +1012,7 @@ function guardarProducto() {
    OBRAS
 ═══════════════════════════════════ */
 
-const OBRA_EMOJIS = { Ventanas: '🪟', Puertas: '🚪', Portones: '🏠', Revestimientos: '🧱' };
+const OBRA_EMOJIS = { Vivienda: '🏠', Edificio: '🏢', Comercio: '🏪' };
 
 function renderObras() {
   const grid = document.getElementById('obras-grid');
@@ -933,12 +1027,12 @@ function renderObras() {
   }
   grid.innerHTML = OBRAS.map(o => `
     <div class="obra-card">
-      <div class="obra-img-placeholder">${OBRA_EMOJIS[o.categoria] || '🏗️'}</div>
+      <div class="obra-img-placeholder">${OBRA_EMOJIS[o.tipo] || '🏗️'}</div>
       <div class="obra-info">
         <div class="obra-titulo">${o.titulo}</div>
-        <div class="obra-desc">${o.descripcion}</div>
+        <div class="obra-desc">${o.descripcion}${o.lugar ? ` · ${o.lugar}` : ''}</div>
         <div class="obra-footer">
-          ${catBadge(o.categoria)}
+          ${catBadge(o.tipo)}
           <div style="display:flex;gap:6px;">
             <button class="btn-accion edit" onclick="editarObra(${o.id})">✏️</button>
             <button class="btn-accion danger" onclick="confirmarEliminar('obra', ${o.id}, '${o.titulo.replace(/'/g,"\\'")}')">🗑</button>
@@ -953,7 +1047,8 @@ function abrirModalObra() {
   obraEditandoId = null;
   document.getElementById('modal-obra-titulo').textContent = 'Agregar obra';
   document.getElementById('obra-titulo-input').value = '';
-  document.getElementById('obra-categoria').value = 'Ventanas';
+  document.getElementById('obra-tipo').value = 'Vivienda';
+  document.getElementById('obra-lugar').value = '';
   document.getElementById('obra-descripcion').value = '';
   abrirModal('modal-obra');
 }
@@ -964,7 +1059,8 @@ function editarObra(id) {
   obraEditandoId = id;
   document.getElementById('modal-obra-titulo').textContent = 'Editar obra';
   document.getElementById('obra-titulo-input').value = o.titulo;
-  document.getElementById('obra-categoria').value = o.categoria;
+  document.getElementById('obra-tipo').value = o.tipo || 'Vivienda';
+  document.getElementById('obra-lugar').value = o.lugar || '';
   document.getElementById('obra-descripcion').value = o.descripcion;
   abrirModal('modal-obra');
 }
@@ -974,7 +1070,8 @@ function guardarObra() {
   if (!titulo) { document.getElementById('obra-titulo-input').focus(); return; }
   const datos = {
     titulo,
-    categoria: document.getElementById('obra-categoria').value,
+    tipo:        document.getElementById('obra-tipo').value,
+    lugar:       document.getElementById('obra-lugar').value.trim(),
     descripcion: document.getElementById('obra-descripcion').value.trim(),
   };
   if (obraEditandoId) {
@@ -1001,9 +1098,11 @@ function actualizarPreviewWA(tipo) {
 }
 
 function guardarWANumero() {
-  const num = document.getElementById('wa-numero').value.trim();
-  if (!num) return;
-  adminToast('Número de WhatsApp guardado');
+  const raw = document.getElementById('wa-numero').value.trim().replace(/\D/g, '');
+  if (!raw) return;
+  const num = raw.startsWith('549') ? raw : '549' + raw;
+  localStorage.setItem('waNumber', num);
+  adminToast('✓ Número de WhatsApp guardado');
 }
 
 function guardarWAMensajes() {
@@ -1107,5 +1206,47 @@ renderTabla('todos');
 renderProductos();
 renderObras();
 </script>
+
+<!-- LOGIN OVERLAY -->
+<div class="al-overlay" id="al-overlay">
+  <div class="al-box">
+    <div class="al-brand">Omar <span>Aberturas</span></div>
+    <div class="al-sub">Panel de administración</div>
+
+    <div id="al-form-login">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="al-email" placeholder="tu@email.com" onkeydown="if(event.key==='Enter')adminLogin()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input class="form-input" type="password" id="al-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()">
+      </div>
+      <div class="al-error" id="al-err-login"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="adminLogin()">Iniciar sesión</button>
+      <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:.5rem;" onclick="alToggleForm('registro')">Primera vez → Crear cuenta</button>
+    </div>
+
+    <div id="al-form-registro" style="display:none;">
+      <div style="font-size:13px;color:var(--gris-texto);margin-bottom:1rem;">Creá la cuenta con tu email de administrador.</div>
+      <div class="form-group">
+        <label class="form-label">Email administrador</label>
+        <input class="form-input" type="email" id="al-reg-email" placeholder="tu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input class="form-input" type="password" id="al-reg-pass" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirmar contraseña</label>
+        <input class="form-input" type="password" id="al-reg-pass2" placeholder="Repetí la contraseña">
+      </div>
+      <div class="al-error" id="al-err-registro"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="adminRegistrar()">Crear cuenta</button>
+      <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:.5rem;" onclick="alToggleForm('login')">← Ya tengo cuenta</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

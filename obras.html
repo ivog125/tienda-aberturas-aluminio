@@ -230,6 +230,10 @@
 <div id="footer-mount"></div>
 <div id="cart-mount"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
 <script src="partials.js"></script>
 <script src="shared.js"></script>
 <script>
@@ -237,17 +241,18 @@
   document.getElementById('footer-mount').innerHTML = renderFooter();
   document.getElementById('cart-mount').innerHTML = renderCartSidebar();
 
-const OBRAS = [
-  { id:1, tipo:'vivienda', emoji:'🏠', desc:'Casa unifamiliar · Ventanas corredizas aluminio blanco', lugar:'Zona Norte' },
-  { id:2, tipo:'vivienda', emoji:'🪟', desc:'Renovación ventanas · Aluminio natural + DVH', lugar:'CABA' },
-  { id:3, tipo:'edificio', emoji:'🏢', desc:'Edificio de 4 pisos · Ventanas proyectantes', lugar:'GBA Sur' },
-  { id:4, tipo:'edificio', emoji:'🏗️', desc:'Complejo residencial · 48 unidades aluminio negro', lugar:'GBA Oeste' },
-  { id:5, tipo:'comercio', emoji:'🏪', desc:'Local comercial · Frente de aluminio con vidrio templado', lugar:'San Isidro' },
-  { id:6, tipo:'vivienda', emoji:'🚪', desc:'Vivienda · Puertas de chapa + portón motorizado', lugar:'Pilar' },
-  { id:7, tipo:'comercio', emoji:'🏬', desc:'Galería comercial · Revestimiento PVC + aberturas', lugar:'Quilmes' },
-  { id:8, tipo:'edificio', emoji:'🏛️', desc:'Edificio corporativo · Sistema DVH premium', lugar:'Puerto Madero' },
-  { id:9, tipo:'vivienda', emoji:'🪵', desc:'Country · Puertas de madera sólida + aluminio negro', lugar:'Tigre' },
+const DEFAULT_OBRAS = [
+  { id:1, tipo:'Vivienda', titulo:'Casa unifamiliar',          descripcion:'Ventanas corredizas aluminio blanco',            lugar:'Zona Norte' },
+  { id:2, tipo:'Vivienda', titulo:'Renovación ventanas',       descripcion:'Aluminio natural + DVH',                         lugar:'CABA' },
+  { id:3, tipo:'Edificio', titulo:'Edificio 4 pisos',          descripcion:'Ventanas proyectantes en todo el edificio',      lugar:'GBA Sur' },
+  { id:4, tipo:'Edificio', titulo:'Complejo residencial',      descripcion:'48 unidades, aluminio negro',                    lugar:'GBA Oeste' },
+  { id:5, tipo:'Comercio', titulo:'Local comercial',           descripcion:'Frente de aluminio con vidrio templado',         lugar:'San Isidro' },
+  { id:6, tipo:'Vivienda', titulo:'Vivienda con portón',       descripcion:'Puertas de chapa + portón motorizado',           lugar:'Pilar' },
+  { id:7, tipo:'Comercio', titulo:'Galería comercial',         descripcion:'Revestimiento PVC + aberturas completas',        lugar:'Quilmes' },
+  { id:8, tipo:'Edificio', titulo:'Edificio corporativo',      descripcion:'Sistema DVH premium',                            lugar:'Puerto Madero' },
+  { id:9, tipo:'Vivienda', titulo:'Country - Puertas premium', descripcion:'Puertas de madera sólida + aluminio negro',      lugar:'Tigre' },
 ];
+const OBRAS = JSON.parse(localStorage.getItem('admin_obras') || 'null') ?? DEFAULT_OBRAS;
 
 const ITEMS_POR_PAGINA = 3;
 let paginaActual = 0;
@@ -256,7 +261,7 @@ let listaActual = OBRAS;
 function filtrarObras(tipo, btn) {
   document.querySelectorAll('.galeria-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  listaActual = tipo === 'todos' ? OBRAS : OBRAS.filter(o => o.tipo === tipo);
+  listaActual = tipo === 'todos' ? OBRAS : OBRAS.filter(o => o.tipo.toLowerCase() === tipo);
   paginaActual = 0;
   renderGaleria();
 }
@@ -272,16 +277,17 @@ function renderGaleria() {
   const pagina = listaActual.slice(inicio, inicio + ITEMS_POR_PAGINA);
   const totalPaginas = Math.ceil(listaActual.length / ITEMS_POR_PAGINA);
 
+  const TIPO_EMOJI = { Vivienda: '🏠', Edificio: '🏢', Comercio: '🏪' };
   document.getElementById('galeria-grid').innerHTML = pagina.map(o => `
     <div class="galeria-item">
       <div class="galeria-placeholder">
-        <span class="galeria-placeholder-icon">${o.emoji}</span>
+        <span class="galeria-placeholder-icon">${TIPO_EMOJI[o.tipo] || '🏗️'}</span>
         <span class="galeria-placeholder-label">Foto próximamente</span>
       </div>
       <div class="galeria-overlay">
         <div class="galeria-overlay-text">
-          <div class="galeria-overlay-tipo">${o.tipo} · ${o.lugar}</div>
-          <div class="galeria-overlay-desc">${o.desc}</div>
+          <div class="galeria-overlay-tipo">${o.tipo}${o.lugar ? ' · ' + o.lugar : ''}</div>
+          <div class="galeria-overlay-desc">${o.titulo}</div>
         </div>
       </div>
     </div>

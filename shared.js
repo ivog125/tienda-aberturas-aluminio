@@ -3,7 +3,7 @@
    Carrito (precio fijo) + consultas a medida (WA directo)
    ============================================================ */
 
-const WA_NUMBER = '5491100000000';
+const WA_NUMBER = localStorage.getItem('waNumber') || '5491100000000';
 let _payMode = 'mp';
 
 // ── Carrito (solo precio fijo) ────────────────────────────────
@@ -195,6 +195,19 @@ function irAMP() {
   msg += `\n💰 *Total: $${total.toLocaleString('es-AR')}*\n\n_Pedido generado desde el sitio web_`;
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
+  const user = auth.currentUser;
+  if (user) {
+    db.collection('pedidos').add({
+      userId:    user.uid,
+      cliente:   nombre, email, tel,
+      productos: carrito.map(i => `${i.nombre} x${i.qty}`).join(', '),
+      total:     `$${total.toLocaleString('es-AR')}`,
+      metodo:    'mercadopago',
+      estado:    'pendiente',
+      fecha:     firebase.firestore.FieldValue.serverTimestamp(),
+    }).catch(() => {});
+  }
+
   document.getElementById('co-paso3-title').textContent = '¡Pedido enviado!';
   document.getElementById('co-paso3-sub').textContent = 'Adrián recibió los detalles. Completá el pago en Mercado Pago para confirmar tu compra.';
   document.getElementById('co-paso3-btn-mp').style.display = 'flex';
@@ -220,6 +233,19 @@ function irTransferWA() {
   });
   msg += `\n💰 *Total transferido: $${total.toLocaleString('es-AR')}*\n\n_Adjunto el comprobante de la transferencia._`;
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  const user = auth.currentUser;
+  if (user) {
+    db.collection('pedidos').add({
+      userId:    user.uid,
+      cliente:   nombre, email, tel,
+      productos: carrito.map(i => `${i.nombre} x${i.qty}`).join(', '),
+      total:     `$${total.toLocaleString('es-AR')}`,
+      metodo:    'transferencia',
+      estado:    'pendiente',
+      fecha:     firebase.firestore.FieldValue.serverTimestamp(),
+    }).catch(() => {});
+  }
 
   document.getElementById('co-paso3-title').textContent = '¡Comprobante enviado!';
   document.getElementById('co-paso3-sub').textContent = 'Adrián va a verificar la transferencia y te confirma el pedido a la brevedad.';
@@ -247,12 +273,135 @@ function switchTab(tab) {
   });
 }
 
+// ── Auth clientes ─────────────────────────────────────────────
+
+function toggleAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  if (modal.classList.contains('open')) {
+    cerrarAuthModal();
+  } else {
+    const user = auth.currentUser;
+    switchAuthView(user ? 'cuenta' : 'login');
+    if (user) _cargarPedidosUsuario();
+    modal.classList.add('open');
+    document.getElementById('auth-overlay').classList.add('open');
+  }
+}
+
+function cerrarAuthModal() {
+  document.getElementById('auth-modal')?.classList.remove('open');
+  document.getElementById('auth-overlay')?.classList.remove('open');
+}
+
+function switchAuthView(view) {
+  ['login', 'registro', 'cuenta', 'reset'].forEach(v => {
+    const el = document.getElementById(`auth-view-${v}`);
+    if (el) el.style.display = v === view ? 'block' : 'none';
+  });
+  ['auth-err-login', 'auth-err-registro', 'auth-err-reset'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '';
+  });
+}
+
+function authLogin() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  const errEl = document.getElementById('auth-err-login');
+  errEl.textContent = '';
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => { cerrarAuthModal(); showToast('¡Bienvenido!'); })
+    .catch(err => { errEl.textContent = _tradAuthError(err.code); });
+}
+
+function authRegistrar() {
+  const nombre = document.getElementById('auth-nombre').value.trim();
+  const email  = document.getElementById('auth-reg-email').value.trim();
+  const pass   = document.getElementById('auth-reg-pass').value;
+  const errEl  = document.getElementById('auth-err-registro');
+  errEl.textContent = '';
+  if (!nombre) { errEl.textContent = 'Ingresá tu nombre.'; return; }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(cred => cred.user.updateProfile({ displayName: nombre }))
+    .then(() => { cerrarAuthModal(); showToast('¡Cuenta creada!'); })
+    .catch(err => { errEl.textContent = _tradAuthError(err.code); });
+}
+
+function authLogout() {
+  auth.signOut().then(() => { cerrarAuthModal(); showToast('Sesión cerrada'); });
+}
+
+function authResetPassword() {
+  const email = document.getElementById('auth-reset-email').value.trim();
+  const errEl = document.getElementById('auth-err-reset');
+  errEl.textContent = '';
+  errEl.style.color = '#dc2626';
+  auth.sendPasswordResetEmail(email)
+    .then(() => { errEl.style.color = 'var(--verde)'; errEl.textContent = '¡Email enviado! Revisá tu bandeja de entrada.'; })
+    .catch(err => { errEl.textContent = _tradAuthError(err.code); });
+}
+
+function _cargarPedidosUsuario() {
+  const listEl = document.getElementById('auth-orders-list');
+  const infoEl = document.getElementById('auth-user-info');
+  const user   = auth.currentUser;
+  if (!listEl || !user) return;
+
+  const nombre = user.displayName || user.email.split('@')[0];
+  infoEl.innerHTML = `<div class="auth-user-name">${nombre}</div><div class="auth-user-email">${user.email}</div>`;
+  listEl.innerHTML = '<div class="auth-orders-empty">Cargando...</div>';
+
+  db.collection('pedidos').where('userId', '==', user.uid).get()
+    .then(snap => {
+      if (snap.empty) { listEl.innerHTML = '<div class="auth-orders-empty">Todavía no tenés pedidos.</div>'; return; }
+      const docs = snap.docs
+        .map(d => d.data())
+        .sort((a, b) => {
+          const fa = a.fecha?.toDate ? a.fecha.toDate() : new Date(a.fecha || 0);
+          const fb = b.fecha?.toDate ? b.fecha.toDate() : new Date(b.fecha || 0);
+          return fb - fa;
+        })
+        .slice(0, 10);
+      listEl.innerHTML = docs.map(p => `
+        <div class="auth-order-item">
+          <div class="auth-order-top">
+            <span class="auth-order-fecha">${p.fecha?.toDate ? p.fecha.toDate().toLocaleDateString('es-AR') : '—'}</span>
+            <span class="auth-order-estado auth-estado-${p.estado}">${p.estado}</span>
+          </div>
+          <div class="auth-order-productos">${p.productos}</div>
+          <div class="auth-order-total">${p.total}</div>
+        </div>
+      `).join('');
+    })
+    .catch(() => { listEl.innerHTML = '<div class="auth-orders-empty">Error al cargar pedidos.</div>'; });
+}
+
+function _tradAuthError(code) {
+  const map = {
+    'auth/invalid-email':        'Email inválido.',
+    'auth/user-not-found':       'No existe una cuenta con ese email.',
+    'auth/wrong-password':       'Contraseña incorrecta.',
+    'auth/invalid-credential':   'Email o contraseña incorrectos.',
+    'auth/email-already-in-use': 'Ya existe una cuenta con ese email.',
+    'auth/weak-password':        'La contraseña debe tener al menos 6 caracteres.',
+    'auth/too-many-requests':    'Demasiados intentos. Intentá más tarde.',
+    'auth/missing-email':        'Ingresá tu email.',
+  };
+  return map[code] || 'Ocurrió un error. Intentá de nuevo.';
+}
+
 // ── SVG WhatsApp ──────────────────────────────────────────────
 const WA_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="white"/></svg>`;
 
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   actualizarCarritoUI();
+
+  // Actualizar todos los links de WA hardcodeados con el número configurado
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+    a.href = a.href.replace(/wa\.me\/\d+/, `wa.me/${WA_NUMBER}`);
+  });
 
   const waFloat = document.querySelector('.wa-float');
   if (waFloat) waFloat.innerHTML = WA_SVG;
@@ -321,4 +470,69 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   `;
   document.body.appendChild(modal);
+
+  // ── Modal de cuenta / auth ────────────────────────────────
+  const authEl = document.createElement('div');
+  authEl.innerHTML = `
+    <div class="auth-overlay" id="auth-overlay" onclick="cerrarAuthModal()"></div>
+    <div class="auth-modal" id="auth-modal">
+      <button class="auth-close" onclick="cerrarAuthModal()">✕</button>
+
+      <div id="auth-view-login">
+        <div class="auth-title">Iniciá sesión</div>
+        <div class="auth-sub">Guardá tu historial de compras</div>
+        <div class="auth-field"><label>Email</label><input type="email" id="auth-email" placeholder="tu@email.com"></div>
+        <div class="auth-field"><label>Contraseña</label><input type="password" id="auth-pass" placeholder="••••••••"></div>
+        <div class="auth-error" id="auth-err-login"></div>
+        <button class="auth-btn-primary" onclick="authLogin()">Iniciar sesión</button>
+        <div class="auth-links">
+          <button class="auth-link" onclick="switchAuthView('reset')">¿Olvidaste tu contraseña?</button>
+          <button class="auth-link" onclick="switchAuthView('registro')">¿No tenés cuenta? Registrate</button>
+        </div>
+        <div class="auth-divider">o</div>
+        <button class="auth-btn-secondary" onclick="cerrarAuthModal()">Continuar sin cuenta</button>
+      </div>
+
+      <div id="auth-view-registro" style="display:none">
+        <div class="auth-title">Crear cuenta</div>
+        <div class="auth-sub">Registrate para ver tu historial de compras</div>
+        <div class="auth-field"><label>Nombre</label><input type="text" id="auth-nombre" placeholder="Tu nombre"></div>
+        <div class="auth-field"><label>Email</label><input type="email" id="auth-reg-email" placeholder="tu@email.com"></div>
+        <div class="auth-field"><label>Contraseña</label><input type="password" id="auth-reg-pass" placeholder="Mínimo 6 caracteres"></div>
+        <div class="auth-error" id="auth-err-registro"></div>
+        <button class="auth-btn-primary" onclick="authRegistrar()">Crear cuenta</button>
+        <button class="auth-link" onclick="switchAuthView('login')">← Ya tengo cuenta</button>
+      </div>
+
+      <div id="auth-view-cuenta" style="display:none">
+        <div class="auth-title">Mi cuenta</div>
+        <div class="auth-user-info" id="auth-user-info"></div>
+        <div class="auth-orders-title">Mis pedidos</div>
+        <div class="auth-orders" id="auth-orders-list"><div class="auth-orders-empty">Cargando...</div></div>
+        <button class="auth-btn-secondary" style="margin-top:1rem;" onclick="authLogout()">Cerrar sesión</button>
+      </div>
+
+      <div id="auth-view-reset" style="display:none">
+        <div class="auth-title">Recuperar contraseña</div>
+        <div class="auth-sub">Te mandamos un email para restablecer tu contraseña</div>
+        <div class="auth-field"><label>Email</label><input type="email" id="auth-reset-email" placeholder="tu@email.com"></div>
+        <div class="auth-error" id="auth-err-reset"></div>
+        <button class="auth-btn-primary" onclick="authResetPassword()">Enviar email</button>
+        <button class="auth-link" onclick="switchAuthView('login')">← Volver</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(authEl);
+
+  // ── Observer: actualiza nav según estado de sesión ────────
+  auth.onAuthStateChanged(user => {
+    const btn = document.getElementById('account-nav-btn');
+    if (!btn) return;
+    if (user) {
+      const nombre = user.displayName || user.email.split('@')[0];
+      btn.textContent = `👤 ${nombre}`;
+    } else {
+      btn.textContent = '👤 Mi cuenta';
+    }
+  });
 });

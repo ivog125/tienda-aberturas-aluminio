@@ -44,6 +44,7 @@ function renderNav(activePage) {
     </a>
     <ul class="nav-links">${links}</ul>
     <div class="nav-right">
+      <button class="account-nav-btn" id="account-nav-btn" onclick="toggleAuthModal()">👤 Mi cuenta</button>
       <button class="cart-nav-btn" onclick="toggleCart()">
         🛒 Carrito
         <span class="cart-badge hidden" id="cart-badge">0</span>
