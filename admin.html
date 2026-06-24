@@ -283,23 +283,23 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
       <div class="stats-grid">
         <div class="stat-card highlight">
           <div class="stat-label">Pendientes</div>
-          <div class="stat-value" id="stat-pendientes">3</div>
+          <div class="stat-value" id="stat-pendientes">—</div>
           <div class="stat-sub">Requieren atención</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total este mes</div>
-          <div class="stat-value">8</div>
+          <div class="stat-value" id="stat-total-mes">—</div>
           <div class="stat-sub">Pedidos recibidos</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Entregados</div>
-          <div class="stat-value">5</div>
+          <div class="stat-value" id="stat-entregados">—</div>
           <div class="stat-sub">Este mes</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Ingresos del mes</div>
-          <div class="stat-value">$1.2M</div>
-          <div class="stat-sub">Solo productos con precio fijo</div>
+          <div class="stat-label">Total acumulado</div>
+          <div class="stat-value" id="stat-total-all">—</div>
+          <div class="stat-sub">Todos los pedidos</div>
         </div>
       </div>
 
@@ -632,6 +632,8 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
    AUTH ADMIN
 ═══════════════════════════════════ */
 
+let _fsDetach = null;
+
 auth.onAuthStateChanged(user => {
   const overlay = document.getElementById('al-overlay');
   if (!overlay) return;
@@ -645,10 +647,27 @@ auth.onAuthStateChanged(user => {
     overlay.style.display = 'none';
     document.getElementById('admin-user-email').textContent = user.email;
     document.getElementById('admin-avatar').textContent = user.email[0].toUpperCase();
+    _iniciarListenerPedidos();
   } else {
     overlay.style.display = 'flex';
+    if (_fsDetach) { _fsDetach(); _fsDetach = null; }
   }
 });
+
+function _iniciarListenerPedidos() {
+  if (_fsDetach) return;
+  document.getElementById('tabla-pedidos').innerHTML = `
+    <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--gris-texto);font-size:14px;">
+      Cargando pedidos...
+    </td></tr>`;
+  _fsDetach = db.collection('pedidos')
+    .orderBy('fecha', 'desc')
+    .onSnapshot(snap => {
+      pedidosFS = snap.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+      renderTabla();
+      actualizarStatsPedidos();
+    }, () => adminToast('⚠ Error al cargar pedidos'));
+}
 
 function adminLogin() {
   const email = document.getElementById('al-email').value.trim();
@@ -710,25 +729,6 @@ function tradAdminError(code) {
    DATOS
 ═══════════════════════════════════ */
 
-const DEFAULT_PEDIDOS = [
-  { id: '#008', fecha: '17/06/2025', cliente: 'Martín García', contacto: '11 4523-0012', email: 'mgarcia@email.com',
-    productos: 'Ventana corrediza 150×120cm × 3', total: '$540.000', estado: 'pendiente',
-    wa: 'Hola Martín, recibimos tu pedido de 3 ventanas corredizas. ¿Cuándo podemos coordinar la visita para tomar medidas?' },
-  { id: '#007', fecha: '16/06/2025', cliente: 'Laura Pérez', contacto: '11 6789-4321', email: 'lperez@email.com',
-    productos: 'Puerta de chapa plegada × 2 · Portón a medida', total: 'A confirmar', estado: 'pendiente',
-    wa: 'Hola Laura, recibimos tu consulta. Vamos a preparar el presupuesto para el portón a medida. Te contactamos pronto.' },
-  { id: '#006', fecha: '15/06/2025', cliente: 'Diego Fernández', contacto: '11 2233-5566', email: 'dfernandez@email.com',
-    productos: 'Panel PVC cielorraso blanco × 18m²', total: '$153.000', estado: 'pendiente',
-    wa: 'Hola Diego, ya tenemos tu pedido. ¿Querés coordinar la entrega para esta semana?' },
-  { id: '#005', fecha: '13/06/2025', cliente: 'Empresa Construcciones SRL', contacto: '11 9988-7766', email: 'compras@construcciones.com',
-    productos: 'Ventana proyectante × 12 · Puerta madera sólida × 4', total: '$1.348.000', estado: 'confirmado',
-    wa: 'Hola, les confirmamos el pedido. Fecha estimada de entrega: 25/06.' },
-  { id: '#004', fecha: '10/06/2025', cliente: 'Ana Rodríguez', contacto: '11 5544-3322', email: 'ana.r@email.com',
-    productos: 'Puerta interior HDF × 3', total: '$195.000', estado: 'entregado', wa: '' },
-  { id: '#003', fecha: '08/06/2025', cliente: 'Roberto Sanz', contacto: '11 7711-2233', email: 'rsanz@email.com',
-    productos: 'Portón chapa doble hoja × 1', total: '$480.000', estado: 'entregado', wa: '' },
-];
-
 const DEFAULT_PRODUCTOS = [
   { id: 1, nombre: 'Ventana corrediza aluminio', categoria: 'Ventanas', precio: 'Desde $120.000', descripcion: 'Aluminio natural o color, vidrio float 4mm', visible: true },
   { id: 2, nombre: 'Ventana proyectante', categoria: 'Ventanas', precio: 'Desde $95.000', descripcion: 'Ideal para baños y cocinas, medidas estándar o a pedido', visible: true },
@@ -749,16 +749,14 @@ const DEFAULT_OBRAS = [
   { id: 4, titulo: 'Puertas oficinas Microcentro',   tipo: 'Comercio',  descripcion: '8 puertas HDF con herrajes premium, entregada en 5 días',        lugar: 'CABA' },
 ];
 
-let PEDIDOS   = JSON.parse(localStorage.getItem('admin_pedidos')   || 'null') ?? [...DEFAULT_PEDIDOS];
+let pedidosFS = [];
+let filtroTablaActivo = 'todos';
+
 let PRODUCTOS = JSON.parse(localStorage.getItem('admin_productos') || 'null') ?? [...DEFAULT_PRODUCTOS];
 let OBRAS     = JSON.parse(localStorage.getItem('admin_obras')     || 'null') ?? [...DEFAULT_OBRAS];
 
-const savePedidos   = () => localStorage.setItem('admin_pedidos',   JSON.stringify(PEDIDOS));
 const saveProductos = () => localStorage.setItem('admin_productos', JSON.stringify(PRODUCTOS));
 const saveObras     = () => localStorage.setItem('admin_obras',     JSON.stringify(OBRAS));
-
-let estadoActual = {};
-PEDIDOS.forEach(p => { estadoActual[p.id] = p.estado; });
 
 let productosFiltroActivo = 'Todos';
 let productoEditandoId = null;
@@ -793,33 +791,68 @@ function mostrarSeccion(id, navEl) {
 ═══════════════════════════════════ */
 
 function renderTabla(filtro) {
-  const lista = filtro === 'todos' ? PEDIDOS : PEDIDOS.filter(p => p.estado === filtro);
-  document.getElementById('tabla-pedidos').innerHTML = lista.map(p => `
-    <tr>
-      <td class="td-id">${p.id}</td>
-      <td style="font-size:13px;color:var(--gris-texto);">${p.fecha}</td>
-      <td>
-        <div class="td-cliente">${p.cliente}</div>
-        <div class="td-cliente-sub">${p.contacto}</div>
-      </td>
-      <td class="td-productos">${p.productos}</td>
-      <td class="td-total">${p.total}</td>
-      <td>
-        <select class="estado-select" onchange="cambiarEstado('${p.id}', this.value)">
-          <option value="pendiente" ${estadoActual[p.id]==='pendiente'?'selected':''}>⏳ Pendiente</option>
-          <option value="confirmado" ${estadoActual[p.id]==='confirmado'?'selected':''}>✅ Confirmado</option>
-          <option value="entregado" ${estadoActual[p.id]==='entregado'?'selected':''}>📦 Entregado</option>
-          <option value="cancelado" ${estadoActual[p.id]==='cancelado'?'selected':''}>❌ Cancelado</option>
-        </select>
-      </td>
-      <td>
-        <div class="td-acciones">
-          ${p.wa ? `<button class="btn-accion wa" onclick="responderWA('${p.id}')">💬 WA</button>` : ''}
-          <button class="btn-accion" onclick="verDetalle('${p.id}')">Ver</button>
+  if (filtro !== undefined) filtroTablaActivo = filtro;
+  const lista = filtroTablaActivo === 'todos'
+    ? pedidosFS
+    : pedidosFS.filter(p => p.estado === filtroTablaActivo);
+
+  const tbody = document.getElementById('tabla-pedidos');
+
+  if (pedidosFS.length === 0) {
+    tbody.innerHTML = `
+      <tr><td colspan="7">
+        <div class="empty-state">
+          <div class="empty-state-icon">📦</div>
+          <div class="empty-state-text">Sin pedidos aún</div>
+          <div class="empty-state-sub">Los pedidos del sitio aparecerán acá automáticamente.</div>
         </div>
-      </td>
-    </tr>
-  `).join('');
+      </td></tr>`;
+    return;
+  }
+
+  if (lista.length === 0) {
+    tbody.innerHTML = `
+      <tr><td colspan="7">
+        <div class="empty-state">
+          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-text">Sin pedidos con este estado</div>
+        </div>
+      </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map(p => {
+    const idCorto = '#' + p.docId.slice(0, 6).toUpperCase();
+    const fecha = p.fecha?.toDate
+      ? p.fecha.toDate().toLocaleDateString('es-AR')
+      : '—';
+    return `
+      <tr>
+        <td class="td-id">${idCorto}</td>
+        <td style="font-size:13px;color:var(--gris-texto);">${fecha}</td>
+        <td>
+          <div class="td-cliente">${p.cliente || '—'}</div>
+          <div class="td-cliente-sub">${p.tel || p.email || ''}</div>
+        </td>
+        <td class="td-productos">${p.productos || '—'}</td>
+        <td class="td-total">$${p.total || '—'}</td>
+        <td>
+          <select class="estado-select" onchange="cambiarEstado('${p.docId}', this.value)">
+            <option value="pendiente"  ${p.estado==='pendiente' ?'selected':''}>⏳ Pendiente</option>
+            <option value="confirmado" ${p.estado==='confirmado'?'selected':''}>✅ Confirmado</option>
+            <option value="entregado"  ${p.estado==='entregado' ?'selected':''}>📦 Entregado</option>
+            <option value="cancelado"  ${p.estado==='cancelado' ?'selected':''}>❌ Cancelado</option>
+          </select>
+        </td>
+        <td>
+          <div class="td-acciones">
+            ${p.tel ? `<button class="btn-accion wa" onclick="responderWA('${p.docId}')">💬 WA</button>` : ''}
+            <button class="btn-accion" onclick="verDetalle('${p.docId}')">Ver</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 function filtrarTabla(filtro, btn) {
@@ -828,46 +861,52 @@ function filtrarTabla(filtro, btn) {
   renderTabla(filtro);
 }
 
-function cambiarEstado(id, nuevoEstado) {
-  estadoActual[id] = nuevoEstado;
-  const p = PEDIDOS.find(x => x.id === id);
-  if (p) p.estado = nuevoEstado;
-  savePedidos();
-  const labels = { pendiente:'⏳ Pendiente', confirmado:'✅ Confirmado', entregado:'📦 Entregado', cancelado:'❌ Cancelado' };
-  adminToast(`Pedido ${id} → ${labels[nuevoEstado]}`);
-  const pendientes = Object.values(estadoActual).filter(e => e === 'pendiente').length;
-  document.getElementById('stat-pendientes').textContent = pendientes;
-  document.getElementById('badge-pedidos').textContent = pendientes;
+function cambiarEstado(docId, nuevoEstado) {
+  db.collection('pedidos').doc(docId).update({ estado: nuevoEstado })
+    .then(() => {
+      const labels = { pendiente: '⏳ Pendiente', confirmado: '✅ Confirmado', entregado: '📦 Entregado', cancelado: '❌ Cancelado' };
+      adminToast(`Estado → ${labels[nuevoEstado]}`);
+    })
+    .catch(() => adminToast('⚠ Error al actualizar estado'));
 }
 
-function responderWA(id) {
-  const p = PEDIDOS.find(x => x.id === id);
-  if (!p || !p.wa) return;
-  const num = p.contacto.replace(/\D/g, '');
-  window.open(`https://wa.me/549${num}?text=${encodeURIComponent(p.wa)}`, '_blank');
+function responderWA(docId) {
+  const p = pedidosFS.find(x => x.docId === docId);
+  if (!p || !p.tel) return;
+  const num = p.tel.replace(/\D/g, '');
+  const msg = `Hola ${p.cliente}! Te contactamos de Omar Aberturas por tu pedido de ${p.productos}. ¿En qué te podemos ayudar?`;
+  window.open(`https://wa.me/549${num}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-function verDetalle(id) {
-  const p = PEDIDOS.find(x => x.id === id);
+function verDetalle(docId) {
+  const p = pedidosFS.find(x => x.docId === docId);
   if (!p) return;
-  document.getElementById('detalle-titulo').textContent = `Pedido ${p.id}`;
+  const idCorto = '#' + docId.slice(0, 6).toUpperCase();
+  const fecha = p.fecha?.toDate
+    ? p.fecha.toDate().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    : '—';
+  const metodoLabel = { mercadopago: '💳 Mercado Pago', transferencia: '🏦 Transferencia' }[p.metodo] || p.metodo || '—';
+
+  document.getElementById('detalle-titulo').textContent = `Pedido ${idCorto}`;
   document.getElementById('detalle-body').innerHTML = `
     <div>
       <div class="detalle-section-title">Cliente</div>
-      <div class="detalle-row"><span class="detalle-row-label">Nombre</span><span class="detalle-row-value">${p.cliente}</span></div>
-      <div class="detalle-row"><span class="detalle-row-label">Teléfono</span><span class="detalle-row-value">${p.contacto}</span></div>
-      <div class="detalle-row"><span class="detalle-row-label">Email</span><span class="detalle-row-value">${p.email}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Nombre</span><span class="detalle-row-value">${p.cliente || '—'}</span></div>
+      ${p.tel   ? `<div class="detalle-row"><span class="detalle-row-label">Teléfono</span><span class="detalle-row-value">${p.tel}</span></div>`   : ''}
+      ${p.email ? `<div class="detalle-row"><span class="detalle-row-label">Email</span><span class="detalle-row-value">${p.email}</span></div>`     : ''}
     </div>
     <div>
       <div class="detalle-section-title">Pedido</div>
-      <div class="detalle-row"><span class="detalle-row-label">Fecha</span><span class="detalle-row-value">${p.fecha}</span></div>
-      <div class="detalle-row"><span class="detalle-row-label">Productos</span><span class="detalle-row-value" style="max-width:220px;">${p.productos}</span></div>
-      <div class="detalle-row"><span class="detalle-row-label">Total</span><span class="detalle-row-value" style="color:var(--rojo);font-size:18px;">${p.total}</span></div>
-      <div class="detalle-row"><span class="detalle-row-label">Estado</span><span class="detalle-row-value">${estadoActual[p.id]}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Fecha</span><span class="detalle-row-value">${fecha}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Productos</span><span class="detalle-row-value" style="max-width:220px;">${p.productos || '—'}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Total</span><span class="detalle-row-value" style="color:var(--rojo);font-size:18px;">$${p.total || '—'}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Método de pago</span><span class="detalle-row-value">${metodoLabel}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Estado</span><span class="detalle-row-value">${p.estado || '—'}</span></div>
     </div>
-    ${p.wa ? `<button class="detalle-wa-btn" onclick="responderWA('${p.id}')">
+    ${p.tel ? `
+    <button class="detalle-wa-btn" onclick="responderWA('${docId}')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Responder por WhatsApp
+      Contactar por WhatsApp
     </button>` : ''}
   `;
   document.getElementById('detalle-overlay').classList.add('open');
@@ -877,6 +916,22 @@ function verDetalle(id) {
 function cerrarDetalle() {
   document.getElementById('detalle-overlay').classList.remove('open');
   document.getElementById('detalle-drawer').classList.remove('open');
+}
+
+function actualizarStatsPedidos() {
+  const pendientes = pedidosFS.filter(p => p.estado === 'pendiente').length;
+  document.getElementById('stat-pendientes').textContent = pendientes;
+  document.getElementById('badge-pedidos').textContent = pendientes || '0';
+  document.getElementById('stat-total-all').textContent = pedidosFS.length;
+
+  const ahora = new Date();
+  const esteMes = pedidosFS.filter(p => {
+    if (!p.fecha?.toDate) return false;
+    const d = p.fecha.toDate();
+    return d.getMonth() === ahora.getMonth() && d.getFullYear() === ahora.getFullYear();
+  });
+  document.getElementById('stat-total-mes').textContent = esteMes.length;
+  document.getElementById('stat-entregados').textContent = esteMes.filter(p => p.estado === 'entregado').length;
 }
 
 /* ═══════════════════════════════════
@@ -1202,7 +1257,6 @@ function adminToast(msg) {
    INIT
 ═══════════════════════════════════ */
 
-renderTabla('todos');
 renderProductos();
 renderObras();
 </script>
