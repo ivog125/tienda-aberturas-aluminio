@@ -288,6 +288,12 @@ footer { background: #1a2332; color: white; padding: 3rem 2rem 0; }
 .co-bank-total-label{opacity:.85;font-size:13px;font-family:'Nunito',sans-serif;font-weight:700;}
 .co-bank-total-amount{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;}
 
+/* ── CTA BAND ── */
+.cta-band{background:linear-gradient(135deg,#111111,#cc2222);padding:3rem 2rem;text-align:center;}
+.cta-band h2{font-family:'Nunito',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:900;color:white;margin-bottom:.75rem;}
+.cta-band p{color:rgba(255,255,255,.8);font-size:15px;margin-bottom:1.75rem;}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+
 /* ── BOTÓN MI CUENTA (NAV) ── */
 .account-nav-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1.5px solid var(--gris-medio);color:var(--negro);padding:7px 14px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .account-nav-btn:hover{border-color:var(--primario);color:var(--primario);}
