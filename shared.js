@@ -116,7 +116,17 @@ function _abrirCheckout() {
   document.getElementById('cart-overlay').classList.remove('open');
   document.getElementById('co-overlay').classList.add('open');
   document.getElementById('co-modal').classList.add('open');
-  _coPaso(1);
+
+  const user = auth.currentUser;
+  if (user) {
+    const nombre = document.getElementById('co-nombre');
+    const email  = document.getElementById('co-email');
+    if (nombre && user.displayName) nombre.value = user.displayName;
+    if (email  && user.email)       email.value  = user.email;
+    _coPaso(1);
+  } else {
+    _coPaso(0);
+  }
 }
 
 function cerrarCheckout() {
@@ -125,19 +135,26 @@ function cerrarCheckout() {
 }
 
 function _coPaso(n) {
-  ['co-paso-1', 'co-paso-2-mp', 'co-paso-2-transfer', 'co-paso-3'].forEach(id => {
+  ['co-paso-0', 'co-paso-1', 'co-paso-2-mp', 'co-paso-2-transfer', 'co-paso-3'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
-  if (n === 1) {
+  const steps = document.getElementById('co-steps');
+  if (n === 0) {
+    document.getElementById('co-paso-0').style.display = 'block';
+    if (steps) steps.style.visibility = 'hidden';
+  } else if (n === 1) {
+    if (steps) steps.style.visibility = '';
     document.getElementById('co-paso-1').style.display = 'block';
     document.getElementById('co-dot-1').className = 'co-dot active';
     document.getElementById('co-dot-2').className = 'co-dot';
   } else if (n === 2) {
+    if (steps) steps.style.visibility = '';
     document.getElementById(_payMode === 'mp' ? 'co-paso-2-mp' : 'co-paso-2-transfer').style.display = 'block';
     document.getElementById('co-dot-1').className = 'co-dot done';
     document.getElementById('co-dot-2').className = 'co-dot active';
   } else if (n === 3) {
+    if (steps) steps.style.visibility = '';
     document.getElementById('co-paso-3').style.display = 'block';
     document.getElementById('co-dot-1').className = 'co-dot done';
     document.getElementById('co-dot-2').className = 'co-dot done';
@@ -342,6 +359,52 @@ function authResetPassword() {
     .catch(err => { errEl.textContent = _tradAuthError(err.code); });
 }
 
+function switchCoAuth(view) {
+  document.getElementById('co-auth-login').style.display    = view === 'login'    ? 'block' : 'none';
+  document.getElementById('co-auth-registro').style.display = view === 'registro' ? 'block' : 'none';
+  ['co-auth-err', 'co-auth-err-reg'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '';
+  });
+}
+
+function coAuthLogin() {
+  const email = document.getElementById('co-auth-email').value.trim();
+  const pass  = document.getElementById('co-auth-pass').value;
+  const errEl = document.getElementById('co-auth-err');
+  errEl.textContent = '';
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(cred => {
+      showToast('¡Bienvenido!');
+      const nombre = document.getElementById('co-nombre');
+      const emailF = document.getElementById('co-email');
+      if (nombre && cred.user.displayName) nombre.value = cred.user.displayName;
+      if (emailF) emailF.value = cred.user.email;
+      _coPaso(1);
+    })
+    .catch(err => { errEl.textContent = _tradAuthError(err.code); });
+}
+
+function coAuthRegistrar() {
+  const nombre = document.getElementById('co-auth-nombre').value.trim();
+  const email  = document.getElementById('co-auth-reg-email').value.trim();
+  const pass   = document.getElementById('co-auth-reg-pass').value;
+  const errEl  = document.getElementById('co-auth-err-reg');
+  errEl.textContent = '';
+  if (!nombre) { errEl.textContent = 'Ingresá tu nombre.'; return; }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(cred => cred.user.updateProfile({ displayName: nombre }).then(() => cred))
+    .then(cred => {
+      showToast('¡Cuenta creada!');
+      const nombreF = document.getElementById('co-nombre');
+      const emailF  = document.getElementById('co-email');
+      if (nombreF) nombreF.value = nombre;
+      if (emailF)  emailF.value  = email;
+      _coPaso(1);
+    })
+    .catch(err => { errEl.textContent = _tradAuthError(err.code); });
+}
+
 function _cargarPedidosUsuario() {
   const listEl = document.getElementById('auth-orders-list');
   const infoEl = document.getElementById('auth-user-info');
@@ -411,12 +474,43 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="co-overlay" id="co-overlay" onclick="cerrarCheckout()"></div>
     <div class="co-modal" id="co-modal">
       <div class="co-header">
-        <div class="co-steps">
+        <div class="co-steps" id="co-steps">
           <div class="co-dot active" id="co-dot-1"><span>1</span> Tus datos</div>
           <div class="co-step-line"></div>
           <div class="co-dot" id="co-dot-2"><span>2</span> Pagar</div>
         </div>
         <button class="co-close" onclick="cerrarCheckout()">✕</button>
+      </div>
+
+      <div class="co-body" id="co-paso-0" style="display:none;">
+        <div class="co-title">¿Querés guardar tu pedido?</div>
+        <div class="co-sub">Iniciá sesión para ver tu historial, o continuá como invitado.</div>
+
+        <div id="co-auth-forms">
+          <div id="co-auth-login">
+            <div class="co-field"><label>Email</label><input type="email" id="co-auth-email" placeholder="tu@email.com"></div>
+            <div class="co-field"><label>Contraseña</label><input type="password" id="co-auth-pass" placeholder="••••••••"></div>
+            <div class="auth-error" id="co-auth-err" style="margin-bottom:.5rem;"></div>
+            <button class="co-btn-primary" onclick="coAuthLogin()">Iniciar sesión →</button>
+            <div class="auth-links" style="margin-top:.75rem;">
+              <button class="auth-link" onclick="switchCoAuth('registro')">¿No tenés cuenta? Registrate</button>
+            </div>
+          </div>
+
+          <div id="co-auth-registro" style="display:none;">
+            <div class="co-field"><label>Nombre</label><input type="text" id="co-auth-nombre" placeholder="Tu nombre"></div>
+            <div class="co-field"><label>Email</label><input type="email" id="co-auth-reg-email" placeholder="tu@email.com"></div>
+            <div class="co-field"><label>Contraseña</label><input type="password" id="co-auth-reg-pass" placeholder="Mínimo 6 caracteres"></div>
+            <div class="auth-error" id="co-auth-err-reg" style="margin-bottom:.5rem;"></div>
+            <button class="co-btn-primary" onclick="coAuthRegistrar()">Crear cuenta →</button>
+            <div class="auth-links" style="margin-top:.75rem;">
+              <button class="auth-link" onclick="switchCoAuth('login')">← Ya tengo cuenta</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-divider">o</div>
+        <button class="co-btn-back" onclick="_coPaso(1)" style="width:100%;text-align:center;">Continuar como invitado →</button>
       </div>
 
       <div class="co-body" id="co-paso-1">
