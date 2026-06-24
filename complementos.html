@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complementos — Omar Aberturas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="page-banner">
+  <div class="page-banner-pattern"></div>
+  <div class="page-banner-inner">
+    <div class="page-breadcrumb"><a href="index.html">Inicio</a><span>›</span> Complementos</div>
+    <h1 class="page-title">🔧 Complementos</h1>
+    <p class="page-subtitle">Accesorios, herrajes y todo lo que necesitás para completar tu obra</p>
+  </div>
+</div>
+
+<section class="productos-section">
+  <div class="productos-wrapper">
+    <div class="productos-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">🔍 Filtrar</div>
+        <div class="sidebar-group">
+          <div class="sidebar-group-title">Categoría</div>
+          <button class="sidebar-link active" onclick="filtrar('todos',this)">Todos <span class="count" id="count-todos"></span></button>
+          <button class="sidebar-link" onclick="filtrar('Herraje',this)">Herrajes <span class="count" id="count-Herraje"></span></button>
+          <button class="sidebar-link" onclick="filtrar('Mosquitero',this)">Mosquiteros <span class="count" id="count-Mosquitero"></span></button>
+          <button class="sidebar-link" onclick="filtrar('Vidrio',this)">Vidrios <span class="count" id="count-Vidrio"></span></button>
+          <button class="sidebar-link" onclick="filtrar('Otros',this)">Otros <span class="count" id="count-Otros"></span></button>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-group-title">Acceso rápido</div>
+          <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
+        </div>
+      </aside>
+      <div>
+        <div class="productos-grid" id="productos-grid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-mount"></div>
+<div id="cart-mount"></div>
+
+<script src="partials.js"></script>
+<script src="shared.js"></script>
+<script>
+document.getElementById('header-mount').innerHTML = renderNav('complementos.html');
+document.getElementById('footer-mount').innerHTML = renderFooter();
+document.getElementById('cart-mount').innerHTML = renderCartSidebar();
+
+const COMPLEMENTOS = [
+  { id:501, icono:'🔒', nombre:'Cerradura doble palillo', desc:'Para puertas de chapa o madera. Con 3 llaves.', precio:18500, unidad:'unidad', tipo:'Herraje' },
+  { id:502, icono:'🔒', nombre:'Cerradura embutir aluminio', desc:'Para perfiles de aluminio. Alta seguridad.', precio:24000, unidad:'unidad', tipo:'Herraje' },
+  { id:503, icono:'🪝', nombre:'Manija para ventana corrediza', desc:'Aluminio o plástico. Compatible con perfiles estándar.', precio:4500, unidad:'unidad', tipo:'Herraje' },
+  { id:504, icono:'🪝', nombre:'Manija para puerta de aluminio', desc:'Manija con escudo. Varios colores disponibles.', precio:8500, unidad:'unidad', tipo:'Herraje' },
+  { id:505, icono:'🪲', nombre:'Mosquitero enrollable', desc:'Para ventanas corredizas y abatibles. A medida.', precio:32000, unidad:'unidad', tipo:'Mosquitero' },
+  { id:506, icono:'🪲', nombre:'Mosquitero fijo', desc:'Marco de aluminio con tela de fibra de vidrio.', precio:18000, unidad:'unidad', tipo:'Mosquitero' },
+  { id:507, icono:'🪟', nombre:'Vidrio float 4mm', desc:'Por m². Para ventanas y puertas de aluminio.', precio:12000, unidad:'m²', tipo:'Vidrio' },
+  { id:508, icono:'🪟', nombre:'Doble vidrio hermético (DVH)', desc:'Por m². Mayor aislación térmica y acústica.', precio:28000, unidad:'m²', tipo:'Vidrio' },
+  { id:509, icono:'⚙️', nombre:'Motor para portón', desc:'Motor corredizo o batiente. Incluye control remoto.', precio:95000, unidad:'unidad', tipo:'Otros' },
+  { id:510, icono:'🔧', nombre:'Burlete para puerta', desc:'Burletes de goma y cepillo. Varios largos disponibles.', precio:3500, unidad:'unidad', tipo:'Otros' },
+];
+
+const qtyMap = {};
+COMPLEMENTOS.forEach(p => { qtyMap[p.id] = 1; });
+
+function renderProductos(filtro) {
+  const lista = filtro === 'todos' ? COMPLEMENTOS : COMPLEMENTOS.filter(p => p.tipo === filtro);
+  document.getElementById('productos-grid').innerHTML = lista.map(p => `
+    <div class="producto-card">
+      <div class="producto-img">
+        <span class="producto-rubro-badge">${p.tipo}</span>
+        ${p.icono}
+      </div>
+      <div class="producto-body">
+        <div class="producto-nombre">${p.nombre}</div>
+        <div class="producto-desc">${p.desc}</div>
+        <div class="producto-precio">$${p.precio.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad}</span></div>
+        <div class="producto-actions">
+          <div class="qty-control">
+            <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
+            <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]||1}</span>
+            <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
+          </div>
+          <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function actualizarContadores() {
+  document.getElementById('count-todos').textContent = COMPLEMENTOS.length;
+  ['Herraje','Mosquitero','Vidrio','Otros'].forEach(t => {
+    const el = document.getElementById('count-' + t);
+    if (el) el.textContent = COMPLEMENTOS.filter(p => p.tipo === t).length;
+  });
+}
+
+function filtrar(tipo, el) {
+  document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderProductos(tipo);
+}
+
+function cambiarQty(id, d) {
+  qtyMap[id] = Math.max(1, (qtyMap[id]||1) + d);
+  const el = document.getElementById('qty-' + id);
+  if (el) el.textContent = qtyMap[id];
+}
+
+function addToCart(id) {
+  const p = COMPLEMENTOS.find(x => x.id === id);
+  if (!p) return;
+  agregarFijo({ id:p.id, icono:p.icono, nombre:p.nombre, precio:p.precio, unidad:p.unidad, qty:qtyMap[id]||1 });
+  showToast('✓ ' + p.nombre + ' agregado');
+  const btn = document.getElementById('btn-' + id);
+  if (btn) { btn.textContent='✓ Agregado'; btn.classList.add('agregado'); setTimeout(()=>{ btn.textContent='+ Agregar'; btn.classList.remove('agregado'); }, 1500); }
+}
+
+renderProductos('todos');
+actualizarContadores();
+</script>
+</body>
+</html>

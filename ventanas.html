@@ -6,6 +6,12 @@
 <title>Ventanas — Omar Aberturas</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+.subcat-intro { background: var(--primario-suave); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+.subcat-intro-icon { font-size: 28px; flex-shrink: 0; }
+.subcat-intro-title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 900; color: var(--primario); }
+.subcat-intro-desc { font-size: 13px; color: var(--gris-texto); margin-top: 2px; }
+</style>
 </head>
 <body>
 <div id="header-mount"></div>
@@ -24,24 +30,30 @@
 <section class="productos-section">
   <div class="productos-wrapper">
     <div class="tabs-row">
-      <button class="tab-btn active" onclick="switchTab('fijos')">💰 Precio fijo</button>
+      <button class="tab-btn active" onclick="switchTab('herrero')">🏗️ Línea Herrero</button>
+      <button class="tab-btn" onclick="switchTab('aluminio')">🪟 Aluminio</button>
+      <button class="tab-btn" onclick="switchTab('a30')">⭐ A30</button>
       <button class="tab-btn" onclick="switchTab('medida')">📐 A medida (consulta)</button>
     </div>
 
-    <!-- PRECIO FIJO -->
-    <div class="tab-panel active" id="tab-fijos">
+    <!-- ── LÍNEA HERRERO ── -->
+    <div class="tab-panel active" id="tab-herrero">
+      <div class="subcat-intro">
+        <div class="subcat-intro-icon">🏗️</div>
+        <div>
+          <div class="subcat-intro-title">Línea Herrero</div>
+          <div class="subcat-intro-desc">Perfilería clásica de alta resistencia, pensada para obras y construcción. Robustez y durabilidad comprobada.</div>
+        </div>
+      </div>
       <div class="productos-layout">
-
-        <!-- Sidebar -->
         <aside class="sidebar">
           <div class="sidebar-title">🔍 Filtrar</div>
           <div class="sidebar-group">
             <div class="sidebar-group-title">Tipo</div>
-            <button class="sidebar-link active" onclick="filtrar('todos',this)">Todos <span class="count" id="count-todos">6</span></button>
-            <button class="sidebar-link" onclick="filtrar('Corrediza',this)">Corrediza <span class="count" id="count-Corrediza">2</span></button>
-            <button class="sidebar-link" onclick="filtrar('Abatible',this)">Abatible <span class="count" id="count-Abatible">2</span></button>
-            <button class="sidebar-link" onclick="filtrar('Proyectante',this)">Proyectante <span class="count" id="count-Proyectante">1</span></button>
-            <button class="sidebar-link" onclick="filtrar('Aireador',this)">Aireador <span class="count" id="count-Aireador">1</span></button>
+            <button class="sidebar-link active" onclick="filtrar('herrero','todos',this)">Todos <span class="count" id="hcount-todos"></span></button>
+            <button class="sidebar-link" onclick="filtrar('herrero','Corrediza',this)">Corrediza <span class="count" id="hcount-Corrediza"></span></button>
+            <button class="sidebar-link" onclick="filtrar('herrero','Abatible',this)">Abatible <span class="count" id="hcount-Abatible"></span></button>
+            <button class="sidebar-link" onclick="filtrar('herrero','Proyectante',this)">Proyectante <span class="count" id="hcount-Proyectante"></span></button>
           </div>
           <div class="sidebar-group">
             <div class="sidebar-group-title">Acceso rápido</div>
@@ -49,14 +61,75 @@
             <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
           </div>
         </aside>
-
         <div>
-          <div class="productos-grid" id="productos-grid"></div>
+          <div class="productos-grid" id="grid-herrero"></div>
         </div>
       </div>
     </div>
 
-    <!-- A MEDIDA -->
+    <!-- ── ALUMINIO ── -->
+    <div class="tab-panel" id="tab-aluminio">
+      <div class="subcat-intro">
+        <div class="subcat-intro-icon">🪟</div>
+        <div>
+          <div class="subcat-intro-title">Aluminio</div>
+          <div class="subcat-intro-desc">Ventanas de aluminio estándar fabricadas en nuestro taller. Todos los sistemas, medidas y colores disponibles.</div>
+        </div>
+      </div>
+      <div class="productos-layout">
+        <aside class="sidebar">
+          <div class="sidebar-title">🔍 Filtrar</div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Tipo</div>
+            <button class="sidebar-link active" onclick="filtrar('aluminio','todos',this)">Todos <span class="count" id="acount-todos"></span></button>
+            <button class="sidebar-link" onclick="filtrar('aluminio','Corrediza',this)">Corrediza <span class="count" id="acount-Corrediza"></span></button>
+            <button class="sidebar-link" onclick="filtrar('aluminio','Abatible',this)">Abatible <span class="count" id="acount-Abatible"></span></button>
+            <button class="sidebar-link" onclick="filtrar('aluminio','Aireador',this)">Aireador <span class="count" id="acount-Aireador"></span></button>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Acceso rápido</div>
+            <button class="sidebar-link" onclick="switchTab('medida')">📐 Pedir a medida</button>
+            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
+          </div>
+        </aside>
+        <div>
+          <div class="productos-grid" id="grid-aluminio"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── A30 ── -->
+    <div class="tab-panel" id="tab-a30">
+      <div class="subcat-intro">
+        <div class="subcat-intro-icon">⭐</div>
+        <div>
+          <div class="subcat-intro-title">A30</div>
+          <div class="subcat-intro-desc">Línea premium de alto rendimiento térmico y acústico. Mayor aislación y acabados superiores.</div>
+        </div>
+      </div>
+      <div class="productos-layout">
+        <aside class="sidebar">
+          <div class="sidebar-title">🔍 Filtrar</div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Tipo</div>
+            <button class="sidebar-link active" onclick="filtrar('a30','todos',this)">Todos <span class="count" id="pcount-todos"></span></button>
+            <button class="sidebar-link" onclick="filtrar('a30','Corrediza',this)">Corrediza <span class="count" id="pcount-Corrediza"></span></button>
+            <button class="sidebar-link" onclick="filtrar('a30','Abatible',this)">Abatible <span class="count" id="pcount-Abatible"></span></button>
+            <button class="sidebar-link" onclick="filtrar('a30','Paño fijo',this)">Paño fijo <span class="count" id="pcount-Panofijo"></span></button>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Acceso rápido</div>
+            <button class="sidebar-link" onclick="switchTab('medida')">📐 Pedir a medida</button>
+            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
+          </div>
+        </aside>
+        <div>
+          <div class="productos-grid" id="grid-a30"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── A MEDIDA ── -->
     <div class="tab-panel" id="tab-medida">
       <p style="font-size:13px;color:var(--gris-texto);margin-bottom:1.5rem;max-width:600px;font-weight:600;">
         Completá las medidas y especificaciones. Lo sumamos al carrito y te enviamos el presupuesto.
@@ -72,21 +145,26 @@
             <div class="form-field"><label>Alto (cm)</label><input type="number" id="v-alto" placeholder="Ej: 100"></div>
           </div>
           <div class="form-row">
+            <div class="form-field"><label>Línea</label>
+              <select id="v-linea"><option value="">Seleccionar...</option><option>Línea Herrero</option><option>Aluminio</option><option>A30</option></select>
+            </div>
             <div class="form-field"><label>Tipo</label>
               <select id="v-tipo"><option value="">Seleccionar...</option><option>Corrediza</option><option>Abatible</option><option>Proyectante</option><option>Paño fijo</option></select>
             </div>
+          </div>
+          <div class="form-row">
             <div class="form-field"><label>Color</label>
               <select id="v-color"><option value="">Seleccionar...</option><option>Blanco</option><option>Natural</option><option>Negro</option><option>Bronce</option></select>
             </div>
-          </div>
-          <div class="form-row">
             <div class="form-field"><label>Vidrio</label>
               <select id="v-vidrio"><option value="">Seleccionar...</option><option>Simple 4mm</option><option>DVH (doble vidrio)</option><option>Templado</option><option>Sin vidrio</option></select>
             </div>
+          </div>
+          <div class="form-row">
             <div class="form-field"><label>Cantidad</label><input type="number" id="v-cant" value="1" min="1"></div>
           </div>
           <div class="form-field full" style="margin-top:4px;"><label>Observaciones</label><textarea id="v-obs" placeholder="Detalles adicionales..."></textarea></div>
-          <button class="btn-consultar" onclick="submitMedidaVentana()">+ Agregar al carrito</button>
+          <button class="btn-consultar" onclick="submitMedidaVentana()">📲 Enviar consulta por WhatsApp</button>
         </div>
 
         <div class="medida-card">
@@ -113,10 +191,11 @@
             <div class="form-field"><label>Cantidad</label><input type="number" id="pa-cant" value="1" min="1"></div>
           </div>
           <div class="form-field full" style="margin-top:4px;"><label>Observaciones</label><textarea id="pa-obs" placeholder="Detalles adicionales..."></textarea></div>
-          <button class="btn-consultar" onclick="submitMedidaPuerta()">+ Agregar al carrito</button>
+          <button class="btn-consultar" onclick="submitMedidaPuerta()">📲 Enviar consulta por WhatsApp</button>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -130,22 +209,36 @@ document.getElementById('header-mount').innerHTML = renderNav('ventanas.html');
 document.getElementById('footer-mount').innerHTML = renderFooter();
 document.getElementById('cart-mount').innerHTML = renderCartSidebar();
 
-const VENTANAS = [
-  { id:101, icono:'🪟', nombre:'Ventana corrediza 100×60', desc:'Aluminio blanco, vidrio simple 4mm. Medida estándar.', precio:48000, unidad:'unidad', tipo:'Corrediza' },
-  { id:102, icono:'🪟', nombre:'Ventana corrediza 120×100', desc:'Aluminio blanco, vidrio simple 4mm.', precio:72000, unidad:'unidad', tipo:'Corrediza' },
-  { id:103, icono:'🪟', nombre:'Ventana abatible 60×80', desc:'Aluminio natural, vidrio simple. Apertura interior.', precio:55000, unidad:'unidad', tipo:'Abatible' },
-  { id:104, icono:'🪟', nombre:'Ventana abatible DVH 80×100', desc:'Aluminio natural, doble vidrio hermético.', precio:98000, unidad:'unidad', tipo:'Abatible' },
-  { id:105, icono:'🪟', nombre:'Ventana proyectante 60×40', desc:'Aluminio blanco, vidrio simple. Ideal para baños.', precio:38000, unidad:'unidad', tipo:'Proyectante' },
-  { id:106, icono:'🪟', nombre:'Aireador / Celóscope 60×20', desc:'Aluminio natural, con reja y mosquitero.', precio:24000, unidad:'unidad', tipo:'Aireador' },
-];
+/* ── DATOS POR LÍNEA ── */
+const LINEAS = {
+  herrero: [
+    { id:101, icono:'🪟', nombre:'Corrediza Herrero 100×60', desc:'Perfilería Herrero, aluminio blanco, vidrio simple 4mm.', precio:48000, unidad:'unidad', tipo:'Corrediza' },
+    { id:102, icono:'🪟', nombre:'Corrediza Herrero 120×100', desc:'Perfilería Herrero, aluminio blanco, vidrio simple 4mm.', precio:72000, unidad:'unidad', tipo:'Corrediza' },
+    { id:103, icono:'🪟', nombre:'Abatible Herrero 60×80', desc:'Perfilería Herrero, aluminio natural, vidrio simple. Apertura interior.', precio:55000, unidad:'unidad', tipo:'Abatible' },
+    { id:104, icono:'🪟', nombre:'Proyectante Herrero 60×40', desc:'Perfilería Herrero, aluminio blanco. Ideal para baños.', precio:38000, unidad:'unidad', tipo:'Proyectante' },
+  ],
+  aluminio: [
+    { id:201, icono:'🪟', nombre:'Corrediza aluminio 100×60', desc:'Aluminio blanco, vidrio simple 4mm. Medida estándar.', precio:52000, unidad:'unidad', tipo:'Corrediza' },
+    { id:202, icono:'🪟', nombre:'Corrediza aluminio 120×100', desc:'Aluminio blanco, vidrio simple 4mm.', precio:78000, unidad:'unidad', tipo:'Corrediza' },
+    { id:203, icono:'🪟', nombre:'Abatible aluminio DVH 80×100', desc:'Aluminio natural, doble vidrio hermético (DVH).', precio:98000, unidad:'unidad', tipo:'Abatible' },
+    { id:204, icono:'🪟', nombre:'Aireador / Celóscope 60×20', desc:'Aluminio natural, con reja y mosquitero incluido.', precio:24000, unidad:'unidad', tipo:'Aireador' },
+  ],
+  a30: [
+    { id:301, icono:'🪟', nombre:'A30 Corrediza 100×60', desc:'Línea A30, perfil reforzado, vidrio DVH, máxima aislación.', precio:95000, unidad:'unidad', tipo:'Corrediza' },
+    { id:302, icono:'🪟', nombre:'A30 Corrediza 150×120', desc:'Línea A30, perfil reforzado, vidrio DVH. Ideal para ambientes amplios.', precio:138000, unidad:'unidad', tipo:'Corrediza' },
+    { id:303, icono:'🪟', nombre:'A30 Abatible 80×100', desc:'Línea A30, doble vidrio, sellado hermético premium.', precio:115000, unidad:'unidad', tipo:'Abatible' },
+    { id:304, icono:'🪟', nombre:'A30 Paño fijo 120×150', desc:'Línea A30, vidrio DVH, máxima entrada de luz con aislación superior.', precio:105000, unidad:'unidad', tipo:'Paño fijo' },
+  ],
+};
 
 const qtyMap = {};
-VENTANAS.forEach(p => { qtyMap[p.id] = 1; });
-let filtroActivo = 'todos';
+Object.values(LINEAS).flat().forEach(p => { qtyMap[p.id] = 1; });
 
-function renderProductos(filtro) {
-  const lista = filtro === 'todos' ? VENTANAS : VENTANAS.filter(p => p.tipo === filtro);
-  document.getElementById('productos-grid').innerHTML = lista.map(p => `
+/* ── RENDER ── */
+function renderGrid(linea, filtro) {
+  const lista = filtro === 'todos' ? LINEAS[linea] : LINEAS[linea].filter(p => p.tipo === filtro);
+  const gridId = { herrero:'grid-herrero', aluminio:'grid-aluminio', a30:'grid-a30' }[linea];
+  document.getElementById(gridId).innerHTML = lista.map(p => `
     <div class="producto-card">
       <div class="producto-img">
         <span class="producto-rubro-badge">${p.tipo}</span>
@@ -168,53 +261,86 @@ function renderProductos(filtro) {
   `).join('');
 }
 
+function actualizarContadores(linea) {
+  const prefixes = { herrero:'hcount', aluminio:'acount', a30:'pcount' };
+  const pre = prefixes[linea];
+  const todos = LINEAS[linea];
+  const tipos = [...new Set(todos.map(p => p.tipo))];
+  const todosEl = document.getElementById(`${pre}-todos`);
+  if (todosEl) todosEl.textContent = todos.length;
+  tipos.forEach(t => {
+    const key = t.replace(/\s/g, '');
+    const el = document.getElementById(`${pre}-${key}`);
+    if (el) el.textContent = todos.filter(p => p.tipo === t).length;
+  });
+}
+
+function filtrar(linea, tipo, el) {
+  const contenedor = el.closest('.sidebar');
+  contenedor.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderGrid(linea, tipo);
+}
+
 function cambiarQty(id, d) {
-  qtyMap[id] = Math.max(1, (qtyMap[id]||1)+d);
-  const el = document.getElementById('qty-'+id);
-  if(el) el.textContent = qtyMap[id];
+  qtyMap[id] = Math.max(1, (qtyMap[id]||1) + d);
+  const el = document.getElementById('qty-' + id);
+  if (el) el.textContent = qtyMap[id];
 }
 
 function addToCart(id) {
-  const p = VENTANAS.find(x=>x.id===id);
-  if(!p) return;
+  const p = Object.values(LINEAS).flat().find(x => x.id === id);
+  if (!p) return;
   agregarFijo({ id:p.id, icono:p.icono, nombre:p.nombre, precio:p.precio, unidad:p.unidad, qty:qtyMap[id]||1 });
-  showToast('✓ '+p.nombre+' agregado');
-  const btn = document.getElementById('btn-'+id);
-  if(btn){ btn.textContent='✓ Agregado'; btn.classList.add('agregado'); setTimeout(()=>{ btn.textContent='+ Agregar'; btn.classList.remove('agregado'); },1500); }
+  showToast('✓ ' + p.nombre + ' agregado');
+  const btn = document.getElementById('btn-' + id);
+  if (btn) { btn.textContent='✓ Agregado'; btn.classList.add('agregado'); setTimeout(()=>{ btn.textContent='+ Agregar'; btn.classList.remove('agregado'); }, 1500); }
 }
 
-function filtrar(tipo, el) {
-  filtroActivo = tipo;
-  document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderProductos(tipo);
-}
-
+/* ── A MEDIDA ── */
 function submitMedidaVentana() {
-  const a=document.getElementById('v-ancho').value, al=document.getElementById('v-alto').value, t=document.getElementById('v-tipo').value;
-  const c=document.getElementById('v-color').value, v=document.getElementById('v-vidrio').value, o=document.getElementById('v-obs').value;
-  const qty=parseInt(document.getElementById('v-cant').value)||1;
+  const a=document.getElementById('v-ancho').value, al=document.getElementById('v-alto').value;
+  const l=document.getElementById('v-linea').value, t=document.getElementById('v-tipo').value;
+  const c=document.getElementById('v-color').value, v=document.getElementById('v-vidrio').value;
+  const o=document.getElementById('v-obs').value, qty=parseInt(document.getElementById('v-cant').value)||1;
   if(!a||!al||!t){ showToast('⚠ Completá ancho, alto y tipo'); return; }
-  agregarMedida({ icono:'🪟', nombre:'Ventana de aluminio', detalle:`${a}×${al}cm · ${t}${c?' · '+c:''}${v?' · '+v:''}${o?' · '+o:''}`, qty });
-  showToast('✓ Ventana agregada al carrito');
-  ['v-ancho','v-alto','v-tipo','v-color','v-vidrio','v-obs'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
+  let msg=`🪟 *Consulta ventana a medida — Omar Aberturas*\n\n`;
+  msg+=`📐 Medidas: ${a}×${al} cm\nCantidad: ${qty}\n`;
+  if(l) msg+=`Línea: ${l}\n`;
+  msg+=`Tipo: ${t}\n`;
+  if(c) msg+=`Color: ${c}\n`;
+  if(v) msg+=`Vidrio: ${v}\n`;
+  if(o) msg+=`Observaciones: ${o}`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  showToast('✓ Consulta enviada por WhatsApp');
+  ['v-ancho','v-alto','v-linea','v-tipo','v-color','v-vidrio','v-obs'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
   document.getElementById('v-cant').value=1;
-  openCart();
 }
 
 function submitMedidaPuerta() {
-  const a=document.getElementById('pa-ancho').value, al=document.getElementById('pa-alto').value, t=document.getElementById('pa-tipo').value;
-  const c=document.getElementById('pa-color').value, v=document.getElementById('pa-vidrio').value, o=document.getElementById('pa-obs').value;
+  const a=document.getElementById('pa-ancho').value, al=document.getElementById('pa-alto').value;
+  const t=document.getElementById('pa-tipo').value, c=document.getElementById('pa-color').value;
+  const v=document.getElementById('pa-vidrio').value, o=document.getElementById('pa-obs').value;
   const qty=parseInt(document.getElementById('pa-cant').value)||1;
   if(!a||!al||!t){ showToast('⚠ Completá ancho, alto y tipo'); return; }
-  agregarMedida({ icono:'🚪', nombre:'Puerta de aluminio', detalle:`${a}×${al}cm · ${t}${c?' · '+c:''}${v?' · '+v:''}${o?' · '+o:''}`, qty });
-  showToast('✓ Puerta agregada al carrito');
+  let msg=`🚪 *Consulta puerta a medida — Omar Aberturas*\n\n`;
+  msg+=`📐 Medidas: ${a}×${al} cm\nCantidad: ${qty}\nTipo: ${t}\n`;
+  if(c) msg+=`Color: ${c}\n`;
+  if(v) msg+=`Vidrio: ${v}\n`;
+  if(o) msg+=`Observaciones: ${o}`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  showToast('✓ Consulta enviada por WhatsApp');
   ['pa-ancho','pa-alto','pa-tipo','pa-color','pa-vidrio','pa-obs'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
   document.getElementById('pa-cant').value=1;
-  openCart();
 }
 
-renderProductos('todos');
+/* ── INIT ── */
+['herrero','aluminio','a30'].forEach(l => {
+  renderGrid(l, 'todos');
+  actualizarContadores(l);
+});
+const _tabV = ['herrero','aluminio','a30','medida'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'herrero';
+switchTab(_tabV);
 </script>
 </body>
 </html>

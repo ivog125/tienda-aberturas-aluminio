@@ -12,7 +12,8 @@
   --negro: #1a1a1a; --gris-claro: #f4f4f4; --gris-medio: #e0e0e0; --gris-texto: #64748b;
   --verde: #16a34a; --verde-suave: #dcfce7;
   --amarillo: #d97706; --amarillo-suave: #fef3c7;
-  --azul: #1a5fad; --azul-suave: #dbeafe;
+  --primario: #1a5fad; --primario-suave: #dbeafe;
+  --violeta: #7c3aed; --violeta-suave: #ede9fe;
 }
 body { font-family: 'Nunito Sans', sans-serif; background: #f0f2f5; color: var(--negro); min-height: 100vh; }
 
@@ -44,6 +45,10 @@ body { font-family: 'Nunito Sans', sans-serif; background: #f0f2f5; color: var(-
 .admin-page-title { font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 900; color: var(--negro); margin-bottom: .25rem; }
 .admin-page-sub { font-size: 13px; color: var(--gris-texto); margin-bottom: 2rem; }
 
+/* ── SECTIONS ── */
+.admin-section { display: none; }
+.admin-section.active { display: block; }
+
 /* ── STATS ── */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
 .stat-card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; border: 1px solid var(--gris-medio); }
@@ -59,7 +64,7 @@ body { font-family: 'Nunito Sans', sans-serif; background: #f0f2f5; color: var(-
 .table-card { background: white; border-radius: 12px; border: 1px solid var(--gris-medio); overflow: hidden; }
 .table-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gris-medio); flex-wrap: wrap; gap: 1rem; }
 .table-title { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 900; color: var(--negro); }
-.table-filters { display: flex; gap: 6px; }
+.table-filters { display: flex; gap: 6px; flex-wrap: wrap; }
 .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--gris-medio); background: white; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; color: var(--gris-texto); cursor: pointer; transition: all .2s; }
 .filter-btn.active { background: var(--negro); color: white; border-color: var(--negro); }
 .filter-btn:hover:not(.active) { border-color: var(--negro); color: var(--negro); }
@@ -75,14 +80,24 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
 .td-cliente-sub { font-size: 12px; color: var(--gris-texto); font-weight: 400; margin-top: 2px; }
 .td-productos { font-size: 13px; color: var(--gris-texto); max-width: 200px; }
 .td-total { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 15px; color: var(--negro); }
+.td-nombre { font-weight: 700; color: var(--negro); }
+.td-nombre-sub { font-size: 12px; color: var(--gris-texto); font-weight: 400; margin-top: 2px; }
+.td-precio { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px; color: var(--negro); }
 
 /* Badges de estado */
 .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
 .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .badge-pendiente { background: var(--amarillo-suave); color: var(--amarillo); }
-.badge-confirmado { background: var(--azul-suave); color: var(--azul); }
+.badge-confirmado { background: var(--primario-suave); color: var(--primario); }
 .badge-entregado { background: var(--verde-suave); color: var(--verde); }
 .badge-cancelado { background: #fee2e2; color: #dc2626; }
+
+/* Badges de categoría */
+.cat-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.cat-ventanas { background: var(--primario-suave); color: var(--primario); }
+.cat-puertas { background: var(--verde-suave); color: var(--verde); }
+.cat-portones { background: var(--amarillo-suave); color: var(--amarillo); }
+.cat-revestimientos { background: var(--violeta-suave); color: var(--violeta); }
 
 /* Acciones */
 .td-acciones { display: flex; gap: 6px; }
@@ -92,38 +107,118 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
 .btn-accion.wa:hover { background: #25D366; color: white; }
 .btn-accion.danger { border-color: #dc2626; color: #dc2626; }
 .btn-accion.danger:hover { background: #dc2626; color: white; }
+.btn-accion.edit { border-color: var(--primario); color: var(--primario); }
+.btn-accion.edit:hover { background: var(--primario); color: white; }
 
 /* Estado selector */
 .estado-select { border: 1px solid var(--gris-medio); border-radius: 6px; padding: 5px 10px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; background: white; color: var(--negro); cursor: pointer; outline: none; }
 .estado-select:focus { border-color: var(--rojo); }
 
+/* ── BOTONES GENERALES ── */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; border: none; transition: all .2s; text-decoration: none; }
+.btn-primary { background: var(--rojo); color: white; }
+.btn-primary:hover { background: var(--rojo-oscuro); }
+.btn-secondary { background: white; color: var(--negro); border: 1.5px solid var(--gris-medio); }
+.btn-secondary:hover { border-color: var(--negro); }
+.btn-danger-full { background: #dc2626; color: white; }
+.btn-danger-full:hover { background: #b91c1c; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* ── SECTION ACTIONS ── */
+.section-actions { display: flex; justify-content: flex-end; margin-bottom: 1.25rem; }
+
+/* ── TOGGLE SWITCH ── */
+.toggle-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--gris-texto); }
+.toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: var(--gris-medio); border-radius: 11px; cursor: pointer; transition: .3s; }
+.toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: .3s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.toggle input:checked + .toggle-slider { background: var(--verde); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+.toggle-label-on { color: var(--verde); }
+.toggle-label-off { color: var(--gris-texto); }
+
+/* ── OBRAS GRID ── */
+.obras-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.25rem; }
+.obra-card { background: white; border-radius: 12px; border: 1px solid var(--gris-medio); overflow: hidden; }
+.obra-img-placeholder { width: 100%; height: 150px; background: var(--gris-claro); display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--gris-medio); }
+.obra-info { padding: 1rem; }
+.obra-titulo { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; color: var(--negro); margin-bottom: .25rem; }
+.obra-desc { font-size: 12px; color: var(--gris-texto); margin-bottom: .75rem; line-height: 1.4; }
+.obra-footer { display: flex; align-items: center; justify-content: space-between; }
+
+/* ── CONFIG CARDS ── */
+.config-card { background: white; border-radius: 12px; border: 1px solid var(--gris-medio); padding: 1.75rem; margin-bottom: 1.5rem; }
+.config-card-title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 900; color: var(--negro); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+.config-save-row { display: flex; justify-content: flex-end; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--gris-medio); }
+
+/* ── FORMS ── */
+.form-group { margin-bottom: 1.25rem; }
+.form-group:last-of-type { margin-bottom: 0; }
+.form-label { display: block; font-size: 13px; font-weight: 700; color: var(--negro); margin-bottom: .4rem; }
+.form-label-sub { font-size: 11px; color: var(--gris-texto); font-weight: 400; margin-left: 4px; }
+.form-input, .form-select, .form-textarea { width: 100%; border: 1.5px solid var(--gris-medio); border-radius: 8px; padding: 10px 12px; font-family: 'Nunito Sans', sans-serif; font-size: 14px; color: var(--negro); outline: none; transition: border-color .2s; background: white; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--rojo); }
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-hint { font-size: 11px; color: var(--gris-texto); margin-top: .35rem; }
+.form-prefix-wrap { position: relative; }
+.form-prefix { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--gris-texto); font-weight: 700; pointer-events: none; }
+.form-prefix-wrap .form-input { padding-left: 38px; }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 400; display: none; align-items: center; justify-content: center; padding: 1rem; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 14px; padding: 2rem; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-title { font-family: 'Nunito', sans-serif; font-size: 19px; font-weight: 900; color: var(--negro); }
+.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gris-texto); padding: 4px 8px; border-radius: 6px; transition: all .2s; }
+.modal-close:hover { background: var(--gris-claro); }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--gris-medio); }
+
 /* ── AVISO BOCETO ── */
 .boceto-banner { background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; padding: .875rem 1.25rem; margin-bottom: 1.5rem; font-size: 13px; color: #92400e; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
+/* ── EMPTY STATE ── */
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--gris-texto); }
+.empty-state-icon { font-size: 40px; margin-bottom: 1rem; }
+.empty-state-text { font-size: 15px; font-weight: 700; color: var(--negro); margin-bottom: .5rem; }
+.empty-state-sub { font-size: 13px; }
+
+/* ── WA PREVIEW ── */
+.wa-preview { background: #e9fbe9; border-radius: 10px; padding: 1rem 1.25rem; font-size: 13px; color: #1a3a1a; line-height: 1.5; margin-top: .75rem; border-left: 3px solid #25D366; }
+.wa-preview-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gris-texto); margin-bottom: .5rem; }
+
 /* ── TOAST ── */
-.admin-toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(12px); background:var(--negro); color:white; padding:10px 20px; border-radius:8px; font-size:13px; font-family:'Nunito',sans-serif; font-weight:700; z-index:500; opacity:0; pointer-events:none; transition:all .3s; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,.2); }
-.admin-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.admin-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--negro); color: white; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-family: 'Nunito', sans-serif; font-weight: 700; z-index: 500; opacity: 0; pointer-events: none; transition: all .3s; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+.admin-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ── DRAWER DE DETALLE ── */
-.detalle-overlay { position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:300; opacity:0; pointer-events:none; transition:opacity .3s; }
-.detalle-overlay.open { opacity:1; pointer-events:all; }
-.detalle-drawer { position:fixed; top:0; right:-480px; width:460px; max-width:100vw; height:100vh; background:white; box-shadow:-8px 0 40px rgba(0,0,0,.12); z-index:301; display:flex; flex-direction:column; transition:right .35s cubic-bezier(.4,0,.2,1); }
-.detalle-drawer.open { right:0; }
-.detalle-drawer-header { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 1.5rem; border-bottom:1px solid var(--gris-medio); background:var(--gris-claro); }
-.detalle-drawer-title { font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; color:var(--negro); }
-.detalle-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--gris-texto); padding:4px 8px; border-radius:6px; transition:all .2s; }
-.detalle-close:hover { background:var(--gris-medio); }
-.detalle-body { flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1.25rem; }
-.detalle-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--gris-texto); margin-bottom:.5rem; }
-.detalle-row { display:flex; justify-content:space-between; align-items:flex-start; padding:.5rem 0; border-bottom:1px solid var(--gris-medio); font-size:14px; }
-.detalle-row:last-child { border-bottom:none; }
-.detalle-row-label { color:var(--gris-texto); font-weight:600; }
-.detalle-row-value { font-weight:700; color:var(--negro); text-align:right; }
-.detalle-wa-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:#25D366; color:white; border:none; padding:12px; border-radius:8px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; cursor:pointer; width:100%; margin-top:auto; transition:all .2s; }
-.detalle-wa-btn:hover { background:#1da851; }
+.detalle-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 300; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.detalle-overlay.open { opacity: 1; pointer-events: all; }
+.detalle-drawer { position: fixed; top: 0; right: -480px; width: 460px; max-width: 100vw; height: 100vh; background: white; box-shadow: -8px 0 40px rgba(0,0,0,.12); z-index: 301; display: flex; flex-direction: column; transition: right .35s cubic-bezier(.4,0,.2,1); }
+.detalle-drawer.open { right: 0; }
+.detalle-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gris-medio); background: var(--gris-claro); }
+.detalle-drawer-title { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 900; color: var(--negro); }
+.detalle-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gris-texto); padding: 4px 8px; border-radius: 6px; transition: all .2s; }
+.detalle-close:hover { background: var(--gris-medio); }
+.detalle-body { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.detalle-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gris-texto); margin-bottom: .5rem; }
+.detalle-row { display: flex; justify-content: space-between; align-items: flex-start; padding: .5rem 0; border-bottom: 1px solid var(--gris-medio); font-size: 14px; }
+.detalle-row:last-child { border-bottom: none; }
+.detalle-row-label { color: var(--gris-texto); font-weight: 600; }
+.detalle-row-value { font-weight: 700; color: var(--negro); text-align: right; }
+.detalle-wa-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; width: 100%; margin-top: auto; transition: all .2s; }
+.detalle-wa-btn:hover { background: #1da851; }
 
-@media(max-width:900px) { .stats-grid { grid-template-columns: 1fr 1fr; } .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { display: none; } }
-@media(max-width:640px) { .stats-grid { grid-template-columns: 1fr 1fr; } td, th { padding: .75rem .875rem; } .td-acciones { flex-direction: column; } .detalle-drawer { width:100vw; } }
+/* ── CONFIRM MODAL ── */
+.confirm-modal { max-width: 380px; text-align: center; }
+.confirm-icon { font-size: 36px; margin-bottom: .75rem; }
+.confirm-title { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900; margin-bottom: .5rem; }
+.confirm-sub { font-size: 14px; color: var(--gris-texto); margin-bottom: 1.5rem; }
+
+@media(max-width:900px) { .stats-grid { grid-template-columns: 1fr 1fr; } .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { display: none; } .form-row { grid-template-columns: 1fr; } }
+@media(max-width:640px) { .stats-grid { grid-template-columns: 1fr 1fr; } td, th { padding: .75rem .875rem; } .td-acciones { flex-direction: column; } .detalle-drawer { width: 100vw; } }
 </style>
 </head>
 <body>
@@ -146,91 +241,271 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
   <!-- SIDEBAR NAV -->
   <aside class="admin-sidebar">
     <div class="admin-nav-label">Principal</div>
-    <a class="admin-nav-item active" href="#">
+    <a class="admin-nav-item active" href="#" onclick="mostrarSeccion('pedidos',this);return false;">
       <span class="admin-nav-icon">📦</span> Pedidos
-      <span class="admin-nav-badge">3</span>
+      <span class="admin-nav-badge" id="badge-pedidos">3</span>
     </a>
-    <a class="admin-nav-item" href="#">
+    <a class="admin-nav-item" href="#" onclick="mostrarSeccion('productos',this);return false;">
       <span class="admin-nav-icon">🛒</span> Productos
     </a>
-    <a class="admin-nav-item" href="#">
+    <a class="admin-nav-item" href="#" onclick="mostrarSeccion('obras',this);return false;">
       <span class="admin-nav-icon">🏗️</span> Obras
     </a>
     <div class="admin-nav-label">Configuración</div>
-    <a class="admin-nav-item" href="#">
+    <a class="admin-nav-item" href="#" onclick="mostrarSeccion('whatsapp',this);return false;">
       <span class="admin-nav-icon">💬</span> WhatsApp
     </a>
-    <a class="admin-nav-item" href="#">
+    <a class="admin-nav-item" href="#" onclick="mostrarSeccion('ajustes',this);return false;">
       <span class="admin-nav-icon">⚙️</span> Ajustes
     </a>
   </aside>
 
   <!-- CONTENIDO -->
   <main class="admin-content">
-    <div class="admin-page-title">Pedidos</div>
-    <div class="admin-page-sub">Todos los pedidos recibidos desde el sitio web.</div>
+    <div class="admin-page-title" id="page-title">Pedidos</div>
+    <div class="admin-page-sub" id="page-sub">Todos los pedidos recibidos desde el sitio web.</div>
 
-    <div class="boceto-banner">
-      ⚠ Este es un boceto del panel. En la versión final los pedidos se guardan automáticamente y Adrián los gestiona desde acá.
-    </div>
+    <!-- ══ SECCIÓN: PEDIDOS ══ -->
+    <div id="sec-pedidos" class="admin-section active">
 
-    <!-- STATS -->
-    <div class="stats-grid">
-      <div class="stat-card highlight">
-        <div class="stat-label">Pendientes</div>
-        <div class="stat-value">3</div>
-        <div class="stat-sub">Requieren atención</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total este mes</div>
-        <div class="stat-value">8</div>
-        <div class="stat-sub">Pedidos recibidos</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Entregados</div>
-        <div class="stat-value">5</div>
-        <div class="stat-sub">Este mes</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Ingresos del mes</div>
-        <div class="stat-value">$1.2M</div>
-        <div class="stat-sub">Solo productos con precio fijo</div>
-      </div>
-    </div>
-
-    <!-- TABLA DE PEDIDOS -->
-    <div class="table-card">
-      <div class="table-header">
-        <div class="table-title">Todos los pedidos</div>
-        <div class="table-filters">
-          <button class="filter-btn active" onclick="filtrarTabla('todos', this)">Todos</button>
-          <button class="filter-btn" onclick="filtrarTabla('pendiente', this)">Pendientes</button>
-          <button class="filter-btn" onclick="filtrarTabla('confirmado', this)">Confirmados</button>
-          <button class="filter-btn" onclick="filtrarTabla('entregado', this)">Entregados</button>
+      <div class="stats-grid">
+        <div class="stat-card highlight">
+          <div class="stat-label">Pendientes</div>
+          <div class="stat-value" id="stat-pendientes">3</div>
+          <div class="stat-sub">Requieren atención</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total este mes</div>
+          <div class="stat-value">8</div>
+          <div class="stat-sub">Pedidos recibidos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Entregados</div>
+          <div class="stat-value">5</div>
+          <div class="stat-sub">Este mes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ingresos del mes</div>
+          <div class="stat-value">$1.2M</div>
+          <div class="stat-sub">Solo productos con precio fijo</div>
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Fecha</th>
-            <th>Cliente</th>
-            <th>Productos</th>
-            <th>Total</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-pedidos"></tbody>
-      </table>
+
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Todos los pedidos</div>
+          <div class="table-filters">
+            <button class="filter-btn active" onclick="filtrarTabla('todos', this)">Todos</button>
+            <button class="filter-btn" onclick="filtrarTabla('pendiente', this)">Pendientes</button>
+            <button class="filter-btn" onclick="filtrarTabla('confirmado', this)">Confirmados</button>
+            <button class="filter-btn" onclick="filtrarTabla('entregado', this)">Entregados</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Productos</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-pedidos"></tbody>
+        </table>
+      </div>
     </div>
+
+    <!-- ══ SECCIÓN: PRODUCTOS ══ -->
+    <div id="sec-productos" class="admin-section">
+      <div class="section-actions">
+        <button class="btn btn-primary" onclick="abrirModalProducto()">+ Agregar producto</button>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Catálogo</div>
+          <div class="table-filters" id="filtros-productos">
+            <button class="filter-btn active" onclick="filtrarProductos('Todos', this)">Todos</button>
+            <button class="filter-btn" onclick="filtrarProductos('Ventanas', this)">Ventanas</button>
+            <button class="filter-btn" onclick="filtrarProductos('Puertas', this)">Puertas</button>
+            <button class="filter-btn" onclick="filtrarProductos('Portones', this)">Portones</button>
+            <button class="filter-btn" onclick="filtrarProductos('Revestimientos', this)">Revestimientos</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Visible</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-productos"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ SECCIÓN: OBRAS ══ -->
+    <div id="sec-obras" class="admin-section">
+      <div class="section-actions">
+        <button class="btn btn-primary" onclick="abrirModalObra()">+ Agregar obra</button>
+      </div>
+      <div class="obras-grid" id="obras-grid"></div>
+    </div>
+
+    <!-- ══ SECCIÓN: WHATSAPP ══ -->
+    <div id="sec-whatsapp" class="admin-section">
+      <div class="config-card">
+        <div class="config-card-title">💬 Número de WhatsApp</div>
+        <div class="form-group">
+          <label class="form-label">Número <span class="form-label-sub">(solo dígitos, con código de área)</span></label>
+          <div class="form-prefix-wrap">
+            <span class="form-prefix">+549</span>
+            <input class="form-input" id="wa-numero" type="text" placeholder="1134567890" value="1134567890">
+          </div>
+          <div class="form-hint">El número que recibe todos los mensajes desde el sitio web.</div>
+        </div>
+        <div class="config-save-row">
+          <button class="btn btn-primary" onclick="guardarWANumero()">Guardar número</button>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <div class="config-card-title">📝 Mensajes predeterminados</div>
+        <div class="form-group">
+          <label class="form-label">Mensaje de contacto general</label>
+          <textarea class="form-textarea" id="wa-msg-general" oninput="actualizarPreviewWA('general')">Hola! Quisiera pedir información sobre sus productos.</textarea>
+          <div class="wa-preview-label" style="margin-top:.75rem;">Vista previa</div>
+          <div class="wa-preview" id="preview-general">Hola! Quisiera pedir información sobre sus productos.</div>
+        </div>
+        <div class="form-group" style="margin-top:1.25rem;">
+          <label class="form-label">Mensaje de presupuesto</label>
+          <textarea class="form-textarea" id="wa-msg-presupuesto" oninput="actualizarPreviewWA('presupuesto')">Hola! Me gustaría solicitar un presupuesto.</textarea>
+          <div class="wa-preview-label" style="margin-top:.75rem;">Vista previa</div>
+          <div class="wa-preview" id="preview-presupuesto">Hola! Me gustaría solicitar un presupuesto.</div>
+        </div>
+        <div class="config-save-row">
+          <button class="btn btn-primary" onclick="guardarWAMensajes()">Guardar mensajes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECCIÓN: AJUSTES ══ -->
+    <div id="sec-ajustes" class="admin-section">
+      <div class="config-card">
+        <div class="config-card-title">🏢 Información del negocio</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre del negocio</label>
+            <input class="form-input" id="aj-nombre" type="text" value="Omar Aberturas">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono de contacto</label>
+            <input class="form-input" id="aj-telefono" type="text" value="+54 9 11 3456-7890">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="aj-email" type="email" value="contacto@omaraberturas.com.ar">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Localidad</label>
+            <input class="form-input" id="aj-localidad" type="text" value="Buenos Aires, GBA Norte">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dirección</label>
+          <input class="form-input" id="aj-direccion" type="text" value="Av. Mitre 1234, Piso 2">
+        </div>
+        <div class="config-save-row">
+          <button class="btn btn-primary" onclick="guardarAjustes('negocio')">Guardar información</button>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <div class="config-card-title">🕐 Horarios de atención</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Lunes a Viernes</label>
+            <input class="form-input" id="aj-horario-semana" type="text" value="8:00 a 18:00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sábados</label>
+            <input class="form-input" id="aj-horario-sabado" type="text" value="8:00 a 13:00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Domingos y feriados</label>
+          <input class="form-input" id="aj-horario-domingo" type="text" value="Cerrado">
+        </div>
+        <div class="config-save-row">
+          <button class="btn btn-primary" onclick="guardarAjustes('horarios')">Guardar horarios</button>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <div class="config-card-title">🏦 Datos bancarios para transferencia</div>
+        <p style="font-size:13px;color:var(--gris);margin-bottom:1.25rem;">Estos datos aparecen en el checkout cuando el cliente elige pagar por transferencia.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Banco</label>
+            <input class="form-input" id="bk-banco" type="text" placeholder="Ej: Banco Galicia">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipo de cuenta</label>
+            <select class="form-input" id="bk-tipo">
+              <option value="Caja de Ahorro $">Caja de Ahorro en pesos</option>
+              <option value="Cuenta Corriente $">Cuenta Corriente en pesos</option>
+              <option value="Caja de Ahorro USD">Caja de Ahorro en dólares</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Número de cuenta</label>
+            <input class="form-input" id="bk-numero" type="text" placeholder="Ej: 4009999/6">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sucursal</label>
+            <input class="form-input" id="bk-sucursal" type="text" placeholder="Ej: 0099 - San Martín">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CBU <span style="color:var(--gris);font-weight:400;">(22 dígitos)</span></label>
+          <input class="form-input" id="bk-cbu" type="text" maxlength="22" placeholder="0000000000000000000000">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Alias CBU</label>
+            <input class="form-input" id="bk-alias" type="text" placeholder="Ej: OMAR.ABERTURAS">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Titular de la cuenta</label>
+            <input class="form-input" id="bk-titular" type="text" placeholder="Nombre completo o razón social">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CUIL / CUIT del titular</label>
+          <input class="form-input" id="bk-cuit" type="text" placeholder="Ej: 20-12345678-9">
+        </div>
+        <div class="config-save-row">
+          <button class="btn btn-primary" onclick="guardarDatosBancarios()">Guardar datos bancarios</button>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
 <!-- TOAST -->
 <div class="admin-toast" id="admin-toast"></div>
 
-<!-- DRAWER DETALLE -->
+<!-- DRAWER DETALLE PEDIDO -->
 <div class="detalle-overlay" id="detalle-overlay" onclick="cerrarDetalle()"></div>
 <div class="detalle-drawer" id="detalle-drawer">
   <div class="detalle-drawer-header">
@@ -240,52 +515,193 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
   <div class="detalle-body" id="detalle-body"></div>
 </div>
 
+<!-- MODAL: PRODUCTO -->
+<div class="modal-overlay" id="modal-producto">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-producto-titulo">Agregar producto</div>
+      <button class="modal-close" onclick="cerrarModal('modal-producto')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nombre del producto</label>
+      <input class="form-input" id="prod-nombre" type="text" placeholder="Ej: Ventana corrediza aluminio">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Categoría</label>
+        <select class="form-select" id="prod-categoria">
+          <option value="Ventanas">Ventanas</option>
+          <option value="Puertas">Puertas</option>
+          <option value="Portones">Portones</option>
+          <option value="Revestimientos">Revestimientos</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Precio</label>
+        <input class="form-input" id="prod-precio" type="text" placeholder="Desde $120.000 o A confirmar">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción <span class="form-label-sub">(opcional)</span></label>
+      <textarea class="form-textarea" id="prod-descripcion" placeholder="Materiales, medidas disponibles, etc."></textarea>
+    </div>
+    <div class="form-group">
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="prod-visible" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span id="prod-visible-label" class="toggle-label-on">Visible en el sitio</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="cerrarModal('modal-producto')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarProducto()">Guardar producto</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: OBRA -->
+<div class="modal-overlay" id="modal-obra">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-obra-titulo">Agregar obra</div>
+      <button class="modal-close" onclick="cerrarModal('modal-obra')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Título de la obra</label>
+      <input class="form-input" id="obra-titulo-input" type="text" placeholder="Ej: Ventanas edificio Palermo">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Categoría</label>
+        <select class="form-select" id="obra-categoria">
+          <option value="Ventanas">Ventanas</option>
+          <option value="Puertas">Puertas</option>
+          <option value="Portones">Portones</option>
+          <option value="Revestimientos">Revestimientos</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Foto <span class="form-label-sub">(en la versión final)</span></label>
+        <input class="form-input" id="obra-foto" type="file" accept="image/*" style="padding:7px 12px;">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción</label>
+      <textarea class="form-textarea" id="obra-descripcion" placeholder="Breve descripción del trabajo realizado"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="cerrarModal('modal-obra')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarObra()">Agregar obra</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRMAR ELIMINACIÓN -->
+<div class="modal-overlay" id="modal-confirmar">
+  <div class="modal confirm-modal">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title" id="confirm-titulo">¿Eliminar?</div>
+    <div class="confirm-sub" id="confirm-sub">Esta acción no se puede deshacer.</div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="btn btn-secondary" onclick="cerrarModal('modal-confirmar')">Cancelar</button>
+      <button class="btn btn-danger-full" id="confirm-btn-ok">Eliminar</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const PEDIDOS = [
-  {
-    id: '#008', fecha: '17/06/2025', cliente: 'Martín García', contacto: '11 4523-0012', email: 'mgarcia@email.com',
+/* ═══════════════════════════════════
+   DATOS
+═══════════════════════════════════ */
+
+const DEFAULT_PEDIDOS = [
+  { id: '#008', fecha: '17/06/2025', cliente: 'Martín García', contacto: '11 4523-0012', email: 'mgarcia@email.com',
     productos: 'Ventana corrediza 150×120cm × 3', total: '$540.000', estado: 'pendiente',
-    wa: 'Hola Martín, recibimos tu pedido de 3 ventanas corredizas. ¿Cuándo podemos coordinar la visita para tomar medidas?'
-  },
-  {
-    id: '#007', fecha: '16/06/2025', cliente: 'Laura Pérez', contacto: '11 6789-4321', email: 'lperez@email.com',
+    wa: 'Hola Martín, recibimos tu pedido de 3 ventanas corredizas. ¿Cuándo podemos coordinar la visita para tomar medidas?' },
+  { id: '#007', fecha: '16/06/2025', cliente: 'Laura Pérez', contacto: '11 6789-4321', email: 'lperez@email.com',
     productos: 'Puerta de chapa plegada × 2 · Portón a medida', total: 'A confirmar', estado: 'pendiente',
-    wa: 'Hola Laura, recibimos tu consulta. Vamos a preparar el presupuesto para el portón a medida. Te contactamos pronto.'
-  },
-  {
-    id: '#006', fecha: '15/06/2025', cliente: 'Diego Fernández', contacto: '11 2233-5566', email: 'dfernandez@email.com',
+    wa: 'Hola Laura, recibimos tu consulta. Vamos a preparar el presupuesto para el portón a medida. Te contactamos pronto.' },
+  { id: '#006', fecha: '15/06/2025', cliente: 'Diego Fernández', contacto: '11 2233-5566', email: 'dfernandez@email.com',
     productos: 'Panel PVC cielorraso blanco × 18m²', total: '$153.000', estado: 'pendiente',
-    wa: 'Hola Diego, ya tenemos tu pedido. ¿Querés coordinar la entrega para esta semana?'
-  },
-  {
-    id: '#005', fecha: '13/06/2025', cliente: 'Empresa Construcciones SRL', contacto: '11 9988-7766', email: 'compras@construcciones.com',
+    wa: 'Hola Diego, ya tenemos tu pedido. ¿Querés coordinar la entrega para esta semana?' },
+  { id: '#005', fecha: '13/06/2025', cliente: 'Empresa Construcciones SRL', contacto: '11 9988-7766', email: 'compras@construcciones.com',
     productos: 'Ventana proyectante × 12 · Puerta madera sólida × 4', total: '$1.348.000', estado: 'confirmado',
-    wa: 'Hola, les confirmamos el pedido. Fecha estimada de entrega: 25/06.'
-  },
-  {
-    id: '#004', fecha: '10/06/2025', cliente: 'Ana Rodríguez', contacto: '11 5544-3322', email: 'ana.r@email.com',
-    productos: 'Puerta interior HDF × 3', total: '$195.000', estado: 'entregado',
-    wa: ''
-  },
-  {
-    id: '#003', fecha: '08/06/2025', cliente: 'Roberto Sanz', contacto: '11 7711-2233', email: 'rsanz@email.com',
-    productos: 'Portón chapa doble hoja × 1', total: '$480.000', estado: 'entregado',
-    wa: ''
-  },
+    wa: 'Hola, les confirmamos el pedido. Fecha estimada de entrega: 25/06.' },
+  { id: '#004', fecha: '10/06/2025', cliente: 'Ana Rodríguez', contacto: '11 5544-3322', email: 'ana.r@email.com',
+    productos: 'Puerta interior HDF × 3', total: '$195.000', estado: 'entregado', wa: '' },
+  { id: '#003', fecha: '08/06/2025', cliente: 'Roberto Sanz', contacto: '11 7711-2233', email: 'rsanz@email.com',
+    productos: 'Portón chapa doble hoja × 1', total: '$480.000', estado: 'entregado', wa: '' },
 ];
+
+const DEFAULT_PRODUCTOS = [
+  { id: 1, nombre: 'Ventana corrediza aluminio', categoria: 'Ventanas', precio: 'Desde $120.000', descripcion: 'Aluminio natural o color, vidrio float 4mm', visible: true },
+  { id: 2, nombre: 'Ventana proyectante', categoria: 'Ventanas', precio: 'Desde $95.000', descripcion: 'Ideal para baños y cocinas, medidas estándar o a pedido', visible: true },
+  { id: 3, nombre: 'Ventana banderola', categoria: 'Ventanas', precio: 'A confirmar', descripcion: 'Medidas a pedido', visible: true },
+  { id: 4, nombre: 'Puerta chapa plegada', categoria: 'Puertas', precio: 'Desde $180.000', descripcion: 'Chapa de acero con refuerzo interno', visible: true },
+  { id: 5, nombre: 'Puerta madera sólida', categoria: 'Puertas', precio: 'Desde $220.000', descripcion: 'Pino o cedro, terminación lacada o barnizada', visible: true },
+  { id: 6, nombre: 'Puerta HDF interior', categoria: 'Puertas', precio: 'Desde $65.000', descripcion: 'Para ambientes interiores, varios colores', visible: true },
+  { id: 7, nombre: 'Portón chapa simple', categoria: 'Portones', precio: 'A confirmar', descripcion: 'Medidas y terminación a pedido', visible: true },
+  { id: 8, nombre: 'Portón chapa doble hoja', categoria: 'Portones', precio: 'A confirmar', descripcion: 'Para garajes amplios, con o sin automatismo', visible: true },
+  { id: 9, nombre: 'Panel PVC cielorraso blanco', categoria: 'Revestimientos', precio: '$8.500/m²', descripcion: 'Incluye colocación. Ancho estándar 250mm', visible: true },
+  { id: 10, nombre: 'Revestimiento PVC imitación madera', categoria: 'Revestimientos', precio: '$11.000/m²', descripcion: 'Varios colores disponibles, incluye colocación', visible: true },
+];
+
+const DEFAULT_OBRAS = [
+  { id: 1, titulo: 'Ventanas duplex Palermo', categoria: 'Ventanas', descripcion: 'Instalación de 12 ventanas corredizas en edificio de 3 plantas' },
+  { id: 2, titulo: 'Portones residencial Tigre', categoria: 'Portones', descripcion: 'Portón doble hoja con automatismo incluido' },
+  { id: 3, titulo: 'Revestimiento integral PVC', categoria: 'Revestimientos', descripcion: 'Cielorraso y paredes, 180m² en vivienda particular' },
+  { id: 4, titulo: 'Puertas oficinas Microcentro', categoria: 'Puertas', descripcion: '8 puertas HDF con herrajes premium, obra entregada en 5 días' },
+];
+
+let PEDIDOS   = JSON.parse(localStorage.getItem('admin_pedidos')   || 'null') ?? [...DEFAULT_PEDIDOS];
+let PRODUCTOS = JSON.parse(localStorage.getItem('admin_productos') || 'null') ?? [...DEFAULT_PRODUCTOS];
+let OBRAS     = JSON.parse(localStorage.getItem('admin_obras')     || 'null') ?? [...DEFAULT_OBRAS];
+
+const savePedidos   = () => localStorage.setItem('admin_pedidos',   JSON.stringify(PEDIDOS));
+const saveProductos = () => localStorage.setItem('admin_productos', JSON.stringify(PRODUCTOS));
+const saveObras     = () => localStorage.setItem('admin_obras',     JSON.stringify(OBRAS));
 
 let estadoActual = {};
 PEDIDOS.forEach(p => { estadoActual[p.id] = p.estado; });
 
-function badgeEstado(e) {
-  const map = { pendiente:'Pendiente', confirmado:'Confirmado', entregado:'Entregado', cancelado:'Cancelado' };
-  return `<span class="badge badge-${e}">${map[e] || e}</span>`;
+let productosFiltroActivo = 'Todos';
+let productoEditandoId = null;
+let obraEditandoId = null;
+let proximoIdProducto = Math.max(0, ...PRODUCTOS.map(p => p.id)) + 1;
+let proximoIdObra     = Math.max(0, ...OBRAS.map(o => o.id)) + 1;
+
+/* ═══════════════════════════════════
+   NAVEGACIÓN
+═══════════════════════════════════ */
+
+const PAGE_META = {
+  pedidos:   { title: 'Pedidos',                  sub: 'Todos los pedidos recibidos desde el sitio web.' },
+  productos: { title: 'Catálogo de productos',    sub: 'Administrá los productos que se muestran en el sitio.' },
+  obras:     { title: 'Galería de obras',         sub: 'Administrá las fotos de trabajos realizados.' },
+  whatsapp:  { title: 'Configuración de WhatsApp', sub: 'Configurá el número y los mensajes predeterminados.' },
+  ajustes:   { title: 'Ajustes del negocio',      sub: 'Información general del negocio.' },
+};
+
+function mostrarSeccion(id, navEl) {
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
+  navEl.classList.add('active');
+  document.getElementById('page-title').textContent = PAGE_META[id].title;
+  document.getElementById('page-sub').textContent = PAGE_META[id].sub;
+  if (id === 'ajustes') cargarDatosBancarios();
 }
+
+/* ═══════════════════════════════════
+   PEDIDOS
+═══════════════════════════════════ */
 
 function renderTabla(filtro) {
   const lista = filtro === 'todos' ? PEDIDOS : PEDIDOS.filter(p => p.estado === filtro);
   document.getElementById('tabla-pedidos').innerHTML = lista.map(p => `
-    <tr data-estado="${p.estado}">
+    <tr>
       <td class="td-id">${p.id}</td>
       <td style="font-size:13px;color:var(--gris-texto);">${p.fecha}</td>
       <td>
@@ -313,23 +729,21 @@ function renderTabla(filtro) {
 }
 
 function filtrarTabla(filtro, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#sec-pedidos .filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderTabla(filtro);
 }
 
-function adminToast(msg) {
-  const t = document.getElementById('admin-toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._t);
-  t._t = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
 function cambiarEstado(id, nuevoEstado) {
   estadoActual[id] = nuevoEstado;
+  const p = PEDIDOS.find(x => x.id === id);
+  if (p) p.estado = nuevoEstado;
+  savePedidos();
   const labels = { pendiente:'⏳ Pendiente', confirmado:'✅ Confirmado', entregado:'📦 Entregado', cancelado:'❌ Cancelado' };
   adminToast(`Pedido ${id} → ${labels[nuevoEstado]}`);
+  const pendientes = Object.values(estadoActual).filter(e => e === 'pendiente').length;
+  document.getElementById('stat-pendientes').textContent = pendientes;
+  document.getElementById('badge-pedidos').textContent = pendientes;
 }
 
 function responderWA(id) {
@@ -371,7 +785,327 @@ function cerrarDetalle() {
   document.getElementById('detalle-drawer').classList.remove('open');
 }
 
+/* ═══════════════════════════════════
+   PRODUCTOS
+═══════════════════════════════════ */
+
+const CAT_ICONS = { Ventanas: '🪟', Puertas: '🚪', Portones: '🏠', Revestimientos: '🧱' };
+
+function catBadge(cat) {
+  const slug = cat.toLowerCase();
+  return `<span class="cat-badge cat-${slug}">${CAT_ICONS[cat] || ''} ${cat}</span>`;
+}
+
+function renderProductos() {
+  const lista = productosFiltroActivo === 'Todos'
+    ? PRODUCTOS
+    : PRODUCTOS.filter(p => p.categoria === productosFiltroActivo);
+
+  if (lista.length === 0) {
+    document.getElementById('tabla-productos').innerHTML = `
+      <tr><td colspan="5">
+        <div class="empty-state">
+          <div class="empty-state-icon">🛒</div>
+          <div class="empty-state-text">Sin productos en esta categoría</div>
+        </div>
+      </td></tr>`;
+    return;
+  }
+
+  document.getElementById('tabla-productos').innerHTML = lista.map(p => `
+    <tr>
+      <td>
+        <div class="td-nombre">${p.nombre}</div>
+        ${p.descripcion ? `<div class="td-nombre-sub">${p.descripcion}</div>` : ''}
+      </td>
+      <td>${catBadge(p.categoria)}</td>
+      <td class="td-precio">${p.precio}</td>
+      <td>
+        <div class="toggle-wrap">
+          <label class="toggle">
+            <input type="checkbox" ${p.visible ? 'checked' : ''} onchange="toggleVisibleProducto(${p.id}, this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="${p.visible ? 'toggle-label-on' : 'toggle-label-off'}">${p.visible ? 'Visible' : 'Oculto'}</span>
+        </div>
+      </td>
+      <td>
+        <div class="td-acciones">
+          <button class="btn-accion edit" onclick="editarProducto(${p.id})">✏️ Editar</button>
+          <button class="btn-accion danger" onclick="confirmarEliminar('producto', ${p.id}, '${p.nombre.replace(/'/g,"\\'")}')">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filtrarProductos(cat, btn) {
+  productosFiltroActivo = cat;
+  document.querySelectorAll('#filtros-productos .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProductos();
+}
+
+function toggleVisibleProducto(id, visible) {
+  const p = PRODUCTOS.find(x => x.id === id);
+  if (!p) return;
+  p.visible = visible;
+  saveProductos();
+  adminToast(`"${p.nombre}" → ${visible ? 'Visible' : 'Oculto'}`);
+  renderProductos();
+}
+
+function abrirModalProducto() {
+  productoEditandoId = null;
+  document.getElementById('modal-producto-titulo').textContent = 'Agregar producto';
+  document.getElementById('prod-nombre').value = '';
+  document.getElementById('prod-categoria').value = 'Ventanas';
+  document.getElementById('prod-precio').value = '';
+  document.getElementById('prod-descripcion').value = '';
+  document.getElementById('prod-visible').checked = true;
+  document.getElementById('prod-visible-label').textContent = 'Visible en el sitio';
+  document.getElementById('prod-visible-label').className = 'toggle-label-on';
+  abrirModal('modal-producto');
+}
+
+function editarProducto(id) {
+  const p = PRODUCTOS.find(x => x.id === id);
+  if (!p) return;
+  productoEditandoId = id;
+  document.getElementById('modal-producto-titulo').textContent = 'Editar producto';
+  document.getElementById('prod-nombre').value = p.nombre;
+  document.getElementById('prod-categoria').value = p.categoria;
+  document.getElementById('prod-precio').value = p.precio;
+  document.getElementById('prod-descripcion').value = p.descripcion || '';
+  document.getElementById('prod-visible').checked = p.visible;
+  const lbl = document.getElementById('prod-visible-label');
+  lbl.textContent = p.visible ? 'Visible en el sitio' : 'Oculto en el sitio';
+  lbl.className = p.visible ? 'toggle-label-on' : 'toggle-label-off';
+  abrirModal('modal-producto');
+}
+
+document.getElementById('prod-visible').addEventListener('change', function() {
+  const lbl = document.getElementById('prod-visible-label');
+  lbl.textContent = this.checked ? 'Visible en el sitio' : 'Oculto en el sitio';
+  lbl.className = this.checked ? 'toggle-label-on' : 'toggle-label-off';
+});
+
+function guardarProducto() {
+  const nombre = document.getElementById('prod-nombre').value.trim();
+  if (!nombre) { document.getElementById('prod-nombre').focus(); return; }
+  const datos = {
+    nombre,
+    categoria: document.getElementById('prod-categoria').value,
+    precio: document.getElementById('prod-precio').value.trim() || 'A confirmar',
+    descripcion: document.getElementById('prod-descripcion').value.trim(),
+    visible: document.getElementById('prod-visible').checked,
+  };
+  if (productoEditandoId) {
+    const p = PRODUCTOS.find(x => x.id === productoEditandoId);
+    Object.assign(p, datos);
+    adminToast('Producto actualizado');
+  } else {
+    datos.id = proximoIdProducto++;
+    PRODUCTOS.push(datos);
+    adminToast('Producto agregado');
+  }
+  saveProductos();
+  cerrarModal('modal-producto');
+  renderProductos();
+}
+
+/* ═══════════════════════════════════
+   OBRAS
+═══════════════════════════════════ */
+
+const OBRA_EMOJIS = { Ventanas: '🪟', Puertas: '🚪', Portones: '🏠', Revestimientos: '🧱' };
+
+function renderObras() {
+  const grid = document.getElementById('obras-grid');
+  if (OBRAS.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1;">
+        <div class="empty-state-icon">🏗️</div>
+        <div class="empty-state-text">Sin obras cargadas</div>
+        <div class="empty-state-sub">Agregá fotos de trabajos realizados para mostrar en el sitio.</div>
+      </div>`;
+    return;
+  }
+  grid.innerHTML = OBRAS.map(o => `
+    <div class="obra-card">
+      <div class="obra-img-placeholder">${OBRA_EMOJIS[o.categoria] || '🏗️'}</div>
+      <div class="obra-info">
+        <div class="obra-titulo">${o.titulo}</div>
+        <div class="obra-desc">${o.descripcion}</div>
+        <div class="obra-footer">
+          ${catBadge(o.categoria)}
+          <div style="display:flex;gap:6px;">
+            <button class="btn-accion edit" onclick="editarObra(${o.id})">✏️</button>
+            <button class="btn-accion danger" onclick="confirmarEliminar('obra', ${o.id}, '${o.titulo.replace(/'/g,"\\'")}')">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function abrirModalObra() {
+  obraEditandoId = null;
+  document.getElementById('modal-obra-titulo').textContent = 'Agregar obra';
+  document.getElementById('obra-titulo-input').value = '';
+  document.getElementById('obra-categoria').value = 'Ventanas';
+  document.getElementById('obra-descripcion').value = '';
+  abrirModal('modal-obra');
+}
+
+function editarObra(id) {
+  const o = OBRAS.find(x => x.id === id);
+  if (!o) return;
+  obraEditandoId = id;
+  document.getElementById('modal-obra-titulo').textContent = 'Editar obra';
+  document.getElementById('obra-titulo-input').value = o.titulo;
+  document.getElementById('obra-categoria').value = o.categoria;
+  document.getElementById('obra-descripcion').value = o.descripcion;
+  abrirModal('modal-obra');
+}
+
+function guardarObra() {
+  const titulo = document.getElementById('obra-titulo-input').value.trim();
+  if (!titulo) { document.getElementById('obra-titulo-input').focus(); return; }
+  const datos = {
+    titulo,
+    categoria: document.getElementById('obra-categoria').value,
+    descripcion: document.getElementById('obra-descripcion').value.trim(),
+  };
+  if (obraEditandoId) {
+    const o = OBRAS.find(x => x.id === obraEditandoId);
+    Object.assign(o, datos);
+    adminToast('Obra actualizada');
+  } else {
+    datos.id = proximoIdObra++;
+    OBRAS.push(datos);
+    adminToast('Obra agregada');
+  }
+  saveObras();
+  cerrarModal('modal-obra');
+  renderObras();
+}
+
+/* ═══════════════════════════════════
+   WHATSAPP
+═══════════════════════════════════ */
+
+function actualizarPreviewWA(tipo) {
+  const val = document.getElementById(`wa-msg-${tipo}`).value;
+  document.getElementById(`preview-${tipo}`).textContent = val;
+}
+
+function guardarWANumero() {
+  const num = document.getElementById('wa-numero').value.trim();
+  if (!num) return;
+  adminToast('Número de WhatsApp guardado');
+}
+
+function guardarWAMensajes() {
+  adminToast('Mensajes guardados');
+}
+
+/* ═══════════════════════════════════
+   AJUSTES
+═══════════════════════════════════ */
+
+function guardarAjustes(seccion) {
+  const labels = { negocio: 'Información del negocio guardada', horarios: 'Horarios guardados' };
+  adminToast(labels[seccion] || 'Guardado');
+}
+
+function guardarDatosBancarios() {
+  const datos = {
+    banco:        document.getElementById('bk-banco').value.trim(),
+    tipoCuenta:   document.getElementById('bk-tipo').value,
+    numeroCuenta: document.getElementById('bk-numero').value.trim(),
+    sucursal:     document.getElementById('bk-sucursal').value.trim(),
+    cbu:          document.getElementById('bk-cbu').value.trim(),
+    alias:        document.getElementById('bk-alias').value.trim(),
+    titular:      document.getElementById('bk-titular').value.trim(),
+    cuit:         document.getElementById('bk-cuit').value.trim(),
+  };
+  if (!datos.cbu && !datos.alias) {
+    adminToast('⚠ Ingresá al menos el CBU o el Alias'); return;
+  }
+  localStorage.setItem('datosBancarios', JSON.stringify(datos));
+  adminToast('✓ Datos bancarios guardados');
+}
+
+function cargarDatosBancarios() {
+  const d = JSON.parse(localStorage.getItem('datosBancarios') || '{}');
+  if (d.banco)        document.getElementById('bk-banco').value = d.banco;
+  if (d.tipoCuenta)   document.getElementById('bk-tipo').value = d.tipoCuenta;
+  if (d.numeroCuenta) document.getElementById('bk-numero').value = d.numeroCuenta;
+  if (d.sucursal)     document.getElementById('bk-sucursal').value = d.sucursal;
+  if (d.cbu)          document.getElementById('bk-cbu').value = d.cbu;
+  if (d.alias)        document.getElementById('bk-alias').value = d.alias;
+  if (d.titular)      document.getElementById('bk-titular').value = d.titular;
+  if (d.cuit)         document.getElementById('bk-cuit').value = d.cuit;
+}
+
+/* ═══════════════════════════════════
+   MODALES Y ELIMINACIÓN
+═══════════════════════════════════ */
+
+function abrirModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function confirmarEliminar(tipo, id, nombre) {
+  document.getElementById('confirm-titulo').textContent = `¿Eliminar "${nombre}"?`;
+  document.getElementById('confirm-sub').textContent = 'Esta acción no se puede deshacer.';
+  document.getElementById('confirm-btn-ok').onclick = () => {
+    if (tipo === 'producto') {
+      PRODUCTOS = PRODUCTOS.filter(x => x.id !== id);
+      saveProductos();
+      renderProductos();
+      adminToast('Producto eliminado');
+    } else if (tipo === 'obra') {
+      OBRAS = OBRAS.filter(x => x.id !== id);
+      saveObras();
+      renderObras();
+      adminToast('Obra eliminada');
+    }
+    cerrarModal('modal-confirmar');
+  };
+  abrirModal('modal-confirmar');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) cerrarModal(this.id);
+  });
+});
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+
+function adminToast(msg) {
+  const t = document.getElementById('admin-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+
 renderTabla('todos');
+renderProductos();
+renderObras();
 </script>
 </body>
 </html>

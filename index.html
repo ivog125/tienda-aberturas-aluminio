@@ -17,7 +17,7 @@
 .hero-title span { color: #ff9999; }
 .hero-subtitle { font-size: 17px; color: rgba(255,255,255,.85); max-width: 520px; margin-bottom: 2.5rem; }
 .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
-.btn-hero-primary { background: white; color: var(--azul); padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-hero-primary { background: white; color: var(--primario); padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
 .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
 .btn-hero-secondary { background: transparent; color: white; border: 2px solid rgba(255,255,255,.5); padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
 .btn-hero-secondary:hover { background: rgba(255,255,255,.1); border-color: white; }
@@ -33,26 +33,26 @@
 .section-header { text-align: center; margin-bottom: 2.5rem; }
 .rubros-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
 .rubro-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: all .3s; cursor: pointer; border: 2px solid transparent; text-decoration: none; color: inherit; display: block; }
-.rubro-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,95,173,.15); border-color: var(--azul); }
+.rubro-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,95,173,.15); border-color: var(--primario); }
 .rubro-card.featured { grid-column: span 2; }
-.rubro-img { width: 100%; background: linear-gradient(135deg, var(--azul-suave), #dbeafe); display: flex; align-items: center; justify-content: center; font-size: 56px; }
+.rubro-img { width: 100%; background: linear-gradient(135deg, var(--primario-suave), #dbeafe); display: flex; align-items: center; justify-content: center; font-size: 56px; }
 .rubro-card .rubro-img { height: 160px; }
 .rubro-card.featured .rubro-img { height: 200px; }
 .rubro-body { padding: 1.25rem; }
 .rubro-tag-pill { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
-.rubro-tag-pill.fab { background: #dbeafe; color: var(--azul); }
+.rubro-tag-pill.fab { background: #dbeafe; color: var(--primario); }
 .rubro-tag-pill.dist { background: #fef3c7; color: #92400e; }
 .rubro-name { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: var(--negro); margin-bottom: 4px; }
 .rubro-card.featured .rubro-name { font-size: 22px; }
 .rubro-desc { font-size: 13px; color: var(--gris-texto); line-height: 1.5; }
-.rubro-link-text { display: inline-flex; align-items: center; gap: 4px; color: var(--azul); font-size: 13px; font-weight: 700; margin-top: 10px; }
+.rubro-link-text { display: inline-flex; align-items: center; gap: 4px; color: var(--primario); font-size: 13px; font-weight: 700; margin-top: 10px; }
 
 /* ── WHY ── */
 .why-section { padding: 4rem 2rem; background: white; }
 .why-wrapper { max-width: 1200px; margin: 0 auto; }
 .why-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-top: 2.5rem; }
 .why-card { background: var(--gris-claro); border-radius: 12px; padding: 1.75rem 1.5rem; text-align: center; }
-.why-icon { width: 56px; height: 56px; background: var(--azul-suave); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 1rem; }
+.why-icon { width: 56px; height: 56px; background: var(--primario-suave); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 1rem; }
 .why-title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--negro); margin-bottom: 6px; }
 .why-body { font-size: 13px; color: var(--gris-texto); line-height: 1.5; }
 
@@ -84,9 +84,9 @@
 .obras-preview-wrapper { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 3rem; }
 .obras-preview-stats { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
 .obras-stat { text-align: center; }
-.obras-stat-num { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--azul); line-height: 1; }
+.obras-stat-num { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--primario); line-height: 1; }
 .obras-stat-label { font-size: 12px; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-.obras-preview-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--azul); color: white; padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; transition: all .2s; white-space: nowrap; }
+.obras-preview-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--primario); color: white; padding: 13px 28px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; transition: all .2s; white-space: nowrap; }
 .obras-preview-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,95,173,.25); }
 @media(max-width:768px) { .obras-preview-wrapper { grid-template-columns: 1fr; } }
 </style>
@@ -225,8 +225,9 @@
   document.getElementById('header-mount').innerHTML = renderNav('index.html');
   document.getElementById('footer-mount').innerHTML = renderFooter();
   document.getElementById('cart-mount').innerHTML = renderCartSidebar();
-
-
+  document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a => {
+    a.href = `https://wa.me/${WA_NUMBER}`;
+  });
 </script>
 </body>
 </html>

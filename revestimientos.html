@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="form-field full" style="margin-top:4px;"><label>Observaciones</label><textarea id="r-obs" placeholder="Medidas del ambiente, tipo de instalación, etc."></textarea></div>
-          <button class="btn-consultar" onclick="submitRevestimiento()">+ Agregar consulta al carrito</button>
+          <button class="btn-consultar" onclick="submitRevestimiento()">📲 Enviar consulta por WhatsApp</button>
         </div>
       </div>
     </div>
@@ -149,11 +149,16 @@ function submitRevestimiento(){
   const c=document.getElementById('r-color').value,o=document.getElementById('r-obs').value;
   const qty=parseInt(document.getElementById('r-cant').value)||1;
   if(!t){showToast('⚠ Seleccioná el tipo de revestimiento');return;}
-  agregarMedida({icono:'🏠',nombre:'Revestimiento PVC consulta',detalle:`${t}${s?' · '+s+'m²':''}${c?' · '+c:''}${o?' · '+o:''}`,qty});
-  showToast('✓ Consulta agregada al carrito');
+  let msg=`🏠 *Consulta revestimiento PVC — Omar Aberturas*\n\n`;
+  msg+=`Tipo: ${t}\n`;
+  if(s) msg+=`Superficie: ${s} m²\n`;
+  if(c) msg+=`Color / terminación: ${c}\n`;
+  msg+=`Cantidad: ${qty} caja${qty>1?'s':''}\n`;
+  if(o) msg+=`Observaciones: ${o}`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  showToast('✓ Consulta enviada por WhatsApp');
   ['r-tipo','r-sup','r-color','r-obs'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('r-cant').value=1;
-  openCart();
 }
 
 renderProductos('todos');

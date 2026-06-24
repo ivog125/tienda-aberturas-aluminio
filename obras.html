@@ -9,11 +9,11 @@
 <style>
 /* ── PROCESO ── */
 .proceso-section { background: var(--gris-claro); border-radius: 16px; padding: 3rem 2.5rem; margin-bottom: 3.5rem; }
-.proceso-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--azul); margin-bottom: .75rem; }
+.proceso-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--primario); margin-bottom: .75rem; }
 .proceso-title { font-family: "Nunito", sans-serif; font-size: clamp(20px,3vw,28px); font-weight: 900; color: var(--negro); margin-bottom: 2.5rem; line-height: 1.3; }
 .proceso-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
-.proceso-step { background: white; border-radius: 12px; padding: 1.5rem; position: relative; border-top: 3px solid var(--azul); }
-.proceso-num { font-family: "Nunito", sans-serif; font-size: 11px; font-weight: 900; color: var(--azul); letter-spacing: 2px; margin-bottom: .5rem; }
+.proceso-step { background: white; border-radius: 12px; padding: 1.5rem; position: relative; border-top: 3px solid var(--primario); }
+.proceso-num { font-family: "Nunito", sans-serif; font-size: 11px; font-weight: 900; color: var(--primario); letter-spacing: 2px; margin-bottom: .5rem; }
 .proceso-icon { font-size: 28px; margin-bottom: .75rem; }
 .proceso-step-title { font-family: "Nunito", sans-serif; font-size: 16px; font-weight: 800; color: var(--negro); margin-bottom: .5rem; }
 .proceso-step-body { font-size: 13px; color: var(--gris-texto); line-height: 1.6; }
@@ -25,14 +25,14 @@
 .galeria-title { font-family: "Nunito", sans-serif; font-size: 22px; font-weight: 900; color: var(--negro); }
 .galeria-tabs { display: flex; gap: 6px; }
 .galeria-tab { padding: 7px 18px; border-radius: 20px; border: 1px solid var(--gris-medio); background: white; color: var(--gris-texto); font-family: "Nunito", sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .2s; }
-.galeria-tab.active { background: var(--azul); color: white; border-color: var(--azul); }
-.galeria-tab:hover:not(.active) { border-color: var(--azul); color: var(--azul); }
+.galeria-tab.active { background: var(--primario); color: white; border-color: var(--primario); }
+.galeria-tab:hover:not(.active) { border-color: var(--primario); color: var(--primario); }
 
 .carrusel-wrapper { margin-bottom: 3.5rem; }
 .galeria-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.25rem; }
 .carrusel-nav { display: flex; align-items: center; justify-content: center; gap: 1.5rem; }
 .carrusel-btn { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gris-medio); background: white; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all .2s; color: var(--negro); }
-.carrusel-btn:hover:not(:disabled) { border-color: var(--azul); color: var(--azul); background: var(--azul-suave); }
+.carrusel-btn:hover:not(:disabled) { border-color: var(--primario); color: var(--primario); background: var(--primario-suave); }
 .carrusel-btn:disabled { opacity: .3; cursor: not-allowed; }
 .carrusel-indicador { font-family: "Nunito", sans-serif; font-size: 14px; font-weight: 700; color: var(--gris-texto); min-width: 48px; text-align: center; }
 .galeria-item { border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; background: var(--gris-claro); aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; transition: transform .3s; }
@@ -50,25 +50,25 @@
 .testimonios-section { margin: 3.5rem 0; }
 .testimonios-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 2rem; }
 .testimonio-card { background: white; border: 1px solid var(--gris-medio); border-radius: 16px; padding: 1.75rem; transition: all .3s; display: flex; flex-direction: column; }
-.testimonio-card:hover { box-shadow: 0 8px 24px rgba(204,34,34,.1); border-color: var(--azul); transform: translateY(-3px); }
-.testimonio-stars { color: var(--azul); font-size: 17px; letter-spacing: 3px; margin-bottom: .75rem; }
-.testimonio-comilla { font-family: Georgia, serif; font-size: 52px; color: var(--azul); opacity: .15; line-height: .8; margin-bottom: .5rem; }
+.testimonio-card:hover { box-shadow: 0 8px 24px rgba(204,34,34,.1); border-color: var(--primario); transform: translateY(-3px); }
+.testimonio-stars { color: var(--primario); font-size: 17px; letter-spacing: 3px; margin-bottom: .75rem; }
+.testimonio-comilla { font-family: Georgia, serif; font-size: 52px; color: var(--primario); opacity: .15; line-height: .8; margin-bottom: .5rem; }
 .testimonio-texto { font-size: 14px; color: var(--gris-texto); line-height: 1.75; font-style: italic; flex: 1; }
 .testimonio-autor { padding-top: 1.25rem; margin-top: 1.25rem; border-top: 1px solid var(--gris-medio); }
 .testimonio-nombre { font-family: "Nunito", sans-serif; font-size: 15px; font-weight: 800; color: var(--negro); }
-.testimonio-tipo { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--azul); margin-top: 3px; }
+.testimonio-tipo { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primario); margin-top: 3px; }
 
 /* ── DIRIGIDO ── */
 .dirigido-section { background: var(--gris-claro); border-radius: 16px; padding: 3rem 2.5rem; text-align: center; margin-top: 3.5rem; }
 .dirigido-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 2rem; text-align: left; }
 .dirigido-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--gris-medio); transition: all .3s; }
-.dirigido-card:hover { box-shadow: 0 8px 24px rgba(204,34,34,.12); border-color: var(--azul); transform: translateY(-3px); }
+.dirigido-card:hover { box-shadow: 0 8px 24px rgba(204,34,34,.12); border-color: var(--primario); transform: translateY(-3px); }
 .dirigido-img { height: 110px; background: linear-gradient(135deg, #1a1a1a, #cc2222); display: flex; align-items: center; justify-content: center; font-size: 40px; }
 .dirigido-body { padding: 1.25rem; }
-.dirigido-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--azul); margin-bottom: 6px; }
+.dirigido-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--primario); margin-bottom: 6px; }
 .dirigido-title { font-family: "Nunito", sans-serif; font-size: 17px; font-weight: 800; color: var(--negro); margin-bottom: 6px; }
 .dirigido-desc { font-size: 13px; color: var(--gris-texto); line-height: 1.5; margin-bottom: 1rem; }
-.dirigido-cta { display: inline-flex; align-items: center; gap: 4px; color: var(--azul); font-size: 13px; font-weight: 800; text-decoration: none; transition: gap .2s; font-family: "Nunito", sans-serif; }
+.dirigido-cta { display: inline-flex; align-items: center; gap: 4px; color: var(--primario); font-size: 13px; font-weight: 800; text-decoration: none; transition: gap .2s; font-family: "Nunito", sans-serif; }
 .dirigido-cta:hover { gap: 8px; }
 
 @media(max-width:900px) { .proceso-grid { grid-template-columns:1fr 1fr; } .dirigido-grid { grid-template-columns:1fr; } .galeria-grid { grid-template-columns:1fr 1fr; } .testimonios-grid { grid-template-columns:1fr 1fr; } }
