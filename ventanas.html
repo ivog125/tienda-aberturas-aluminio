@@ -30,103 +30,13 @@
 <section class="productos-section">
   <div class="productos-wrapper">
     <div class="tabs-row">
-      <button class="tab-btn active" onclick="switchTab('herrero')">🏗️ Línea Herrero</button>
-      <button class="tab-btn" onclick="switchTab('aluminio')">🪟 Aluminio</button>
-      <button class="tab-btn" onclick="switchTab('a30')">⭐ A30</button>
+      <button class="tab-btn active" onclick="switchTab('catalogo')">🪟 Catálogo</button>
       <button class="tab-btn" onclick="switchTab('medida')">📐 A medida (consulta)</button>
     </div>
 
-    <!-- ── LÍNEA HERRERO ── -->
-    <div class="tab-panel active" id="tab-herrero">
-      <div class="subcat-intro">
-        <div class="subcat-intro-icon">🏗️</div>
-        <div>
-          <div class="subcat-intro-title">Línea Herrero</div>
-          <div class="subcat-intro-desc">Perfilería clásica de alta resistencia, pensada para obras y construcción. Robustez y durabilidad comprobada.</div>
-        </div>
-      </div>
-      <div class="productos-layout">
-        <aside class="sidebar">
-          <div class="sidebar-title">🔍 Filtrar</div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Tipo</div>
-            <button class="sidebar-link active" onclick="filtrar('herrero','todos',this)">Todos <span class="count" id="hcount-todos"></span></button>
-            <button class="sidebar-link" onclick="filtrar('herrero','Corrediza',this)">Corrediza <span class="count" id="hcount-Corrediza"></span></button>
-            <button class="sidebar-link" onclick="filtrar('herrero','Abatible',this)">Abatible <span class="count" id="hcount-Abatible"></span></button>
-            <button class="sidebar-link" onclick="filtrar('herrero','Proyectante',this)">Proyectante <span class="count" id="hcount-Proyectante"></span></button>
-          </div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Acceso rápido</div>
-            <button class="sidebar-link" onclick="switchTab('medida')">📐 Pedir a medida</button>
-            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
-          </div>
-        </aside>
-        <div>
-          <div class="productos-grid" id="grid-herrero"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ALUMINIO ── -->
-    <div class="tab-panel" id="tab-aluminio">
-      <div class="subcat-intro">
-        <div class="subcat-intro-icon">🪟</div>
-        <div>
-          <div class="subcat-intro-title">Aluminio</div>
-          <div class="subcat-intro-desc">Ventanas de aluminio estándar fabricadas en nuestro taller. Todos los sistemas, medidas y colores disponibles.</div>
-        </div>
-      </div>
-      <div class="productos-layout">
-        <aside class="sidebar">
-          <div class="sidebar-title">🔍 Filtrar</div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Tipo</div>
-            <button class="sidebar-link active" onclick="filtrar('aluminio','todos',this)">Todos <span class="count" id="acount-todos"></span></button>
-            <button class="sidebar-link" onclick="filtrar('aluminio','Corrediza',this)">Corrediza <span class="count" id="acount-Corrediza"></span></button>
-            <button class="sidebar-link" onclick="filtrar('aluminio','Abatible',this)">Abatible <span class="count" id="acount-Abatible"></span></button>
-            <button class="sidebar-link" onclick="filtrar('aluminio','Aireador',this)">Aireador <span class="count" id="acount-Aireador"></span></button>
-          </div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Acceso rápido</div>
-            <button class="sidebar-link" onclick="switchTab('medida')">📐 Pedir a medida</button>
-            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
-          </div>
-        </aside>
-        <div>
-          <div class="productos-grid" id="grid-aluminio"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── A30 ── -->
-    <div class="tab-panel" id="tab-a30">
-      <div class="subcat-intro">
-        <div class="subcat-intro-icon">⭐</div>
-        <div>
-          <div class="subcat-intro-title">A30</div>
-          <div class="subcat-intro-desc">Línea premium de alto rendimiento térmico y acústico. Mayor aislación y acabados superiores.</div>
-        </div>
-      </div>
-      <div class="productos-layout">
-        <aside class="sidebar">
-          <div class="sidebar-title">🔍 Filtrar</div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Tipo</div>
-            <button class="sidebar-link active" onclick="filtrar('a30','todos',this)">Todos <span class="count" id="pcount-todos"></span></button>
-            <button class="sidebar-link" onclick="filtrar('a30','Corrediza',this)">Corrediza <span class="count" id="pcount-Corrediza"></span></button>
-            <button class="sidebar-link" onclick="filtrar('a30','Abatible',this)">Abatible <span class="count" id="pcount-Abatible"></span></button>
-            <button class="sidebar-link" onclick="filtrar('a30','Paño fijo',this)">Paño fijo <span class="count" id="pcount-Panofijo"></span></button>
-          </div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Acceso rápido</div>
-            <button class="sidebar-link" onclick="switchTab('medida')">📐 Pedir a medida</button>
-            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
-          </div>
-        </aside>
-        <div>
-          <div class="productos-grid" id="grid-a30"></div>
-        </div>
-      </div>
+    <!-- ── CATÁLOGO DINÁMICO ── -->
+    <div class="tab-panel active" id="tab-catalogo">
+      <div class="productos-grid" id="grid-catalogo"></div>
     </div>
 
     <!-- ── A MEDIDA ── -->
@@ -213,77 +123,58 @@ document.getElementById('header-mount').innerHTML = renderNav('ventanas.html');
 document.getElementById('footer-mount').innerHTML = renderFooter();
 document.getElementById('cart-mount').innerHTML = renderCartSidebar();
 
-/* ── DATOS POR LÍNEA ── */
-const LINEAS = {
-  herrero: [
-    { id:101, icono:'🪟', nombre:'Corrediza Herrero 100×60', desc:'Perfilería Herrero, aluminio blanco, vidrio simple 4mm.', precio:48000, unidad:'unidad', tipo:'Corrediza' },
-    { id:102, icono:'🪟', nombre:'Corrediza Herrero 120×100', desc:'Perfilería Herrero, aluminio blanco, vidrio simple 4mm.', precio:72000, unidad:'unidad', tipo:'Corrediza' },
-    { id:103, icono:'🪟', nombre:'Abatible Herrero 60×80', desc:'Perfilería Herrero, aluminio natural, vidrio simple. Apertura interior.', precio:55000, unidad:'unidad', tipo:'Abatible' },
-    { id:104, icono:'🪟', nombre:'Proyectante Herrero 60×40', desc:'Perfilería Herrero, aluminio blanco. Ideal para baños.', precio:38000, unidad:'unidad', tipo:'Proyectante' },
-  ],
-  aluminio: [
-    { id:201, icono:'🪟', nombre:'Corrediza aluminio 100×60', desc:'Aluminio blanco, vidrio simple 4mm. Medida estándar.', precio:52000, unidad:'unidad', tipo:'Corrediza' },
-    { id:202, icono:'🪟', nombre:'Corrediza aluminio 120×100', desc:'Aluminio blanco, vidrio simple 4mm.', precio:78000, unidad:'unidad', tipo:'Corrediza' },
-    { id:203, icono:'🪟', nombre:'Abatible aluminio DVH 80×100', desc:'Aluminio natural, doble vidrio hermético (DVH).', precio:98000, unidad:'unidad', tipo:'Abatible' },
-    { id:204, icono:'🪟', nombre:'Aireador / Celóscope 60×20', desc:'Aluminio natural, con reja y mosquitero incluido.', precio:24000, unidad:'unidad', tipo:'Aireador' },
-  ],
-  a30: [
-    { id:301, icono:'🪟', nombre:'A30 Corrediza 100×60', desc:'Línea A30, perfil reforzado, vidrio DVH, máxima aislación.', precio:95000, unidad:'unidad', tipo:'Corrediza' },
-    { id:302, icono:'🪟', nombre:'A30 Corrediza 150×120', desc:'Línea A30, perfil reforzado, vidrio DVH. Ideal para ambientes amplios.', precio:138000, unidad:'unidad', tipo:'Corrediza' },
-    { id:303, icono:'🪟', nombre:'A30 Abatible 80×100', desc:'Línea A30, doble vidrio, sellado hermético premium.', precio:115000, unidad:'unidad', tipo:'Abatible' },
-    { id:304, icono:'🪟', nombre:'A30 Paño fijo 120×150', desc:'Línea A30, vidrio DVH, máxima entrada de luz con aislación superior.', precio:105000, unidad:'unidad', tipo:'Paño fijo' },
-  ],
-};
+/* ── PRODUCTOS DINÁMICOS ── */
+const CAT_ICONO = { Ventanas:'🪟', Puertas:'🚪', Portones:'🏗️', Revestimientos:'🏠', Complementos:'🔧' };
+
+function parsePrecioNum(texto) {
+  if (!texto) return 0;
+  const m = texto.replace(/\./g, '').match(/\d+/);
+  return m ? parseInt(m[0]) : 0;
+}
+
+function cargarProductosPagina(categorias) {
+  const todos = JSON.parse(localStorage.getItem('admin_productos') || 'null') || [];
+  return todos.filter(p => p.visible && categorias.includes(p.categoria));
+}
 
 const qtyMap = {};
-Object.values(LINEAS).flat().forEach(p => { qtyMap[p.id] = 1; });
 
-/* ── RENDER ── */
-function renderGrid(linea, filtro) {
-  const lista = filtro === 'todos' ? LINEAS[linea] : LINEAS[linea].filter(p => p.tipo === filtro);
-  const gridId = { herrero:'grid-herrero', aluminio:'grid-aluminio', a30:'grid-a30' }[linea];
-  document.getElementById(gridId).innerHTML = lista.map(p => `
-    <div class="producto-card">
-      <div class="producto-img">
-        <span class="producto-rubro-badge">${p.tipo}</span>
-        ${p.icono}
-      </div>
-      <div class="producto-body">
-        <div class="producto-nombre">${p.nombre}</div>
-        <div class="producto-desc">${p.desc}</div>
-        <div class="producto-precio">$${p.precio.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad}</span></div>
-        <div class="producto-actions">
-          <div class="qty-control">
-            <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
-            <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]||1}</span>
-            <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
-          </div>
-          <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>
+function renderCatalogo(lista) {
+  const grid = document.getElementById('grid-catalogo');
+  if (!lista.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gris-texto);">
+      <div style="font-size:36px;margin-bottom:1rem;">🪟</div>
+      <div style="font-weight:700;margin-bottom:.5rem;">Catálogo en construcción</div>
+      <div style="font-size:13px;">El catálogo se carga desde el panel de administración.</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = lista.map(p => {
+    if (!qtyMap[p.id]) qtyMap[p.id] = 1;
+    const icono = CAT_ICONO[p.categoria] || '📦';
+    const precioNum = parsePrecioNum(p.precio);
+    const precioDisplay = precioNum > 0
+      ? `$${precioNum.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad||'unidad'}</span>`
+      : `<span style="color:var(--gris-texto)">${p.precio || 'A confirmar'}</span>`;
+    const acciones = precioNum > 0
+      ? `<div class="qty-control">
+           <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
+           <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]}</span>
+           <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
+         </div>
+         <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>`
+      : `<button class="btn-agregar" style="background:var(--gris-texto)" onclick="consultarWA('${p.nombre.replace(/'/g,"\\'")}')">Consultar →</button>`;
+    return `
+      <div class="producto-card">
+        <div class="producto-img">${icono}</div>
+        <div class="producto-body">
+          <div class="producto-nombre">${p.nombre}</div>
+          <div class="producto-desc">${p.descripcion || ''}</div>
+          <div class="producto-precio">${precioDisplay}</div>
+          <div class="producto-actions">${acciones}</div>
         </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function actualizarContadores(linea) {
-  const prefixes = { herrero:'hcount', aluminio:'acount', a30:'pcount' };
-  const pre = prefixes[linea];
-  const todos = LINEAS[linea];
-  const tipos = [...new Set(todos.map(p => p.tipo))];
-  const todosEl = document.getElementById(`${pre}-todos`);
-  if (todosEl) todosEl.textContent = todos.length;
-  tipos.forEach(t => {
-    const key = t.replace(/\s/g, '');
-    const el = document.getElementById(`${pre}-${key}`);
-    if (el) el.textContent = todos.filter(p => p.tipo === t).length;
-  });
-}
-
-function filtrar(linea, tipo, el) {
-  const contenedor = el.closest('.sidebar');
-  contenedor.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderGrid(linea, tipo);
+      </div>`;
+  }).join('');
 }
 
 function cambiarQty(id, d) {
@@ -293,12 +184,18 @@ function cambiarQty(id, d) {
 }
 
 function addToCart(id) {
-  const p = Object.values(LINEAS).flat().find(x => x.id === id);
+  const p = PRODUCTOS_PAGINA.find(x => x.id === id);
   if (!p) return;
-  agregarFijo({ id:p.id, icono:p.icono, nombre:p.nombre, precio:p.precio, unidad:p.unidad, qty:qtyMap[id]||1 });
+  const precioNum = parsePrecioNum(p.precio);
+  agregarFijo({ id: p.id, icono: CAT_ICONO[p.categoria]||'📦', nombre: p.nombre, precio: precioNum, unidad: p.unidad||'unidad', qty: qtyMap[id]||1 });
   showToast('✓ ' + p.nombre + ' agregado');
   const btn = document.getElementById('btn-' + id);
   if (btn) { btn.textContent='✓ Agregado'; btn.classList.add('agregado'); setTimeout(()=>{ btn.textContent='+ Agregar'; btn.classList.remove('agregado'); }, 1500); }
+}
+
+function consultarWA(nombre) {
+  const msg = `Hola! Me gustaría consultar precio y disponibilidad de: ${nombre}`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 /* ── A MEDIDA ── */
@@ -339,11 +236,9 @@ function submitMedidaPuerta() {
 }
 
 /* ── INIT ── */
-['herrero','aluminio','a30'].forEach(l => {
-  renderGrid(l, 'todos');
-  actualizarContadores(l);
-});
-const _tabV = ['herrero','aluminio','a30','medida'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'herrero';
+const PRODUCTOS_PAGINA = cargarProductosPagina(['Ventanas']);
+renderCatalogo(PRODUCTOS_PAGINA);
+const _tabV = ['catalogo','medida'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'catalogo';
 switchTab(_tabV);
 </script>
 </body>

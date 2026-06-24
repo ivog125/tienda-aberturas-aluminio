@@ -22,31 +22,12 @@
 <section class="productos-section">
   <div class="productos-wrapper">
     <div class="tabs-row">
-      <button class="tab-btn active" onclick="switchTab('fijos')">💰 Precio fijo</button>
+      <button class="tab-btn active" onclick="switchTab('catalogo')">🏠 Catálogo</button>
       <button class="tab-btn" onclick="switchTab('medida')">📋 Consulta especial</button>
     </div>
 
-    <div class="tab-panel active" id="tab-fijos">
-      <div class="productos-layout">
-        <aside class="sidebar">
-          <div class="sidebar-title">🔍 Filtrar</div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Tipo</div>
-            <button class="sidebar-link active" onclick="filtrar('todos',this)">Todos <span class="count">6</span></button>
-            <button class="sidebar-link" onclick="filtrar('Cielorraso',this)">Cielorraso <span class="count">2</span></button>
-            <button class="sidebar-link" onclick="filtrar('Pared',this)">Pared <span class="count">2</span></button>
-            <button class="sidebar-link" onclick="filtrar('Zocalo',this)">Zócalo <span class="count">2</span></button>
-          </div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Acceso rápido</div>
-            <button class="sidebar-link" onclick="switchTab('medida')">📋 Consulta especial</button>
-            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
-          </div>
-        </aside>
-        <div>
-          <div class="productos-grid" id="productos-grid"></div>
-        </div>
-      </div>
+    <div class="tab-panel active" id="tab-catalogo">
+      <div class="productos-grid" id="grid-catalogo"></div>
     </div>
 
     <div class="tab-panel" id="tab-medida">
@@ -97,55 +78,78 @@ document.getElementById('header-mount').innerHTML = renderNav('revestimientos.ht
 document.getElementById('footer-mount').innerHTML = renderFooter();
 document.getElementById('cart-mount').innerHTML = renderCartSidebar();
 
-const PRODUCTOS = [
-  { id:301, icono:'🏠', nombre:'Panel PVC cielorraso blanco liso', desc:'Panel de 25cm de ancho. Resistente a la humedad.', precio:8500, unidad:'m²', tipo:'Cielorraso' },
-  { id:302, icono:'🏠', nombre:'Panel PVC cielorraso texturado', desc:'Panel de 25cm con textura. Ideal para baños y cocinas.', precio:9800, unidad:'m²', tipo:'Cielorraso' },
-  { id:303, icono:'🏠', nombre:'Revestimiento PVC pared blanco', desc:'Panel de 20cm de ancho. Resistente a la humedad.', precio:7200, unidad:'m²', tipo:'Pared' },
-  { id:304, icono:'🏠', nombre:'Revestimiento PVC pared madera', desc:'Panel efecto madera. Apto para interior.', precio:10500, unidad:'m²', tipo:'Pared' },
-  { id:305, icono:'🏠', nombre:'Zócalo PVC 10cm blanco', desc:'Zócalo de PVC flexible 10cm. Por metro lineal.', precio:2200, unidad:'ml', tipo:'Zocalo' },
-  { id:306, icono:'🏠', nombre:'Zócalo PVC 15cm blanco', desc:'Zócalo de PVC flexible 15cm. Por metro lineal.', precio:2900, unidad:'ml', tipo:'Zocalo' },
-];
+const CAT_ICONO = { Ventanas:'🪟', Puertas:'🚪', Portones:'🏗️', Revestimientos:'🏠', Complementos:'🔧' };
+
+function parsePrecioNum(texto) {
+  if (!texto) return 0;
+  const m = texto.replace(/\./g, '').match(/\d+/);
+  return m ? parseInt(m[0]) : 0;
+}
+
+function cargarProductosPagina(categorias) {
+  const todos = JSON.parse(localStorage.getItem('admin_productos') || 'null') || [];
+  return todos.filter(p => p.visible && categorias.includes(p.categoria));
+}
 
 const qtyMap = {};
-PRODUCTOS.forEach(p=>{ qtyMap[p.id]=1; });
 
-function renderProductos(filtro){
-  const lista = filtro==='todos' ? PRODUCTOS : PRODUCTOS.filter(p=>p.tipo===filtro);
-  document.getElementById('productos-grid').innerHTML = lista.map(p=>`
-    <div class="producto-card">
-      <div class="producto-img">
-        <span class="producto-rubro-badge">${p.tipo}</span>${p.icono}
-      </div>
-      <div class="producto-body">
-        <div class="producto-nombre">${p.nombre}</div>
-        <div class="producto-desc">${p.desc}</div>
-        <div class="producto-precio">$${p.precio.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad}</span></div>
-        <div class="producto-actions">
-          <div class="qty-control">
-            <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
-            <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]||1}</span>
-            <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
-          </div>
-          <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>
+function renderCatalogo(lista) {
+  const grid = document.getElementById('grid-catalogo');
+  if (!lista.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gris-texto);">
+      <div style="font-size:36px;margin-bottom:1rem;">🏠</div>
+      <div style="font-weight:700;margin-bottom:.5rem;">Catálogo en construcción</div>
+      <div style="font-size:13px;">El catálogo se carga desde el panel de administración.</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = lista.map(p => {
+    if (!qtyMap[p.id]) qtyMap[p.id] = 1;
+    const icono = CAT_ICONO[p.categoria] || '📦';
+    const precioNum = parsePrecioNum(p.precio);
+    const precioDisplay = precioNum > 0
+      ? `$${precioNum.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad||'unidad'}</span>`
+      : `<span style="color:var(--gris-texto)">${p.precio || 'A confirmar'}</span>`;
+    const acciones = precioNum > 0
+      ? `<div class="qty-control">
+           <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
+           <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]}</span>
+           <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
+         </div>
+         <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>`
+      : `<button class="btn-agregar" style="background:var(--gris-texto)" onclick="consultarWA('${p.nombre.replace(/'/g,"\\'")}')">Consultar →</button>`;
+    return `
+      <div class="producto-card">
+        <div class="producto-img">${icono}</div>
+        <div class="producto-body">
+          <div class="producto-nombre">${p.nombre}</div>
+          <div class="producto-desc">${p.descripcion || ''}</div>
+          <div class="producto-precio">${precioDisplay}</div>
+          <div class="producto-actions">${acciones}</div>
         </div>
-      </div>
-    </div>`).join('');
+      </div>`;
+  }).join('');
 }
 
-function cambiarQty(id,d){ qtyMap[id]=Math.max(1,(qtyMap[id]||1)+d); const el=document.getElementById('qty-'+id); if(el) el.textContent=qtyMap[id]; }
-
-function addToCart(id){
-  const p=PRODUCTOS.find(x=>x.id===id); if(!p) return;
-  agregarFijo({id:p.id,icono:p.icono,nombre:p.nombre,precio:p.precio,unidad:p.unidad,qty:qtyMap[id]||1});
-  showToast('✓ '+p.nombre+' agregado');
-  const btn=document.getElementById('btn-'+id);
-  if(btn){btn.textContent='✓ Agregado';btn.classList.add('agregado');setTimeout(()=>{btn.textContent='+ Agregar';btn.classList.remove('agregado');},1500);}
+function cambiarQty(id, d) {
+  qtyMap[id] = Math.max(1, (qtyMap[id]||1) + d);
+  const el = document.getElementById('qty-' + id);
+  if (el) el.textContent = qtyMap[id];
 }
 
-function filtrar(tipo,el){
-  document.querySelectorAll('.sidebar-link').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderProductos(tipo);
+function addToCart(id) {
+  const p = PRODUCTOS_PAGINA.find(x => x.id === id);
+  if (!p) return;
+  const precioNum = parsePrecioNum(p.precio);
+  agregarFijo({ id: p.id, icono: CAT_ICONO[p.categoria]||'📦', nombre: p.nombre, precio: precioNum, unidad: p.unidad||'unidad', qty: qtyMap[id]||1 });
+  showToast('✓ ' + p.nombre + ' agregado');
+  const btn = document.getElementById('btn-' + id);
+  if (btn) { btn.textContent='✓ Agregado'; btn.classList.add('agregado'); setTimeout(()=>{ btn.textContent='+ Agregar'; btn.classList.remove('agregado'); }, 1500); }
+}
+
+function consultarWA(nombre) {
+  const msg = `Hola! Me gustaría consultar precio y disponibilidad de: ${nombre}`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function submitRevestimiento(){
@@ -165,7 +169,9 @@ function submitRevestimiento(){
   document.getElementById('r-cant').value=1;
 }
 
-renderProductos('todos');
+const PRODUCTOS_PAGINA = cargarProductosPagina(['Revestimientos']);
+renderCatalogo(PRODUCTOS_PAGINA);
+switchTab('catalogo');
 </script>
 </body>
 </html>

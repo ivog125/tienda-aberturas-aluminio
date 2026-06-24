@@ -28,69 +28,13 @@
 <section class="productos-section">
   <div class="productos-wrapper">
     <div class="tabs-row">
-      <button class="tab-btn active" onclick="switchTab('chapa')">🔩 Chapa</button>
-      <button class="tab-btn" onclick="switchTab('aluminio')">🪟 Aluminio</button>
+      <button class="tab-btn active" onclick="switchTab('catalogo')">🚪 Catálogo</button>
       <button class="tab-btn" onclick="switchTab('medida')">📐 A medida (consulta)</button>
     </div>
 
-    <!-- ── CHAPA ── -->
-    <div class="tab-panel active" id="tab-chapa">
-      <div class="subcat-intro">
-        <div class="subcat-intro-icon">🔩</div>
-        <div>
-          <div class="subcat-intro-title">Chapa</div>
-          <div class="subcat-intro-desc">Puertas y portones de chapa de acero. Alta resistencia y seguridad para exteriores e interiores.</div>
-        </div>
-      </div>
-      <div class="productos-layout">
-        <aside class="sidebar">
-          <div class="sidebar-title">🔍 Filtrar</div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Tipo</div>
-            <button class="sidebar-link active" onclick="filtrar('chapa','todos',this)">Todos <span class="count" id="ccount-todos"></span></button>
-            <button class="sidebar-link" onclick="filtrar('chapa','Puerta',this)">Puertas <span class="count" id="ccount-Puerta"></span></button>
-            <button class="sidebar-link" onclick="filtrar('chapa','Porton',this)">Portones <span class="count" id="ccount-Porton"></span></button>
-          </div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Acceso rápido</div>
-            <button class="sidebar-link" onclick="switchTab('medida')">📐 Pedir a medida</button>
-            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
-          </div>
-        </aside>
-        <div>
-          <div class="productos-grid" id="grid-chapa"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ALUMINIO ── -->
-    <div class="tab-panel" id="tab-aluminio">
-      <div class="subcat-intro">
-        <div class="subcat-intro-icon">🪟</div>
-        <div>
-          <div class="subcat-intro-title">Aluminio</div>
-          <div class="subcat-intro-desc">Puertas y portones de aluminio. Livianos, resistentes a la corrosión y con terminación premium.</div>
-        </div>
-      </div>
-      <div class="productos-layout">
-        <aside class="sidebar">
-          <div class="sidebar-title">🔍 Filtrar</div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Tipo</div>
-            <button class="sidebar-link active" onclick="filtrar('aluminio','todos',this)">Todos <span class="count" id="acount-todos"></span></button>
-            <button class="sidebar-link" onclick="filtrar('aluminio','Puerta',this)">Puertas <span class="count" id="acount-Puerta"></span></button>
-            <button class="sidebar-link" onclick="filtrar('aluminio','Porton',this)">Portones <span class="count" id="acount-Porton"></span></button>
-          </div>
-          <div class="sidebar-group">
-            <div class="sidebar-group-title">Acceso rápido</div>
-            <button class="sidebar-link" onclick="switchTab('medida')">📐 Pedir a medida</button>
-            <a class="sidebar-link" href="contacto.html">✉ Contactar</a>
-          </div>
-        </aside>
-        <div>
-          <div class="productos-grid" id="grid-aluminio"></div>
-        </div>
-      </div>
+    <!-- ── CATÁLOGO DINÁMICO ── -->
+    <div class="tab-panel active" id="tab-catalogo">
+      <div class="productos-grid" id="grid-catalogo"></div>
     </div>
 
     <!-- ── A MEDIDA ── -->
@@ -172,69 +116,58 @@ document.getElementById('header-mount').innerHTML = renderNav('puertas.html');
 document.getElementById('footer-mount').innerHTML = renderFooter();
 document.getElementById('cart-mount').innerHTML = renderCartSidebar();
 
-/* ── DATOS POR CATEGORÍA ── */
-const CATEGORIAS = {
-  chapa: [
-    { id:301, icono:'🚪', nombre:'Puerta de chapa lisa', desc:'Chapa 0.6mm, 80×200cm. Marco incluido.', precio:85000, unidad:'unidad', tipo:'Puerta' },
-    { id:302, icono:'🚪', nombre:'Puerta de chapa plegada', desc:'Chapa 0.8mm, 80×200cm. Marco incluido. Mayor rigidez.', precio:110000, unidad:'unidad', tipo:'Puerta' },
-    { id:303, icono:'🚪', nombre:'Puerta de chapa con ventiluz', desc:'Chapa 0.6mm con ventiluz superior, 80×210cm.', precio:125000, unidad:'unidad', tipo:'Puerta' },
-    { id:304, icono:'🏗️', nombre:'Portón de chapa simple hoja', desc:'Portón de chapa 200×200cm. Manual, con cerradura.', precio:320000, unidad:'unidad', tipo:'Porton' },
-    { id:305, icono:'🏗️', nombre:'Portón de chapa doble hoja', desc:'Portón de chapa 300×200cm. Manual, con cerradura.', precio:480000, unidad:'unidad', tipo:'Porton' },
-  ],
-  aluminio: [
-    { id:401, icono:'🚪', nombre:'Puerta de aluminio abatible', desc:'Aluminio natural, 90×200cm. Con vidrio simple o DVH.', precio:195000, unidad:'unidad', tipo:'Puerta' },
-    { id:402, icono:'🚪', nombre:'Puerta de aluminio corrediza', desc:'Aluminio blanco, 120×200cm. Riel inferior reforzado.', precio:240000, unidad:'unidad', tipo:'Puerta' },
-    { id:403, icono:'🏗️', nombre:'Portón de aluminio simple hoja', desc:'Aluminio, medidas estándar 200×200cm. Liviano y resistente.', precio:380000, unidad:'unidad', tipo:'Porton' },
-    { id:404, icono:'🏗️', nombre:'Portón de aluminio doble hoja', desc:'Aluminio, 300×200cm. Ideal para garajes amplios.', precio:560000, unidad:'unidad', tipo:'Porton' },
-  ],
-};
+/* ── PRODUCTOS DINÁMICOS ── */
+const CAT_ICONO = { Ventanas:'🪟', Puertas:'🚪', Portones:'🏗️', Revestimientos:'🏠', Complementos:'🔧' };
+
+function parsePrecioNum(texto) {
+  if (!texto) return 0;
+  const m = texto.replace(/\./g, '').match(/\d+/);
+  return m ? parseInt(m[0]) : 0;
+}
+
+function cargarProductosPagina(categorias) {
+  const todos = JSON.parse(localStorage.getItem('admin_productos') || 'null') || [];
+  return todos.filter(p => p.visible && categorias.includes(p.categoria));
+}
 
 const qtyMap = {};
-Object.values(CATEGORIAS).flat().forEach(p => { qtyMap[p.id] = 1; });
 
-/* ── RENDER ── */
-function renderGrid(cat, filtro) {
-  const lista = filtro === 'todos' ? CATEGORIAS[cat] : CATEGORIAS[cat].filter(p => p.tipo === filtro);
-  const gridId = { chapa:'grid-chapa', aluminio:'grid-aluminio' }[cat];
-  document.getElementById(gridId).innerHTML = lista.map(p => `
-    <div class="producto-card">
-      <div class="producto-img">
-        <span class="producto-rubro-badge">${p.tipo === 'Puerta' ? 'Puerta' : 'Portón'}</span>
-        ${p.icono}
-      </div>
-      <div class="producto-body">
-        <div class="producto-nombre">${p.nombre}</div>
-        <div class="producto-desc">${p.desc}</div>
-        <div class="producto-precio">$${p.precio.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad}</span></div>
-        <div class="producto-actions">
-          <div class="qty-control">
-            <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
-            <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]||1}</span>
-            <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
-          </div>
-          <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>
+function renderCatalogo(lista) {
+  const grid = document.getElementById('grid-catalogo');
+  if (!lista.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gris-texto);">
+      <div style="font-size:36px;margin-bottom:1rem;">🚪</div>
+      <div style="font-weight:700;margin-bottom:.5rem;">Catálogo en construcción</div>
+      <div style="font-size:13px;">El catálogo se carga desde el panel de administración.</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = lista.map(p => {
+    if (!qtyMap[p.id]) qtyMap[p.id] = 1;
+    const icono = CAT_ICONO[p.categoria] || '📦';
+    const precioNum = parsePrecioNum(p.precio);
+    const precioDisplay = precioNum > 0
+      ? `$${precioNum.toLocaleString('es-AR')}<span class="unidad"> / ${p.unidad||'unidad'}</span>`
+      : `<span style="color:var(--gris-texto)">${p.precio || 'A confirmar'}</span>`;
+    const acciones = precioNum > 0
+      ? `<div class="qty-control">
+           <button class="qty-btn" onclick="cambiarQty(${p.id},-1)">−</button>
+           <span class="qty-num" id="qty-${p.id}">${qtyMap[p.id]}</span>
+           <button class="qty-btn" onclick="cambiarQty(${p.id},1)">+</button>
+         </div>
+         <button class="btn-agregar" id="btn-${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>`
+      : `<button class="btn-agregar" style="background:var(--gris-texto)" onclick="consultarWA('${p.nombre.replace(/'/g,"\\'")}')">Consultar →</button>`;
+    return `
+      <div class="producto-card">
+        <div class="producto-img">${icono}</div>
+        <div class="producto-body">
+          <div class="producto-nombre">${p.nombre}</div>
+          <div class="producto-desc">${p.descripcion || ''}</div>
+          <div class="producto-precio">${precioDisplay}</div>
+          <div class="producto-actions">${acciones}</div>
         </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function actualizarContadores(cat) {
-  const prefixes = { chapa:'ccount', aluminio:'acount' };
-  const pre = prefixes[cat];
-  const todos = CATEGORIAS[cat];
-  const todosEl = document.getElementById(`${pre}-todos`);
-  if (todosEl) todosEl.textContent = todos.length;
-  ['Puerta','Porton'].forEach(t => {
-    const el = document.getElementById(`${pre}-${t}`);
-    if (el) el.textContent = todos.filter(p => p.tipo === t).length;
-  });
-}
-
-function filtrar(cat, tipo, el) {
-  el.closest('.sidebar').querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderGrid(cat, tipo);
+      </div>`;
+  }).join('');
 }
 
 function cambiarQty(id, d) {
@@ -244,12 +177,18 @@ function cambiarQty(id, d) {
 }
 
 function addToCart(id) {
-  const p = Object.values(CATEGORIAS).flat().find(x => x.id === id);
+  const p = PRODUCTOS_PAGINA.find(x => x.id === id);
   if (!p) return;
-  agregarFijo({ id:p.id, icono:p.icono, nombre:p.nombre, precio:p.precio, unidad:p.unidad, qty:qtyMap[id]||1 });
+  const precioNum = parsePrecioNum(p.precio);
+  agregarFijo({ id: p.id, icono: CAT_ICONO[p.categoria]||'📦', nombre: p.nombre, precio: precioNum, unidad: p.unidad||'unidad', qty: qtyMap[id]||1 });
   showToast('✓ ' + p.nombre + ' agregado');
   const btn = document.getElementById('btn-' + id);
   if (btn) { btn.textContent='✓ Agregado'; btn.classList.add('agregado'); setTimeout(()=>{ btn.textContent='+ Agregar'; btn.classList.remove('agregado'); }, 1500); }
+}
+
+function consultarWA(nombre) {
+  const msg = `Hola! Me gustaría consultar precio y disponibilidad de: ${nombre}`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 /* ── A MEDIDA ── */
@@ -288,11 +227,9 @@ function submitPuerta() {
 }
 
 /* ── INIT ── */
-['chapa','aluminio'].forEach(c => {
-  renderGrid(c, 'todos');
-  actualizarContadores(c);
-});
-const _tabP = ['chapa','aluminio','medida'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'chapa';
+const PRODUCTOS_PAGINA = cargarProductosPagina(['Puertas', 'Portones']);
+renderCatalogo(PRODUCTOS_PAGINA);
+const _tabP = ['catalogo','medida'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'catalogo';
 switchTab(_tabP);
 </script>
 </body>

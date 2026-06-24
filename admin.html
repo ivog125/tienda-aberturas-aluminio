@@ -344,6 +344,7 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
             <button class="filter-btn" onclick="filtrarProductos('Puertas', this)">Puertas</button>
             <button class="filter-btn" onclick="filtrarProductos('Portones', this)">Portones</button>
             <button class="filter-btn" onclick="filtrarProductos('Revestimientos', this)">Revestimientos</button>
+            <button class="filter-btn" onclick="filtrarProductos('Complementos', this)">Complementos</button>
           </div>
         </div>
         <table>
@@ -546,12 +547,17 @@ td { padding: .875rem 1.25rem; font-size: 14px; vertical-align: middle; }
           <option value="Puertas">Puertas</option>
           <option value="Portones">Portones</option>
           <option value="Revestimientos">Revestimientos</option>
+          <option value="Complementos">Complementos</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Precio</label>
-        <input class="form-input" id="prod-precio" type="text" placeholder="Desde $120.000 o A confirmar">
+        <label class="form-label">Unidad <span class="form-label-sub">(unidad, m², ml…)</span></label>
+        <input class="form-input" id="prod-unidad" type="text" placeholder="unidad">
       </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Precio <span class="form-label-sub">(texto visible en el sitio)</span></label>
+      <input class="form-input" id="prod-precio" type="text" placeholder="Desde $120.000 o A confirmar">
     </div>
     <div class="form-group">
       <label class="form-label">Descripción <span class="form-label-sub">(opcional)</span></label>
@@ -730,16 +736,18 @@ function tradAdminError(code) {
 ═══════════════════════════════════ */
 
 const DEFAULT_PRODUCTOS = [
-  { id: 1, nombre: 'Ventana corrediza aluminio', categoria: 'Ventanas', precio: 'Desde $120.000', descripcion: 'Aluminio natural o color, vidrio float 4mm', visible: true },
-  { id: 2, nombre: 'Ventana proyectante', categoria: 'Ventanas', precio: 'Desde $95.000', descripcion: 'Ideal para baños y cocinas, medidas estándar o a pedido', visible: true },
-  { id: 3, nombre: 'Ventana banderola', categoria: 'Ventanas', precio: 'A confirmar', descripcion: 'Medidas a pedido', visible: true },
-  { id: 4, nombre: 'Puerta chapa plegada', categoria: 'Puertas', precio: 'Desde $180.000', descripcion: 'Chapa de acero con refuerzo interno', visible: true },
-  { id: 5, nombre: 'Puerta madera sólida', categoria: 'Puertas', precio: 'Desde $220.000', descripcion: 'Pino o cedro, terminación lacada o barnizada', visible: true },
-  { id: 6, nombre: 'Puerta HDF interior', categoria: 'Puertas', precio: 'Desde $65.000', descripcion: 'Para ambientes interiores, varios colores', visible: true },
-  { id: 7, nombre: 'Portón chapa simple', categoria: 'Portones', precio: 'A confirmar', descripcion: 'Medidas y terminación a pedido', visible: true },
-  { id: 8, nombre: 'Portón chapa doble hoja', categoria: 'Portones', precio: 'A confirmar', descripcion: 'Para garajes amplios, con o sin automatismo', visible: true },
-  { id: 9, nombre: 'Panel PVC cielorraso blanco', categoria: 'Revestimientos', precio: '$8.500/m²', descripcion: 'Incluye colocación. Ancho estándar 250mm', visible: true },
-  { id: 10, nombre: 'Revestimiento PVC imitación madera', categoria: 'Revestimientos', precio: '$11.000/m²', descripcion: 'Varios colores disponibles, incluye colocación', visible: true },
+  { id: 1,  nombre: 'Ventana corrediza aluminio',      categoria: 'Ventanas',      unidad: 'unidad', precio: 'Desde $120.000', descripcion: 'Aluminio natural o color, vidrio float 4mm', visible: true },
+  { id: 2,  nombre: 'Ventana proyectante',             categoria: 'Ventanas',      unidad: 'unidad', precio: 'Desde $95.000',  descripcion: 'Ideal para baños y cocinas, medidas estándar o a pedido', visible: true },
+  { id: 3,  nombre: 'Ventana banderola',               categoria: 'Ventanas',      unidad: 'unidad', precio: 'A confirmar',    descripcion: 'Medidas a pedido', visible: true },
+  { id: 4,  nombre: 'Puerta chapa plegada',            categoria: 'Puertas',       unidad: 'unidad', precio: 'Desde $180.000', descripcion: 'Chapa de acero con refuerzo interno', visible: true },
+  { id: 5,  nombre: 'Puerta madera sólida',            categoria: 'Puertas',       unidad: 'unidad', precio: 'Desde $220.000', descripcion: 'Pino o cedro, terminación lacada o barnizada', visible: true },
+  { id: 6,  nombre: 'Puerta HDF interior',             categoria: 'Puertas',       unidad: 'unidad', precio: 'Desde $65.000',  descripcion: 'Para ambientes interiores, varios colores', visible: true },
+  { id: 7,  nombre: 'Portón chapa simple',             categoria: 'Portones',      unidad: 'unidad', precio: 'A confirmar',    descripcion: 'Medidas y terminación a pedido', visible: true },
+  { id: 8,  nombre: 'Portón chapa doble hoja',         categoria: 'Portones',      unidad: 'unidad', precio: 'A confirmar',    descripcion: 'Para garajes amplios, con o sin automatismo', visible: true },
+  { id: 9,  nombre: 'Panel PVC cielorraso blanco',     categoria: 'Revestimientos', unidad: 'm²',    precio: '$8.500/m²',     descripcion: 'Incluye colocación. Ancho estándar 250mm', visible: true },
+  { id: 10, nombre: 'Revestimiento PVC imitación madera', categoria: 'Revestimientos', unidad: 'm²', precio: '$11.000/m²',    descripcion: 'Varios colores disponibles, incluye colocación', visible: true },
+  { id: 11, nombre: 'Mosquitero enrollable',           categoria: 'Complementos',  unidad: 'unidad', precio: 'Desde $32.000', descripcion: 'Para ventanas corredizas y abatibles. A medida.', visible: true },
+  { id: 12, nombre: 'Motor para portón',               categoria: 'Complementos',  unidad: 'unidad', precio: 'Desde $95.000', descripcion: 'Motor corredizo o batiente. Incluye control remoto.', visible: true },
 ];
 
 const DEFAULT_OBRAS = [
@@ -1009,6 +1017,7 @@ function abrirModalProducto() {
   document.getElementById('modal-producto-titulo').textContent = 'Agregar producto';
   document.getElementById('prod-nombre').value = '';
   document.getElementById('prod-categoria').value = 'Ventanas';
+  document.getElementById('prod-unidad').value = '';
   document.getElementById('prod-precio').value = '';
   document.getElementById('prod-descripcion').value = '';
   document.getElementById('prod-visible').checked = true;
@@ -1024,6 +1033,7 @@ function editarProducto(id) {
   document.getElementById('modal-producto-titulo').textContent = 'Editar producto';
   document.getElementById('prod-nombre').value = p.nombre;
   document.getElementById('prod-categoria').value = p.categoria;
+  document.getElementById('prod-unidad').value = p.unidad || '';
   document.getElementById('prod-precio').value = p.precio;
   document.getElementById('prod-descripcion').value = p.descripcion || '';
   document.getElementById('prod-visible').checked = p.visible;
@@ -1045,7 +1055,8 @@ function guardarProducto() {
   const datos = {
     nombre,
     categoria: document.getElementById('prod-categoria').value,
-    precio: document.getElementById('prod-precio').value.trim() || 'A confirmar',
+    unidad:    document.getElementById('prod-unidad').value.trim() || 'unidad',
+    precio:    document.getElementById('prod-precio').value.trim() || 'A confirmar',
     descripcion: document.getElementById('prod-descripcion').value.trim(),
     visible: document.getElementById('prod-visible').checked,
   };
