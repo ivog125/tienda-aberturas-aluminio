@@ -3,8 +3,7 @@
    Inicialización de Auth + Firestore
    ============================================================ */
 
-// TODO: Cambiar por el email real de Adrián antes del deploy
-const ADMIN_EMAIL = 'admin@omaraberturas.com';
+const ADMIN_EMAIL = 'correo.omaraberturas@gmail.com';
 
 firebase.initializeApp({
   apiKey: "AIzaSyCoGU_2TNJni7Aj_VJlYRuYkE43JKpnU94",
