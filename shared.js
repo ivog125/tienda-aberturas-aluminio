@@ -3,7 +3,7 @@
    Carrito (precio fijo) + consultas a medida (WA directo)
    ============================================================ */
 
-const WA_NUMBER = localStorage.getItem('waNumber') || '5491100000000';
+const WA_NUMBER = localStorage.getItem('waNumber') || '5491122939621';
 let _payMode = 'mp';
 
 // ── Carrito (solo precio fijo) ────────────────────────────────
