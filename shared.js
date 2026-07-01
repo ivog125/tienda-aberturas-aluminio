@@ -210,25 +210,32 @@ function irAMP() {
     msg += `${i + 1}. ${item.nombre} x${item.qty} — $${(item.precio * item.qty).toLocaleString('es-AR')}\n`;
   });
   msg += `\n💰 *Total: $${total.toLocaleString('es-AR')}*\n\n_Pedido generado desde el sitio web_`;
-  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
   const user = auth.currentUser;
-  if (user) {
-    db.collection('pedidos').add({
-      userId:    user.uid,
-      cliente:   nombre, email, tel,
-      productos: carrito.map(i => `${i.nombre} x${i.qty}`).join(', '),
-      total:     `$${total.toLocaleString('es-AR')}`,
-      metodo:    'mercadopago',
-      estado:    'pendiente',
-      fecha:     firebase.firestore.FieldValue.serverTimestamp(),
-    }).catch(() => {});
-  }
+  const guardarPedido = user
+    ? db.collection('pedidos').add({
+        userId:    user.uid,
+        cliente:   nombre, email, tel,
+        productos: carrito.map(i => `${i.nombre} x${i.qty}`).join(', '),
+        total:     `$${total.toLocaleString('es-AR')}`,
+        metodo:    'mercadopago',
+        estado:    'pendiente',
+        fecha:     firebase.firestore.FieldValue.serverTimestamp(),
+      })
+    : Promise.resolve();
 
-  document.getElementById('co-paso3-title').textContent = '¡Pedido enviado!';
-  document.getElementById('co-paso3-sub').textContent = 'Adrián recibió los detalles. Completá el pago en Mercado Pago para confirmar tu compra.';
-  document.getElementById('co-paso3-btn-mp').style.display = 'flex';
-  _coPaso(3);
+  guardarPedido
+    .then(() => {
+      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+      document.getElementById('co-paso3-title').textContent = '¡Pedido enviado!';
+      document.getElementById('co-paso3-sub').textContent = 'Adrián recibió los detalles. Completá el pago en Mercado Pago para confirmar tu compra.';
+      document.getElementById('co-paso3-btn-mp').style.display = 'flex';
+      _coPaso(3);
+    })
+    .catch(() => {
+      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+      showToast('⚠ Te contactamos por WhatsApp, pero no pudimos registrar el pedido en el sistema — el vendedor lo va a cargar manualmente.');
+    });
 }
 
 function irMP() {
@@ -249,25 +256,32 @@ function irTransferWA() {
     msg += `${i + 1}. ${item.nombre} x${item.qty} — $${(item.precio * item.qty).toLocaleString('es-AR')}\n`;
   });
   msg += `\n💰 *Total transferido: $${total.toLocaleString('es-AR')}*\n\n_Adjunto el comprobante de la transferencia._`;
-  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
   const user = auth.currentUser;
-  if (user) {
-    db.collection('pedidos').add({
-      userId:    user.uid,
-      cliente:   nombre, email, tel,
-      productos: carrito.map(i => `${i.nombre} x${i.qty}`).join(', '),
-      total:     `$${total.toLocaleString('es-AR')}`,
-      metodo:    'transferencia',
-      estado:    'pendiente',
-      fecha:     firebase.firestore.FieldValue.serverTimestamp(),
-    }).catch(() => {});
-  }
+  const guardarPedido = user
+    ? db.collection('pedidos').add({
+        userId:    user.uid,
+        cliente:   nombre, email, tel,
+        productos: carrito.map(i => `${i.nombre} x${i.qty}`).join(', '),
+        total:     `$${total.toLocaleString('es-AR')}`,
+        metodo:    'transferencia',
+        estado:    'pendiente',
+        fecha:     firebase.firestore.FieldValue.serverTimestamp(),
+      })
+    : Promise.resolve();
 
-  document.getElementById('co-paso3-title').textContent = '¡Comprobante enviado!';
-  document.getElementById('co-paso3-sub').textContent = 'Adrián va a verificar la transferencia y te confirma el pedido a la brevedad.';
-  document.getElementById('co-paso3-btn-mp').style.display = 'none';
-  _coPaso(3);
+  guardarPedido
+    .then(() => {
+      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+      document.getElementById('co-paso3-title').textContent = '¡Comprobante enviado!';
+      document.getElementById('co-paso3-sub').textContent = 'Adrián va a verificar la transferencia y te confirma el pedido a la brevedad.';
+      document.getElementById('co-paso3-btn-mp').style.display = 'none';
+      _coPaso(3);
+    })
+    .catch(() => {
+      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+      showToast('⚠ Te contactamos por WhatsApp, pero no pudimos registrar el pedido en el sistema — el vendedor lo va a cargar manualmente.');
+    });
 }
 
 // ── Toast ─────────────────────────────────────────────────────

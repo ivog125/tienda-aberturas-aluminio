@@ -660,6 +660,12 @@ auth.onAuthStateChanged(user => {
   }
 });
 
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
 function _iniciarListenerPedidos() {
   if (_fsDetach) return;
   document.getElementById('tabla-pedidos').innerHTML = `
@@ -839,11 +845,11 @@ function renderTabla(filtro) {
         <td class="td-id">${idCorto}</td>
         <td style="font-size:13px;color:var(--gris-texto);">${fecha}</td>
         <td>
-          <div class="td-cliente">${p.cliente || '—'}</div>
-          <div class="td-cliente-sub">${p.tel || p.email || ''}</div>
+          <div class="td-cliente">${escapeHtml(p.cliente || '—')}</div>
+          <div class="td-cliente-sub">${escapeHtml(p.tel || p.email || '')}</div>
         </td>
-        <td class="td-productos">${p.productos || '—'}</td>
-        <td class="td-total">$${p.total || '—'}</td>
+        <td class="td-productos">${escapeHtml(p.productos || '—')}</td>
+        <td class="td-total">$${escapeHtml(p.total || '—')}</td>
         <td>
           <select class="estado-select" onchange="cambiarEstado('${p.docId}', this.value)">
             <option value="pendiente"  ${p.estado==='pendiente' ?'selected':''}>⏳ Pendiente</option>
@@ -899,15 +905,15 @@ function verDetalle(docId) {
   document.getElementById('detalle-body').innerHTML = `
     <div>
       <div class="detalle-section-title">Cliente</div>
-      <div class="detalle-row"><span class="detalle-row-label">Nombre</span><span class="detalle-row-value">${p.cliente || '—'}</span></div>
-      ${p.tel   ? `<div class="detalle-row"><span class="detalle-row-label">Teléfono</span><span class="detalle-row-value">${p.tel}</span></div>`   : ''}
-      ${p.email ? `<div class="detalle-row"><span class="detalle-row-label">Email</span><span class="detalle-row-value">${p.email}</span></div>`     : ''}
+      <div class="detalle-row"><span class="detalle-row-label">Nombre</span><span class="detalle-row-value">${escapeHtml(p.cliente || '—')}</span></div>
+      ${p.tel   ? `<div class="detalle-row"><span class="detalle-row-label">Teléfono</span><span class="detalle-row-value">${escapeHtml(p.tel)}</span></div>`   : ''}
+      ${p.email ? `<div class="detalle-row"><span class="detalle-row-label">Email</span><span class="detalle-row-value">${escapeHtml(p.email)}</span></div>`     : ''}
     </div>
     <div>
       <div class="detalle-section-title">Pedido</div>
       <div class="detalle-row"><span class="detalle-row-label">Fecha</span><span class="detalle-row-value">${fecha}</span></div>
-      <div class="detalle-row"><span class="detalle-row-label">Productos</span><span class="detalle-row-value" style="max-width:220px;">${p.productos || '—'}</span></div>
-      <div class="detalle-row"><span class="detalle-row-label">Total</span><span class="detalle-row-value" style="color:var(--rojo);font-size:18px;">$${p.total || '—'}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Productos</span><span class="detalle-row-value" style="max-width:220px;">${escapeHtml(p.productos || '—')}</span></div>
+      <div class="detalle-row"><span class="detalle-row-label">Total</span><span class="detalle-row-value" style="color:var(--rojo);font-size:18px;">$${escapeHtml(p.total || '—')}</span></div>
       <div class="detalle-row"><span class="detalle-row-label">Método de pago</span><span class="detalle-row-value">${metodoLabel}</span></div>
       <div class="detalle-row"><span class="detalle-row-label">Estado</span><span class="detalle-row-value">${p.estado || '—'}</span></div>
     </div>

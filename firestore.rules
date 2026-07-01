@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function esAdmin() {
+      return request.auth != null
+          && request.auth.token.email == 'correo.omaraberturas@gmail.com';
+    }
+
+    // Texto de tipo correcto, sin HTML (< o >) y con longitud acotada
+    function esTextoValido(valor, maxLen) {
+      return valor is string
+          && valor.size() > 0
+          && valor.size() <= maxLen
+          && !valor.matches('.*[<>].*');
+    }
+
+    // 'total' hoy es solo informativo para el panel admin: no hay integración real de cobro
+    // (irMP() en shared.js solo abre mercadopago.com, no crea una Preference con este monto).
+    // Esta regla valida FORMATO (bloquea HTML/scripts y longitudes absurdas), no CORRECCIÓN:
+    // no confirma que el monto coincida con precio×cantidad real del carrito.
+    // El día que se conecte Mercado Pago de verdad (Checkout Pro / API de Preferencias),
+    // el monto a cobrar tiene que calcularse server-side (Cloud Function con Admin SDK y un
+    // catálogo de precios de confianza) — nunca confiar en el total que manda el navegador.
+    // Formato exacto que produce total.toLocaleString('es-AR'): $ + grupos de dígitos separados por puntos
+    function esTotalValido(valor) {
+      return valor is string
+          && valor.size() <= 20
+          && valor.matches('^\\$[0-9]{1,3}(\\.[0-9]{3})*$');
+    }
+
+    match /pedidos/{pedidoId} {
+      allow read, update, delete: if esAdmin();
+
+      allow create: if request.auth != null
+          && request.resource.data.keys().hasAll(['userId','cliente','email','tel','productos','total','metodo','estado','fecha'])
+          && request.resource.data.userId == request.auth.uid
+          && esTextoValido(request.resource.data.cliente, 100)
+          && esTextoValido(request.resource.data.email, 100)
+          && esTextoValido(request.resource.data.tel, 100)
+          && esTextoValido(request.resource.data.productos, 500)
+          && esTotalValido(request.resource.data.total)
+          && request.resource.data.metodo in ['mercadopago', 'transferencia']
+          && request.resource.data.estado == 'pendiente';
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
